@@ -1,0 +1,81 @@
+@container playlistContainer (max-width: 111rem) {
+  .cardContainer {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@container playlistContainer (max-width: 93.2rem) {
+  .cardContainer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .control-btns {
+    gap: 4rem;
+  }
+
+  .control-btn {
+    width: 5rem;
+    height: 5rem;
+    font-size: 3rem;
+  }
+}
+
+@container playlistContainer (max-width: 89.5rem) {
+  .playbar {
+    /* flex-direction: column; */
+    padding: 2rem;
+  }
+
+  .total-control {
+    width: 100%;
+  }
+
+  .seekbar {
+    height: 0.8rem;
+  }
+
+  .bar-circle {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .song-control-title {
+    font-size: 1.4rem;
+  }
+
+  .song-control-author {
+    font-size: 1.2rem;
+  }
+
+  .control-btns {
+    gap: 3rem;
+  }
+
+  .control-btn {
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 2.5rem;
+  }
+
+  .speaker-iconbox {
+    font-size: 3rem;
+  }
+
+  .volume-bar {
+    height: 0.7rem;
+  }
+}
+
+@container library (min-width: 65rem) {
+  /* .songlist {
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+    overflow: scroll;
+  } */
+
+  /* .song-card-info {
+    width: 15rem;
+  } */
+}

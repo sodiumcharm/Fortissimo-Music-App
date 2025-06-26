@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/query.css" />
+    <link rel="stylesheet" href="css/utility.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <header>
+      <nav class="nav flex align-center">
+        <div class="logo-box flex align-center justify-center">
+          <div class="logo-imgbox">
+            <img class="logo-icon" src="img/logo-icon.png" alt="Logo" />
+          </div>
+          <div class="logo-textbox">
+            <img class="logo-text" src="img/logo-text.png" alt="Fortissimo" />
+          </div>
+        </div>
+        <ul class="nav-links flex align-center">
+          <li><a href="#" class="link btn">Sign up</a></li>
+          <li><a href="#" class="link btn btn-orange">Log in</a></li>
+        </ul>
+      </nav>
+    </header> -->
+    <main>
+      <audio class="audio-player" crossorigin="anonymous"></audio>
+      <div class="overlay hidden"></div>
+
+      <div class="error-note hidden">
+        <span class="line-md--alert-loop"></span>
+        <p class="error-msg">
+          Loading failed! Please check your internet connection.
+        </p>
+        <button class="err-btn rounded">Retry</button>
+      </div>
+
+      <div class="history-container bg-grey-2 hidden">
+        <h2 class="box-heading">History</h2>
+
+        <div class="history-list">
+          <!-- <div class="history-card bg-yel-grey-3">
+            <div class="history-card-imgbox">
+              <img
+                src="img/card-1.webp"
+                alt="Song Image"
+                class="song-card-img"
+              />
+            </div>
+            <div class="history-card-info">
+              <p class="history-card-name">Dream Solister</p>
+              <p class="history-card-artist">TRUE</p>
+            </div>
+            <button class="history-card-play">
+              <ion-icon name="play"></ion-icon>
+            </button>
+          </div> -->
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="equalizer-box hidden">
+        <h2 class="box-heading">Equalizer</h2>
+
+        <div class="eq-controls">
+          <div class="eq-control-ui">
+            <div class="knob-ui">
+              <p class="display"><span class="left-vol-display">00</span>%</p>
+              <div class="knob left-knob"></div>
+              <p class="label">LEFT VOLUME</p>
+            </div>
+
+            <div class="control-ui sub-bass">
+              <p class="display"><span class="sub-bass-display">00</span> dB</p>
+              <div class="track sub-bass-track">
+                <span class="thumb sub-bass-thumb"></span>
+              </div>
+              <p class="label">60Hz</p>
+            </div>
+
+            <div class="control-ui bass">
+              <p class="display"><span class="bass-display">00</span> dB</p>
+              <div class="track bass-track">
+                <span class="thumb bass-thumb"></span>
+              </div>
+              <p class="label">120Hz</p>
+            </div>
+
+            <div class="control-ui bass">
+              <p class="display"><span class="lowmid-display">00</span> dB</p>
+              <div class="track lowmid-track">
+                <span class="thumb lowmid-thumb"></span>
+              </div>
+              <p class="label">400Hz</p>
+            </div>
+
+            <div class="control-ui bass">
+              <p class="display"><span class="mid-display">00</span> dB</p>
+              <div class="track mid-track">
+                <span class="thumb mid-thumb"></span>
+              </div>
+              <p class="label">1kHz</p>
+            </div>
+
+            <div class="control-ui bass">
+              <p class="display"><span class="highmid-display">00</span> dB</p>
+              <div class="track highmid-track">
+                <span class="thumb highmid-thumb"></span>
+              </div>
+              <p class="label">2.5kHz</p>
+            </div>
+
+            <div class="control-ui bass">
+              <p class="display"><span class="treble-display">00</span> dB</p>
+              <div class="track treble-track">
+                <span class="thumb treble-thumb"></span>
+              </div>
+              <p class="label">6kHz</p>
+            </div>
+
+            <div class="knob-ui">
+              <p class="display"><span class="right-vol-display">00</span>%</p>
+              <div class="knob right-knob"></div>
+              <p class="label">RIGHT VOLUME</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="container flex">
+        <div class="left flex-column">
+          <div class="home bg-yel-grey rounded">
+            <button class="settings"><span class="mingcute--settings-3-fill"></span></button>
+            <canvas class="canvas"></canvas>
+
+            <ul>
+              <li class="home-li">
+                <div class="logo-box">
+                  <img src="img/logo-1.png" alt="Logo" class="logo-img" />
+                </div>
+              </li>
+
+              <div class="search-box">
+                <input class="input" type="text" placeholder="Search music" />
+
+                <button class="search-mic-btn">
+                  <span class="mingcute--mic-line"></span>
+                </button>
+              </div>
+            </ul>
+          </div>
+
+          <div class="library bg-grey rounded">
+            <button title="Liked songs" class="liked-song-btn">
+              <ion-icon name="heart-circle-outline"></ion-icon>
+            </button>
+            <h2 class="flex align-center">
+              <ion-icon class="icons" name="musical-notes-outline"></ion-icon
+              ><span class="playlist-displayer">Music</span>
+            </h2>
+
+            <div class="songlist">
+              <!-- <div class="song-card flex align-center rounded bg-yel-grey-3">
+                <div class="song-card-imgbox">
+                  <img src="img/card-1.webp" alt="Song Image" class="song-card-img" />
+                </div>
+                <div class="song-card-info">
+                  <p class="song-card-name">Dream Solister</p>
+                  <p class="song-card-artist">TRUE</p>
+                </div>
+                <div class="like-container"><span class="mingcute--thumb-up-2-line"></span></div>
+                <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
+              </div> -->
+            </div>
+
+            <div class="footer flex rounded">
+              <a href="#" class="link">Legal</a>
+              <a href="#" class="link">Privacy Policy</a>
+              <a href="#" class="link">Cookies</a>
+              <a href="#" class="link">About Ads</a>
+              <a href="#" class="link">Accessibility</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="right flex-column rounded">
+          <div class="loading-ui hidden">
+            <span class="svg-spinners--12-dots-scale-rotate"></span>Loading
+          </div>
+
+          <div class="header bg-yel-grey-2 flex">
+            <div class="nav flex">
+              <button
+                class="btn-nav btn-nav-1 playlist-loop-btn"
+                title="Playlist Loop All"
+              >
+                <span class="mingcute--repeat"></span>
+              </button>
+              <button class="btn-nav btn-nav-1 song-loop-btn" title="Loop one">
+                <span class="mingcute--repeat icon-repeat-1"></span>
+              </button>
+              <button
+                class="btn-nav btn-nav-1 eq-toggle"
+                title="Enable Equalizer"
+              >
+                <span class="mingcute--remote-control-line"></span>
+              </button>
+              <button class="btn-nav btn-nav-1 eq-btn hidden" title="Equalizer">
+                <span class="mingcute--settings-6-line"></span>
+              </button>
+            </div>
+
+            <div class="buttons flex">
+              <button class="btn-nav btn-nav-2 history-toggle" title="History">
+                <span class="mingcute--time-duration-line"></span>
+              </button>
+              <button class="btn btn-trnsp">Sign up</button>
+              <button class="btn btn-orange">Log in</button>
+            </div>
+          </div>
+
+          <div class="playlist bg-grey">
+            <div class="playlist-detail-box bg-playlist hide-playlist">
+              <button class="exit-playlistbox"><span class="mingcute--arrow-left-fill"></span></button>
+              <div class="playlist-details-section">
+                <div class="playlist-cover-imgbox">
+                  <img class="playlist-cover-img" src="" alt="Cover Image" />
+                </div>
+
+                <div class="playlist-info-box">
+                  <h3 class="playlist-heading"></h3>
+
+                  <div class="playlist-desc"></div>
+
+                  <div class="user-account">
+                    <div class="user-account-imgbox">
+                      <img src="" class="playlist-account-img" />
+                    </div>
+
+                    <p class="playlist-username"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="songs-section"></div>
+            </div>
+
+            <div class="filter-tags">
+              <div data-genre="all" class="filter-tag filter-active">All</div>
+              <div data-genre="band" class="filter-tag">Band</div>
+              <div data-genre="anime" class="filter-tag">Anime</div>
+              <div data-genre="romantic" class="filter-tag">Romantic</div>
+              <div data-genre="game" class="filter-tag">Game</div>
+              <div data-genre="english" class="filter-tag">English</div>
+              <div data-genre="hindi" class="filter-tag">Hindi</div>
+              <div data-genre="bengali" class="filter-tag">Bengali</div>
+              <div data-genre="telugu" class="filter-tag">Telugu</div>
+              <div data-genre="japanese" class="filter-tag">Japanese</div>
+              <div data-genre="ai song" class="filter-tag">AI Songs</div>
+              <div data-genre="nature" class="filter-tag">Nature</div>
+              <div data-genre="patriotic" class="filter-tag">Patriotic</div>
+            </div>
+
+            <h1>Fortissimo Playlists</h1>
+
+            <div class="cardContainer rounded">
+              <!-- <div class="card rounded">
+                <div class="card-imgbox rounded">
+                  <img src="img/card-1.webp" alt="Image" class="card-img" />
+
+                  <button class="card-btn-play">
+                    <ion-icon
+                      class="icons card-play-icons"
+                      name="play"
+                    ></ion-icon>
+                  </button>
+                </div>
+                <h2>Sound! Euphonium</h2>
+                <p>
+                  Masterpieces from Hibike! Euphonium which will make you feel
+                  nostalgic.
+                </p>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="playbar hidden flex bg-yel-grey-2-1 align-center">
+            <button class="playbar-close-btn">
+              <span class="mingcute--arrows-down-line"></span>
+            </button>
+
+            <div class="control-imgbox rounded">
+              <img src="" alt="Image" class="control-img" />
+            </div>
+
+            <div class="total-control">
+              <div class="song-control-1">
+                <div class="seekbar">
+                  <div class="buffered-bar"></div>
+                  <div class="progress-fill"></div>
+                  <span class="bar-circle"></span>
+                </div>
+                <div class="duration-info">
+                  <p class="current-time">00:00</p>
+                  <p class="total-time">00:00</p>
+                </div>
+              </div>
+
+              <div class="song-control-2">
+                <div class="song-control-info">
+                  <p class="song-control-title"></p>
+                  <p class="song-control-author"></p>
+                </div>
+
+                <div class="sound-control">
+                  <div class="control-btns">
+                    <button class="control-btn play-prev">
+                      <ion-icon name="play-skip-back"></ion-icon>
+                    </button>
+                    <button class="control-btn control-btn-play">
+                      <ion-icon name="play"></ion-icon>
+                    </button>
+                    <button class="control-btn play-next">
+                      <ion-icon name="play-skip-forward"></ion-icon>
+                    </button>
+                  </div>
+
+                  <div class="volume-control">
+                    <div class="speaker-iconbox">
+                      <ion-icon name="volume-high"></ion-icon>
+                    </div>
+                    <div class="volume-bar">
+                      <div class="volume-fill"></div>
+                      <span class="volume-circle"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="script/script.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
