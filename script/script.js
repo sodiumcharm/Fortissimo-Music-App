@@ -28,6 +28,11 @@ const songsContainer = document.querySelector(".songlist");
 const playlistContainer = document.querySelector(".cardContainer");
 const songsSection = document.querySelector(".songs-section");
 
+const allSongsTabBtn = document.querySelector(".all-songs-btn");
+const likedSongsTabBtn = document.querySelector(".liked-song-btn");
+const allSongsDisplayer = document.querySelector(".all-songs-display");
+const likedSongsDisplayer = document.querySelector(".liked-songs-display");
+
 const songConTitle = document.querySelector(".song-control-title");
 const songConArtist = document.querySelector(".song-control-author");
 const songConImg = document.querySelector(".control-img");
@@ -92,6 +97,9 @@ const playlistUserImg = document.querySelector(".playlist-account-img");
 const playlistUsername = document.querySelector(".playlist-username");
 const exitPlaylistBtn = document.querySelector(".exit-playlistbox");
 
+let allTabIsOpen = true;
+let likedTabIsOpen = false;
+
 let isPlaylistLoop = false;
 let isSongLoop = false;
 
@@ -105,13 +113,17 @@ let currentCardImg = null;
 let isDragging = false;
 let isDraggingVolume = false;
 let isDraggingUi = false;
+let currentPlaylistBtn = null;
+let currentPlaylistCardEl = null;
 
 let currentRefBtn = null;
 let currentRefCardImg = null;
 let currentRefSongUrl = null;
 
-let currentPlaylist = null;
+let currentPlaylistId = null;
 let playbarSwipedDown = false;
+
+let playlistCardBtnPressed = false;
 
 const songsArray = [];
 const playlistsArray = [];
@@ -141,19 +153,34 @@ const handleSearch = function () {
     .toLowerCase()
     .replace(/\s+/g, " ");
 
+  let targets;
+
+  if (allTabIsOpen) {
+    targets = document.querySelectorAll(".song-card");
+  } else if (likedTabIsOpen) {
+    targets = document.querySelectorAll(".song-card.liked");
+  }
+
+  const playlistTargets = document.querySelectorAll('.card');
+
   if (searchText === "") {
-    document.querySelectorAll(".song-card").forEach((card) => {
+    targets.forEach((card) => {
       card.classList.remove("hide");
     });
 
-    playlistDisplayer.textContent = `Music`;
+    playlistTargets.forEach((card) => {
+      card.classList.remove("hide");
+    });
+
+    allSongsDisplayer.textContent = `All Songs`;
+    likedSongsDisplayer.textContent = `Liked Songs`;
 
     return;
   }
 
   const resultArr = [];
 
-  document.querySelectorAll(".song-card").forEach((card) => {
+  targets.forEach((card) => {
     if (
       singleMatchCheck(
         searchText.split(" "),
@@ -167,7 +194,24 @@ const handleSearch = function () {
     }
   });
 
-  playlistDisplayer.textContent = `Search Results (${resultArr.length})`;
+  playlistTargets.forEach((card) => {
+    if (
+      singleMatchCheck(
+        searchText.split(" "),
+        card.dataset.playlistname.toLowerCase().split(" ")
+      )
+    ) {
+      card.classList.remove("hide");
+    } else {
+      card.classList.add("hide");
+    }
+  });
+
+  if (allTabIsOpen) {
+    allSongsDisplayer.textContent = `Results (${resultArr.length})`;
+  } else if (likedTabIsOpen) {
+    likedSongsDisplayer.textContent = `Results (${resultArr.length})`;
+  }
 };
 
 const historyManager = function (action) {
@@ -266,8 +310,32 @@ const updateVolume = function (e) {
   }
 };
 
-const addHistoryCard = function (songUrl, songName, artistName, cardImg) {
-  const html = `<div class="history-card bg-yel-grey-3" data-histurl="${songUrl}">
+const addHistoryCard = function (
+  songUrl,
+  songName,
+  artistName,
+  cardImg,
+  context,
+  triggeredBy
+) {
+  const now = new Date();
+
+  const day = now.getDate();
+
+  const month = now.toLocaleString("en-US", { month: "short" });
+
+  const time = now
+    .toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .toLowerCase();
+
+  const year = now.getFullYear();
+
+  if (context === "global") {
+    const html = `<div class="history-card bg-yel-grey-3" data-histurl="${songUrl}" data-histcontext="${context}">
             <div class="history-card-imgbox">
               <img
                 src="${cardImg}"
@@ -279,24 +347,87 @@ const addHistoryCard = function (songUrl, songName, artistName, cardImg) {
               <p class="history-card-name">${songName}</p>
               <p class="history-card-artist">${artistName}</p>
             </div>
-            <button class="history-card-play">
-              <ion-icon name="play"></ion-icon>
-            </button>
+            <p class="history-time-display">
+              <span class="history-time">${time}</span>
+              <span class="history-date">${day} ${month} ${year}</span>
+            </p>
           </div>`;
 
-  document.querySelectorAll(".history-card").forEach((el) => {
-    if (songUrl === el.getAttribute("data-histurl")) {
-      el.remove();
-    }
-  });
+    document.querySelectorAll(".history-card").forEach((el) => {
+      if (songUrl === el.getAttribute("data-histurl")) {
+        if (!el.closest(".history-playlist-card")) {
+          el.remove();
+        }
+      }
+    });
 
-  document
-    .querySelector(".history-list")
-    .insertAdjacentHTML("afterbegin", html);
+    document
+      .querySelector(".history-list")
+      .insertAdjacentHTML("afterbegin", html);
+  } else if (context === "playlist") {
+    const playlist = document.querySelector(
+      `[data-playlistid="${triggeredBy}"]`
+    );
+
+    const playlistName = playlist.dataset.playlistname;
+    const playlistImg = playlist.dataset.coverimg;
+
+    const html = `<div class="history-playlist-card" data-superhisturl="${songUrl}" data-supertargetplaylist="${triggeredBy}">
+            <div class="history-playlist-info">
+              <div class="history-playlist-imgbox">
+                <img
+                  src="${playlistImg}"
+                  alt="Playlist Image"
+                  class="history-playlist-img"
+                />
+              </div>
+
+              <p class="history-playlist-name">
+                Played from
+                "<span class="history-playlistname-display"
+                  >${playlistName}</span
+                >"
+              </p>
+            </div>
+
+            <div class="history-playlist-container">
+              <div class="history-card bg-yel-grey-3" data-histurl="${songUrl}" data-histcontext="${context}" data-targetplaylist="${triggeredBy}">
+                <div class="history-card-imgbox">
+                  <img
+                    src="${cardImg}"
+                    alt="Song Image"
+                    class="song-card-img"
+                  />
+                </div>
+                <div class="history-card-info">
+                  <p class="history-card-name">${songName}</p>
+                  <p class="history-card-artist">${artistName}</p>
+                </div>
+                <p class="history-time-display">
+              <span class="history-time">${time}</span>
+              <span class="history-date">${day} ${month} ${year}</span>
+            </p>
+              </div>
+            </div>
+          </div>`;
+
+    document.querySelectorAll(".history-playlist-card").forEach((el) => {
+      if (
+        songUrl === el.getAttribute("data-superhisturl") &&
+        triggeredBy === el.getAttribute("data-supertargetplaylist")
+      ) {
+        el.remove();
+      }
+    });
+
+    document
+      .querySelector(".history-list")
+      .insertAdjacentHTML("afterbegin", html);
+  }
 };
 
 const nextSongLoader = function () {
-  if (currentPlaylist) {
+  if (currentPlaylistId) {
     const currentSongRefCard = document.querySelector(
       `[data-refurl="${currentSongUrl}"]`
     );
@@ -366,12 +497,35 @@ const songLoader = function (songs, container, context) {
         const cardImg = card.querySelector(".song-card-imgbox");
         const btn = card.querySelector(".song-card-play");
 
-        addHistoryCard(
-          songUrl,
-          currentSongName,
-          currentArtistName,
-          currentSongImg
-        );
+        setTimeout(function () {
+          const context = card.dataset.context;
+          const triggeredBy = card.getAttribute("data-triggeredby");
+
+          addHistoryCard(
+            songUrl,
+            currentSongName,
+            currentArtistName,
+            currentSongImg,
+            context,
+            triggeredBy
+          );
+        }, 100);
+
+        setTimeout(function () {
+          card.setAttribute("data-context", "global");
+          card.removeAttribute("data-triggeredby");
+        }, 200);
+
+        // const context = card.dataset.context;
+        // console.log(context);
+
+        // addHistoryCard(
+        //   songUrl,
+        //   currentSongName,
+        //   currentArtistName,
+        //   currentSongImg,
+        //   context
+        // );
 
         // const currentPlaylistCard = document.querySelector(
         //   `[data-playlistname="${playlist}"]`
@@ -413,21 +567,6 @@ const songLoader = function (songs, container, context) {
       }
     });
   });
-
-  audio.addEventListener("ended", function () {
-    currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-    songPlayBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-    currentBtn
-      .closest(".song-card")
-      .querySelector(".song-card-imgbox")
-      .classList.remove("rotate");
-
-    audio.currentTime = 0;
-
-    if (isSongLoop) currentSongLoader();
-
-    if (isPlaylistLoop) nextSongLoader();
-  });
 };
 
 const playlistLoader = function (playlists) {
@@ -467,38 +606,48 @@ const playlistLoader = function (playlists) {
   const playlistCards = document.querySelectorAll(".card");
 
   playlistCards.forEach((playlistCard) => {
-    playlistCard.addEventListener("click", function () {
-      playlistCoverImg.src = playlistCard.dataset.coverimg;
-      playlistHeading.textContent = playlistCard.dataset.playlistname;
-      playlistDescription.textContent = playlistCard.dataset.description;
-      playlistUserImg.src = playlistCard.dataset.creatorimg;
-      playlistUsername.textContent = playlistCard.dataset.creator;
+    playlistCard.addEventListener("click", function (e) {
+      if (
+        !e.target.classList.contains("card-btn-play") &&
+        !e.target.classList.contains("icons")
+      ) {
+        playlistCoverImg.src = playlistCard.dataset.coverimg;
+        playlistHeading.textContent = playlistCard.dataset.playlistname;
+        playlistDescription.textContent = playlistCard.dataset.description;
+        playlistUserImg.src = playlistCard.dataset.creatorimg;
+        playlistUsername.textContent = playlistCard.dataset.creator;
 
-      playlistBox.classList.remove("hide-playlist");
+        if (!playlistCardBtnPressed) {
+          playlistBox.classList.remove("hide-playlist");
 
-      document.querySelector(".playlist").classList.add("stop-scroll");
-      // const songlist = JSON.parse(playlistCard.getAttribute("data-songs"));
-      const playlistName = playlistCard.getAttribute("data-playlistname");
-      currentPlaylist = playlistName;
-
-      // playlistDisplayer.innerHTML = playlistName;
-
-      const allSongRefCards = songsSection.querySelectorAll(
-        ".song-reference-card"
-      );
-
-      allSongRefCards.forEach((card) => {
-        card.classList.add("hide");
-
-        if (
-          JSON.parse(playlistCard.dataset.songs).includes(
-            Number(card.dataset.refid)
-          )
-        ) {
-          card.classList.remove("hide");
-          card.setAttribute("data-refplaylist", playlistName);
+          document.querySelector(".playlist").classList.add("stop-scroll");
         }
-      });
+        // playlistBox.classList.remove("hide-playlist");
+
+        // document.querySelector(".playlist").classList.add("stop-scroll");
+
+        // const songlist = JSON.parse(playlistCard.getAttribute("data-songs"));
+        const playlistId = playlistCard.getAttribute("data-playlistid");
+        currentPlaylistId = playlistId;
+
+        // playlistDisplayer.innerHTML = playlistName;
+
+        const allSongRefCards = songsSection.querySelectorAll(
+          ".song-reference-card"
+        );
+
+        allSongRefCards.forEach((card) => {
+          card.classList.add("hide");
+
+          if (
+            JSON.parse(playlistCard.dataset.songs).includes(
+              Number(card.dataset.refid)
+            )
+          ) {
+            card.classList.remove("hide");
+          }
+        });
+      }
     });
   });
 };
@@ -519,7 +668,7 @@ const songReferenceLoader = function (songs, container, context) {
                   <p class="song-card-name">${obj.title}</p>
                   <p class="song-card-artist">${obj.artist}</p>
                 </div>
-                <div class="like-container"><span class="mingcute--thumb-up-2-line"></span></div>
+                <div class="like-container ref-like-container"><span class="mingcute--thumb-up-2-line"></span></div>
                 <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
               </div>`;
 
@@ -527,30 +676,71 @@ const songReferenceLoader = function (songs, container, context) {
   }
 
   document.querySelectorAll(".song-reference-card").forEach((card) => {
-    card.addEventListener("click", function () {
-      document.querySelectorAll(".song-card").forEach((globalCard) => {
-        if (card.dataset.refid === globalCard.dataset.id) {
-          globalCard.click();
+    card.addEventListener("click", function (e) {
+      if (
+        !e.target.classList.contains("ref-like-container") &&
+        !e.target.classList.contains("mingcute--thumb-up-2-line") &&
+        !e.target.classList.contains("mingcute--thumb-up-2-fill")
+      ) {
+        document.querySelectorAll(".song-card").forEach((globalCard) => {
+          if (card.dataset.refid === globalCard.dataset.id) {
+            globalCard.click();
+            globalCard.setAttribute("data-context", `${card.dataset.context}`);
 
-          const refUrl = card.dataset.refurl;
-          const refBtn = card.querySelector(".song-card-play");
-          const refCardImg = card.querySelector(".song-card-imgbox");
+            const refUrl = card.dataset.refurl;
+            const refBtn = card.querySelector(".song-card-play");
+            const refCardImg = card.querySelector(".song-card-imgbox");
 
-          if (refUrl !== currentRefSongUrl) {
-            if (currentRefBtn)
-              currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-            if (currentRefCardImg) currentRefCardImg.classList.remove("rotate");
+            if (refUrl !== currentRefSongUrl) {
+              if (currentRefBtn)
+                currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+              if (currentRefCardImg)
+                currentRefCardImg.classList.remove("rotate");
+            }
+
+            refBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+            refCardImg.classList.add("rotate");
+            currentRefBtn = refBtn;
+            currentRefCardImg = refCardImg;
+            currentRefSongUrl = refUrl;
+
+            // card.setAttribute("data-refplaylist", currentPlaylistId);
+            document.querySelectorAll(".song-reference-card").forEach((el) => {
+              if (!el.classList.contains("hide")) {
+                el.setAttribute("data-refplaylist", currentPlaylistId);
+              }
+            });
+
+            if (currentPlaylistCardEl) {
+              currentPlaylistCardEl.classList.remove("playlist-active");
+            }
+
+            const targetPlaylistId = card.dataset.refplaylist;
+
+            const targetPlaylist = document.querySelector(
+              `[data-playlistid="${targetPlaylistId}"]`
+            );
+
+            globalCard.setAttribute("data-triggeredby", `${targetPlaylistId}`);
+
+            if (currentPlaylistBtn) {
+              currentPlaylistBtn.innerHTML =
+                '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+            }
+
+            const targetPlaylistBtn =
+              targetPlaylist.querySelector(".card-btn-play");
+            targetPlaylistBtn.innerHTML =
+              '<ion-icon class="icons card-play-icons" name="pause"></ion-icon>';
+            currentPlaylistBtn = targetPlaylistBtn;
+
+            currentPlaylistCardEl = targetPlaylist;
+            targetPlaylist.classList.add("playlist-active");
+
+            return;
           }
-
-          refBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
-          refCardImg.classList.add("rotate");
-          currentRefBtn = refBtn;
-          currentRefCardImg = refCardImg;
-          currentRefSongUrl = refUrl;
-
-          return;
-        }
-      });
+        });
+      }
     });
   });
 };
@@ -590,6 +780,21 @@ const appFunctionality = async function () {
   //   observer.observe(card, { attributes: true });
   // });
 
+  audio.addEventListener("ended", function () {
+    currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+    songPlayBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+    currentBtn
+      .closest(".song-card")
+      .querySelector(".song-card-imgbox")
+      .classList.remove("rotate");
+
+    audio.currentTime = 0;
+
+    if (isSongLoop) currentSongLoader();
+
+    if (isPlaylistLoop) nextSongLoader();
+  });
+
   document
     .querySelector(".history-list")
     .addEventListener("click", function (e) {
@@ -597,12 +802,31 @@ const appFunctionality = async function () {
       if (!card) return;
 
       const historyUrl = card.dataset.histurl;
-      const targetSongCard = document.querySelector(
-        `[data-url="${historyUrl}"]`
-      );
 
-      if (targetSongCard) {
-        targetSongCard.click();
+      if (card.getAttribute("data-histcontext") === "global") {
+        const targetSongCard = document.querySelector(
+          `[data-url="${historyUrl}"]`
+        );
+
+        if (targetSongCard) {
+          targetSongCard.click();
+        }
+      }
+
+      if (card.getAttribute("data-histcontext") === "playlist") {
+        const targetSongRefCard = document.querySelector(
+          `[data-refurl="${historyUrl}"]`
+        );
+
+        const targetPlaylistId = card.dataset.targetplaylist;
+        const targetPlaylist = document.querySelector(
+          `[data-playlistid="${targetPlaylistId}"]`
+        );
+        targetPlaylist.click();
+
+        if (targetSongRefCard) {
+          targetSongRefCard.click();
+        }
       }
 
       historyManager("hide");
@@ -622,10 +846,12 @@ const appFunctionality = async function () {
         currentBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
       }
 
-      if (currentRefBtn.innerHTML.includes("pause")) {
-        currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-      } else {
-        currentRefBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+      if (currentRefBtn) {
+        if (currentRefBtn.innerHTML.includes("pause")) {
+          currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+        } else {
+          currentRefBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+        }
       }
 
       audio.pause();
@@ -642,10 +868,12 @@ const appFunctionality = async function () {
         currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
       }
 
-      if (currentRefBtn.innerHTML.includes("play")) {
-        currentRefBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
-      } else {
-        currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+      if (currentRefBtn) {
+        if (currentRefBtn.innerHTML.includes("play")) {
+          currentRefBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+        } else {
+          currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+        }
       }
 
       audio.play();
@@ -657,7 +885,7 @@ const appFunctionality = async function () {
   });
 
   playPrevBtn.addEventListener("click", function () {
-    if (currentPlaylist) {
+    if (currentPlaylistId) {
       const currentSongRefCard = document.querySelector(
         `[data-refurl="${currentSongUrl}"]`
       );
@@ -742,6 +970,43 @@ const appFunctionality = async function () {
       updateVolume(e);
       isDraggingVolume = false;
     }
+  });
+
+  document.querySelectorAll(".card-btn-play").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      playlistCardBtnPressed = true;
+
+      // if (currentPlaylistBtn) {
+      //   currentPlaylistBtn.innerHTML =
+      //     '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+      // }
+
+      // currentPlaylistBtn = btn;
+
+      // btn.innerHTML =
+      //   '<ion-icon class="icons card-play-icons" name="pause"></ion-icon>';
+
+      const targetPlaylistCard = btn.closest(".card");
+
+      targetPlaylistCard.click();
+
+      const allSongRefCards = songsSection.querySelectorAll(
+        ".song-reference-card"
+      );
+
+      for (let card of allSongRefCards) {
+        if (!card.classList.contains("hide")) {
+          card.click();
+          break;
+        }
+      }
+
+      if (!isPlaylistLoop) {
+        playlistLoopBtn.click();
+      }
+
+      playlistCardBtnPressed = false;
+    });
   });
 
   divider.addEventListener("mousedown", function () {
@@ -850,19 +1115,61 @@ const appFunctionality = async function () {
     });
   });
 
-  document
-    .querySelector(".liked-song-btn")
-    .addEventListener("click", function () {
-      playlistDisplayer.textContent = "Liked songs";
+  document.querySelectorAll(".ref-like-container").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const parentRefCard = btn.closest(".song-reference-card");
 
-      document.querySelectorAll(".song-card").forEach((card) => {
-        if (card.classList.contains("liked")) {
-          card.classList.remove("hide");
-        } else {
-          card.classList.add("hide");
-        }
-      });
+      const targetId = parentRefCard.dataset.refid;
+
+      const targetGlobalSongCard = document.querySelector(
+        `[data-id="${targetId}"]`
+      );
+
+      targetGlobalSongCard.querySelector(".like-container").click();
+
+      parentRefCard.classList.toggle("liked-ref");
+
+      if (parentRefCard.classList.contains("liked-ref")) {
+        btn.innerHTML = '<span class="mingcute--thumb-up-2-fill"></span>';
+      } else {
+        btn.innerHTML = '<span class="mingcute--thumb-up-2-line"></span>';
+      }
     });
+  });
+
+  allSongsTabBtn.addEventListener("click", function () {
+    allTabIsOpen = true;
+    likedTabIsOpen = false;
+
+    document.querySelectorAll(".left-window-tab").forEach(function (tab) {
+      tab.classList.remove("active-left-windowtab");
+    });
+
+    this.classList.add("active-left-windowtab");
+
+    document.querySelectorAll(".song-card").forEach((card) => {
+      card.classList.remove("hide");
+    });
+  });
+
+  likedSongsTabBtn.addEventListener("click", function () {
+    allTabIsOpen = false;
+    likedTabIsOpen = true;
+
+    document.querySelectorAll(".left-window-tab").forEach(function (tab) {
+      tab.classList.remove("active-left-windowtab");
+    });
+
+    this.classList.add("active-left-windowtab");
+
+    document.querySelectorAll(".song-card").forEach((card) => {
+      if (card.classList.contains("liked")) {
+        card.classList.remove("hide");
+      } else {
+        card.classList.add("hide");
+      }
+    });
+  });
 
   // searchInput.addEventListener("keydown", function (e) {
   //   if (e.key === "Enter") {
