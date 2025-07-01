@@ -1,0 +1,34 @@
+* {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #000;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.main {
+  position: relative;
+}
+
+.link {
+  display: inline-block;
+  text-decoration: none;
+  color: #fff;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  height: 100vh;
+}

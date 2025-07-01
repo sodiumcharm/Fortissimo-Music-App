@@ -128,13 +128,6 @@ let playlistCardBtnPressed = false;
 const songsArray = [];
 const playlistsArray = [];
 
-allCloseBtns.forEach((btn) => {
-  btn.addEventListener("click", function () {
-    btn.parentElement.classList.add("hidden");
-    overlay.classList.add("hidden");
-  });
-});
-
 const singleMatchCheck = function (arr1, arr2) {
   for (let i = 0; i < arr1.length; i++) {
     const value = arr1[i];
@@ -161,7 +154,7 @@ const handleSearch = function () {
     targets = document.querySelectorAll(".song-card.liked");
   }
 
-  const playlistTargets = document.querySelectorAll('.card');
+  const playlistTargets = document.querySelectorAll(".card");
 
   if (searchText === "") {
     targets.forEach((card) => {
@@ -509,12 +502,22 @@ const songLoader = function (songs, container, context) {
             context,
             triggeredBy
           );
-        }, 100);
+
+          if (context === "global" && currentRefBtn) {
+            currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+            currentPlaylistBtn.innerHTML =
+              '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+
+            if (currentPlaylistCardEl)
+              currentPlaylistCardEl.classList.remove("playlist-active");
+            currentRefCardImg.classList.remove("rotate");
+          }
+        }, 0);
 
         setTimeout(function () {
           card.setAttribute("data-context", "global");
           card.removeAttribute("data-triggeredby");
-        }, 200);
+        }, 1);
 
         // const context = card.dataset.context;
         // console.log(context);
@@ -598,6 +601,11 @@ const playlistLoader = function (playlists) {
                 <p>
                   ${playlist.description}.
                 </p>
+                <div class="playlist-right-click hidden">
+                  <button class="floating-btn floating-save-btn">
+                    <ion-icon class="floating-icons" name="bookmark-outline"></ion-icon>Save playlist
+                  </button>
+                </div>
               </div>`;
 
     playlistContainer.insertAdjacentHTML("beforeend", html);
@@ -648,6 +656,32 @@ const playlistLoader = function (playlists) {
           }
         });
       }
+    });
+
+    playlistCard.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      console.log(e);
+      const floatingMenu = playlistCard.querySelector(".playlist-right-click");
+
+      const rect = playlistCard.getBoundingClientRect();
+
+      const offsetX = e.clientX - rect.left;
+
+      const offsetY = e.clientY - rect.top;
+
+      const leftPercent = (offsetX / rect.width) * 100;
+      const topPercent = (offsetY / rect.height) * 100;
+
+      floatingMenu.style.left = `${leftPercent}%`;
+      floatingMenu.style.top = `${topPercent}%`;
+
+      floatingMenu.classList.remove("hidden");
+    });
+
+    document.querySelectorAll(".playlist-right-click").forEach((menu) => {
+      menu.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
     });
   });
 };
@@ -764,21 +798,41 @@ const appFunctionality = async function () {
     card.classList.add("hide");
   });
 
-  // playlistCards.forEach((card) => {
-  //   const observer = new MutationObserver((mutationsList) => {
-  //     for (const mutation of mutationsList) {
-  //       if (
-  //         mutation.type === "attributes" &&
-  //         mutation.attributeName === "class" &&
-  //         card.classList.contains("playlist-active")
-  //       ) {
-  //         card.scrollIntoView({ behavior: "smooth", block: "center" });
-  //       }
-  //     }
-  //   });
+  const playlistCards = document.querySelectorAll(".card");
 
-  //   observer.observe(card, { attributes: true });
-  // });
+  playlistCards.forEach((card) => {
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "class" &&
+          card.classList.contains("playlist-active")
+        ) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+    });
+
+    observer.observe(card, { attributes: true });
+  });
+
+  const allFloatingMenu = document.querySelectorAll(".playlist-right-click");
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".playlist-right-click")) {
+      allFloatingMenu.forEach((menu) => {
+        menu.classList.add("hidden");
+      });
+    }
+  });
+
+  document.addEventListener("contextmenu", function (e) {
+    if (!e.target.closest(".card")) {
+      allFloatingMenu.forEach((menu) => {
+        menu.classList.add("hidden");
+      });
+    }
+  });
 
   audio.addEventListener("ended", function () {
     currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
@@ -787,6 +841,11 @@ const appFunctionality = async function () {
       .closest(".song-card")
       .querySelector(".song-card-imgbox")
       .classList.remove("rotate");
+
+    if (currentRefBtn) {
+      currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+      currentRefCardImg.classList.remove("rotate");
+    }
 
     audio.currentTime = 0;
 
@@ -937,6 +996,7 @@ const appFunctionality = async function () {
   });
 
   seekbar.addEventListener("mousedown", (e) => {
+    e.preventDefault();
     isDragging = true;
     updateSeekForDrag(e); // Update immediately
   });
@@ -955,6 +1015,7 @@ const appFunctionality = async function () {
   });
 
   volumeBar.addEventListener("mousedown", (e) => {
+    e.preventDefault();
     isDraggingVolume = true;
     updateVolume(e);
   });
@@ -1105,12 +1166,26 @@ const appFunctionality = async function () {
     btn.addEventListener("click", function () {
       const parentCard = btn.closest(".song-card");
 
+      const parentId = parentCard.getAttribute("data-id");
+
+      const targetRefCard = document.querySelector(
+        `[data-refid="${parentId}"]`
+      );
+
+      const targetRefLikeBtn = targetRefCard.querySelector(
+        ".ref-like-container"
+      );
+
       parentCard.classList.toggle("liked");
 
       if (parentCard.classList.contains("liked")) {
         btn.innerHTML = '<span class="mingcute--thumb-up-2-fill"></span>';
+        targetRefLikeBtn.innerHTML =
+          '<span class="mingcute--thumb-up-2-fill"></span>';
       } else {
         btn.innerHTML = '<span class="mingcute--thumb-up-2-line"></span>';
+        targetRefLikeBtn.innerHTML =
+          '<span class="mingcute--thumb-up-2-line"></span>';
       }
     });
   });
@@ -1126,14 +1201,6 @@ const appFunctionality = async function () {
       );
 
       targetGlobalSongCard.querySelector(".like-container").click();
-
-      parentRefCard.classList.toggle("liked-ref");
-
-      if (parentRefCard.classList.contains("liked-ref")) {
-        btn.innerHTML = '<span class="mingcute--thumb-up-2-fill"></span>';
-      } else {
-        btn.innerHTML = '<span class="mingcute--thumb-up-2-line"></span>';
-      }
     });
   });
 
@@ -1244,6 +1311,13 @@ const appFunctionality = async function () {
     playlistBox.classList.add("hide-playlist");
     document.querySelector(".playlist").classList.remove("stop-scroll");
   });
+
+  allCloseBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      btn.parentElement.classList.add("hidden");
+      overlay.classList.add("hidden");
+    });
+  });
 };
 
 retryLoadBtn.addEventListener("click", async function () {
@@ -1288,6 +1362,42 @@ const audioManipulator = function () {
       const r = 255;
       const g = 200 - barHeight / 2;
       const b = 50;
+
+      // const r = 120;
+      // const g = 200 - barHeight / 2;
+      // const b = 50;
+
+      // const r = 255 - barHeight / 2;
+      // const g = 200;
+      // const b = 255;
+
+      // const r = 255 - barHeight / 2;
+      // const g = 220;
+      // const b = 150;
+
+      // const r = 50;
+      // const g = 150 - barHeight / 3;
+      // const b = 255;
+
+      // const r = 30;
+      // const g = 200 - barHeight / 2;
+      // const b = 150 + barHeight / 4;
+
+      // const r = 180 + barHeight / 5;
+      // const g = 50;
+      // const b = 255 - barHeight / 4;
+
+      // const r = 100 + barHeight / 2;
+      // const g = 255 - barHeight / 3;
+      // const b = 200 + barHeight / 5;
+
+      // const r = 120 + barHeight / 2;
+      // const g = 220;
+      // const b = 30 + barHeight / 5;
+
+      // const r = 180;
+      // const g = 250 - barHeight / 2;
+      // const b = 255;
 
       ctx.fillStyle = `rgb(${r},${g},${b})`;
       ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);

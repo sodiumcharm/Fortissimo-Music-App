@@ -1,0 +1,168 @@
+.right {
+  flex-grow: 1;
+  margin: var(--ui-gap) var(--ui-gap) var(--ui-gap) 0;
+  gap: var(--ui-gap);
+  overflow: hidden;
+  position: relative;
+
+  container-type: inline-size;
+  container-name: playlistContainer;
+}
+
+.loading-ui {
+  font-size: 1.6rem;
+  font-weight: 600;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.right .header {
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2.5rem;
+}
+
+.header .nav {
+  gap: 1rem;
+}
+
+.btn-nav {
+  display: flex;
+  background: none;
+  border: none;
+  text-align: center;
+  color: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.btn-nav-1 {
+  background-color: #000;
+}
+
+.btn-nav-2 {
+  background-color: transparent;
+}
+
+.btn-nav:hover {
+  /* background-color: var(--primary-color);
+  color: #121212; */
+  transform: scale(1.16);
+}
+
+.buttons {
+  gap: 2.5rem;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  background: none;
+  padding: 1rem 2rem;
+  border-radius: 50rem;
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--default-font-size);
+  font-weight: 650;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-trnsp:hover {
+  background-color: var(--primary-color);
+  color: #121212;
+}
+
+.btn-orange {
+  background-image: linear-gradient(
+    45deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  color: #121212;
+  font-weight: 700;
+  outline: 2px dotted var(--secondary-color);
+}
+
+.btn-orange:hover {
+  transform: scale(1.1);
+}
+
+/* Styling for the playlist area */
+
+.playlist {
+  /* padding: 0 var(--default-padding) var(--default-padding)
+    var(--default-padding); */
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+  /* overflow: hidden; */
+}
+
+.filter-tags {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.3rem var(--default-padding) 1.2rem var(--default-padding);
+  background-image: linear-gradient(to bottom, #121212 40%, transparent 100%);
+  z-index: 150;
+  overflow-x: auto;
+  scrollbar-width: none;
+  user-select: none;
+  cursor: grab;
+  -ms-overflow-style: none;
+}
+
+.filter-tags::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.2rem;
+  background-color: rgba(37, 37, 37, 0.7);
+  color: #fff;
+  border-radius: 40px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.playlist h1 {
+  padding: 0 var(--default-padding);
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.cardContainer {
+  padding: 0 var(--default-padding) var(--default-padding)
+    var(--default-padding);
+  display: grid;
+  grid-template-columns: repeat(var(--col-num), 1fr);
+  column-gap: var(--grid-gap);
+  row-gap: 3rem;
+  align-items: center;
+  justify-items: center;
+}
