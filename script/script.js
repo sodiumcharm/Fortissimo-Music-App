@@ -100,6 +100,7 @@ const playlistDescription = document.querySelector(".playlist-desc");
 const playlistUserImg = document.querySelector(".playlist-account-img");
 const playlistUsername = document.querySelector(".playlist-username");
 const exitPlaylistBtn = document.querySelector(".exit-playlistbox");
+const savePlaylistBtn = document.querySelector(".save-playlistbox");
 
 // *************************************************************
 // INITIAL STATE VARIABLES
@@ -123,6 +124,8 @@ let isDraggingVolume = false;
 let isDraggingUi = false;
 let currentPlaylistBtn = null;
 let currentPlaylistCardEl = null;
+
+let currentFloatingMenu = null;
 
 let currentRefBtn = null;
 let currentRefCardImg = null;
@@ -593,6 +596,9 @@ const playlistLoader = function (playlists) {
                   <button class="floating-btn floating-save-btn">
                     <ion-icon class="floating-icons" name="bookmark-outline"></ion-icon>Save playlist
                   </button>
+                  <button class="floating-btn floating-creator-btn">
+                    <ion-icon class="floating-icons" name="person-circle-outline"></ion-icon>Creator Info
+                  </button>
                 </div>
               </div>`;
 
@@ -618,6 +624,12 @@ const playlistLoader = function (playlists) {
 
           document.querySelector(".playlist").classList.add("stop-scroll");
         }
+
+        if (playlistCard.classList.contains('saved')) {
+          savePlaylistBtn.innerHTML = '<span class="mingcute--bookmark-fill"></span>';
+        } else {
+          savePlaylistBtn.innerHTML = '<span class="mingcute--bookmark-add-fill"></span>';
+        }
         // playlistBox.classList.remove("hide-playlist");
 
         // document.querySelector(".playlist").classList.add("stop-scroll");
@@ -625,6 +637,7 @@ const playlistLoader = function (playlists) {
         // const songlist = JSON.parse(playlistCard.getAttribute("data-songs"));
         const playlistId = playlistCard.getAttribute("data-playlistid");
         currentPlaylistId = playlistId;
+        playlistBox.setAttribute('data-activatorid', playlistId);
 
         // playlistDisplayer.innerHTML = playlistName;
 
@@ -651,6 +664,10 @@ const playlistLoader = function (playlists) {
       console.log(e);
       const floatingMenu = playlistCard.querySelector(".playlist-right-click");
 
+      if (currentFloatingMenu) currentFloatingMenu.classList.add("hidden");
+
+      currentFloatingMenu = floatingMenu;
+
       const rect = playlistCard.getBoundingClientRect();
 
       const offsetX = e.clientX - rect.left;
@@ -664,12 +681,6 @@ const playlistLoader = function (playlists) {
       floatingMenu.style.top = `${topPercent}%`;
 
       floatingMenu.classList.remove("hidden");
-    });
-
-    document.querySelectorAll(".playlist-right-click").forEach((menu) => {
-      menu.addEventListener("click", function (e) {
-        e.stopPropagation();
-      });
     });
   });
 };
@@ -827,6 +838,10 @@ const currentSongLoader = function () {
   currentSongCard.click();
 };
 
+// *************************************************************
+// MAIN FUNCTION FOR IMPLEMENTATION OF ALL FEATURES
+// *************************************************************
+
 const appFunctionality = async function () {
   let res = await fetch(url + "/api/songs");
 
@@ -844,6 +859,40 @@ const appFunctionality = async function () {
   const allSongCards = songsSection.querySelectorAll(".song-card");
   allSongCards.forEach((card) => {
     card.classList.add("hide");
+  });
+
+  document.querySelectorAll(".playlist-right-click").forEach((menu) => {
+    menu.addEventListener("click", function (e) {
+      e.stopPropagation();
+
+      if (e.target.closest(".floating-save-btn")) {
+        const parentCard = e.target.closest(".card");
+
+        parentCard.classList.toggle("saved");
+
+        if (parentCard.classList.contains("saved")) {
+          e.target.closest(".floating-save-btn").innerHTML =
+            '<ion-icon class="floating-icons" name="bookmark"></ion-icon>Saved';
+          
+          savePlaylistBtn.innerHTML = '<span class="mingcute--bookmark-fill"></span>';
+        } else {
+          e.target.closest(".floating-save-btn").innerHTML =
+            '<ion-icon class="floating-icons" name="bookmark-outline"></ion-icon>Save playlist';
+
+          savePlaylistBtn.innerHTML = '<span class="mingcute--bookmark-add-fill"></span>';
+        }
+      }
+    });
+  });
+
+  savePlaylistBtn.addEventListener('click', function() {
+    const activatorPlaylistId = playlistBox.dataset.activatorid;
+
+    const targetPlaylistCard = document.querySelector(`[data-playlistid="${activatorPlaylistId}"]`);
+
+    const targetSaveBtn = targetPlaylistCard.querySelector('.floating-save-btn');
+
+    targetSaveBtn.click();
   });
 
   const playlistCards = document.querySelectorAll(".card");

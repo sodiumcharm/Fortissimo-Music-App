@@ -593,10 +593,8 @@ ul {
   gap: 1rem;
 }
 
-.exit-playlistbox {
+.playlist-box-btn {
   position: absolute;
-  top: 3rem;
-  left: 3rem;
   border: none;
   background: none;
   color: var(--primary-color);
@@ -606,7 +604,17 @@ ul {
   transition: all 0.3s;
 }
 
-.exit-playlistbox:hover {
+.exit-playlistbox {
+  top: 3rem;
+  left: 3rem;
+}
+
+.save-playlistbox {
+  top: 3rem;
+  right: 3rem;
+}
+
+.playlist-box-btn:hover {
   transform: scale(1.2);
 }
 
