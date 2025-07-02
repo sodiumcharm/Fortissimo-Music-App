@@ -1,5 +1,9 @@
 "use strict";
 
+// *************************************************************
+// DOM ELEMENT SELECTION
+// *************************************************************
+
 const canvas = document.querySelector(".canvas");
 
 const container = document.querySelector(".container");
@@ -97,6 +101,10 @@ const playlistUserImg = document.querySelector(".playlist-account-img");
 const playlistUsername = document.querySelector(".playlist-username");
 const exitPlaylistBtn = document.querySelector(".exit-playlistbox");
 
+// *************************************************************
+// INITIAL STATE VARIABLES
+// *************************************************************
+
 let allTabIsOpen = true;
 let likedTabIsOpen = false;
 
@@ -128,6 +136,101 @@ let playlistCardBtnPressed = false;
 const songsArray = [];
 const playlistsArray = [];
 
+// *************************************************************
+// FUNCTION EXPRESSIONS FOR UI MODIFICATIONS
+// *************************************************************
+
+const historyManager = function (action) {
+  if (action === "hide") {
+    overlay.classList.add("hidden");
+    historyCont.classList.add("hidden");
+  } else if (action === "show") {
+    overlay.classList.remove("hidden");
+    historyCont.classList.remove("hidden");
+  }
+};
+
+const eqManager = function (action) {
+  if (action === "hide") {
+    overlay.classList.add("hidden");
+    equalizerBox.classList.add("hidden");
+  } else if (action === "show") {
+    overlay.classList.remove("hidden");
+    equalizerBox.classList.remove("hidden");
+  }
+};
+
+const errorNoteManager = function (action) {
+  if (action === "hide") {
+    overlay.classList.add("hidden");
+    errorNote.classList.add("hidden");
+  } else if (action === "show") {
+    overlay.classList.remove("hidden");
+    errorNote.classList.remove("hidden");
+  }
+};
+
+const updateSeekbar = function (percentage) {
+  seekbarThumb.style.left = `${percentage}%`;
+  seekbarProgressFill.style.width = `${percentage}%`;
+};
+
+const updateVolumeBar = function (percent) {
+  volumeThumb.style.left = `${percent * 100}%`;
+  volumeFill.style.width = `${percent * 100}%`;
+};
+
+const updateSeekForDrag = function (e) {
+  const rect = seekbar.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const percentage = Math.max(0, Math.min(offsetX / rect.width, 1)); // clamp between 0 and 1
+
+  const newTime = percentage * audio.duration;
+  if (!isNaN(newTime)) {
+    audio.currentTime = newTime;
+  }
+
+  // Move thumb and progress fill
+  seekbarThumb.style.left = `${percentage * 100}%`;
+  seekbarProgressFill.style.width = `${percentage * 100}%`;
+};
+
+const updateBuffered = function () {
+  if (audio.buffered.length > 0) {
+    const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+    const duration = audio.duration;
+
+    if (duration > 0) {
+      const percentage = (bufferedEnd / duration) * 100;
+      bufferedBar.style.width = `${percentage}%`;
+    }
+  }
+};
+
+const updateVolume = function (e) {
+  const rect = volumeBar.getBoundingClientRect();
+  const offsetX = e.clientX - rect.left;
+  const percent = Math.max(0, Math.min(offsetX / rect.width, 1)); // reverse for bottom-up control
+  audio.volume = percent;
+
+  // Update UI
+  updateVolumeBar(percent);
+
+  if (audio.volume === 0) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-mute"></ion-icon>';
+  } else if (audio.volume > 0 && audio.volume < 0.34) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-low"></ion-icon>';
+  } else if (audio.volume >= 0.34 && audio.volume < 0.68) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-medium"></ion-icon>';
+  } else {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-high"></ion-icon>';
+  }
+};
+
+// *************************************************************
+// UTILITY FUNCTION EXPRESSIONS
+// *************************************************************
+
 const singleMatchCheck = function (arr1, arr2) {
   for (let i = 0; i < arr1.length; i++) {
     const value = arr1[i];
@@ -139,6 +242,19 @@ const singleMatchCheck = function (arr1, arr2) {
 
   return false;
 };
+
+const timeFormatter = function (time) {
+  if (isNaN(time)) return "00:00";
+
+  const minute = String(Math.trunc(time / 60)).padStart(2, "0");
+  const seconds = String(Math.trunc(time % 60)).padStart(2, "0");
+
+  return `${minute}:${seconds}`;
+};
+
+// *************************************************************
+// FUNCTION EXPRESSIONS FOR DOM LOADING
+// *************************************************************
 
 const handleSearch = function () {
   const searchText = searchInput.value
@@ -204,102 +320,6 @@ const handleSearch = function () {
     allSongsDisplayer.textContent = `Results (${resultArr.length})`;
   } else if (likedTabIsOpen) {
     likedSongsDisplayer.textContent = `Results (${resultArr.length})`;
-  }
-};
-
-const historyManager = function (action) {
-  if (action === "hide") {
-    overlay.classList.add("hidden");
-    historyCont.classList.add("hidden");
-  } else if (action === "show") {
-    overlay.classList.remove("hidden");
-    historyCont.classList.remove("hidden");
-  }
-};
-
-const eqManager = function (action) {
-  if (action === "hide") {
-    overlay.classList.add("hidden");
-    equalizerBox.classList.add("hidden");
-  } else if (action === "show") {
-    overlay.classList.remove("hidden");
-    equalizerBox.classList.remove("hidden");
-  }
-};
-
-const errorNoteManager = function (action) {
-  if (action === "hide") {
-    overlay.classList.add("hidden");
-    errorNote.classList.add("hidden");
-  } else if (action === "show") {
-    overlay.classList.remove("hidden");
-    errorNote.classList.remove("hidden");
-  }
-};
-
-const timeFormatter = function (time) {
-  if (isNaN(time)) return "00:00";
-
-  const minute = String(Math.trunc(time / 60)).padStart(2, "0");
-  const seconds = String(Math.trunc(time % 60)).padStart(2, "0");
-
-  return `${minute}:${seconds}`;
-};
-
-const updateSeekbar = function (percentage) {
-  seekbarThumb.style.left = `${percentage}%`;
-  seekbarProgressFill.style.width = `${percentage}%`;
-};
-
-const updateVolumeBar = function (percent) {
-  volumeThumb.style.left = `${percent * 100}%`;
-  volumeFill.style.width = `${percent * 100}%`;
-};
-
-const updateSeekForDrag = function (e) {
-  const rect = seekbar.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const percentage = Math.max(0, Math.min(offsetX / rect.width, 1)); // clamp between 0 and 1
-
-  const newTime = percentage * audio.duration;
-  if (!isNaN(newTime)) {
-    audio.currentTime = newTime;
-  }
-
-  // Move thumb and progress fill
-  seekbarThumb.style.left = `${percentage * 100}%`;
-  seekbarProgressFill.style.width = `${percentage * 100}%`;
-};
-
-const updateBuffered = function () {
-  if (audio.buffered.length > 0) {
-    const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
-    const duration = audio.duration;
-
-    if (duration > 0) {
-      const percentage = (bufferedEnd / duration) * 100;
-      bufferedBar.style.width = `${percentage}%`;
-    }
-  }
-};
-
-const updateVolume = function (e) {
-  const rect = volumeBar.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const percent = Math.max(0, Math.min(offsetX / rect.width, 1)); // reverse for bottom-up control
-  audio.volume = percent;
-
-  // Update UI
-  updateVolumeBar(percent);
-
-  if (audio.volume === 0) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-mute"></ion-icon>';
-  } else if (audio.volume > 0 && audio.volume < 0.34) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-low"></ion-icon>';
-  } else if (audio.volume >= 0.34 && audio.volume < 0.68) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-medium"></ion-icon>';
-  } else {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-high"></ion-icon>';
   }
 };
 
@@ -417,38 +437,6 @@ const addHistoryCard = function (
       .querySelector(".history-list")
       .insertAdjacentHTML("afterbegin", html);
   }
-};
-
-const nextSongLoader = function () {
-  if (currentPlaylistId) {
-    const currentSongRefCard = document.querySelector(
-      `[data-refurl="${currentSongUrl}"]`
-    );
-
-    const currentPlaylistRefSongs = document.querySelectorAll(
-      `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
-    );
-
-    let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
-      currentSongRefCard
-    );
-
-    currentSongIndex++;
-    if (currentSongIndex >= currentPlaylistRefSongs.length)
-      currentSongIndex = 0;
-
-    const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
-
-    nextSongCard.click();
-  }
-};
-
-const currentSongLoader = function () {
-  const currentSongCard = document.querySelector(
-    `[data-url="${currentSongUrl}"]`
-  );
-
-  currentSongCard.click();
 };
 
 const songLoader = function (songs, container, context) {
@@ -779,6 +767,66 @@ const songReferenceLoader = function (songs, container, context) {
   });
 };
 
+// *************************************************************
+// FUNCTION EXPRESSIONS FOR CHANGING SONGS
+// *************************************************************
+
+const nextSongLoader = function () {
+  if (currentPlaylistId) {
+    const currentSongRefCard = document.querySelector(
+      `[data-refurl="${currentSongUrl}"]`
+    );
+
+    const currentPlaylistRefSongs = document.querySelectorAll(
+      `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
+    );
+
+    let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
+      currentSongRefCard
+    );
+
+    currentSongIndex++;
+    if (currentSongIndex >= currentPlaylistRefSongs.length)
+      currentSongIndex = 0;
+
+    const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
+
+    nextSongCard.click();
+  }
+};
+
+const prevSongLoader = function () {
+  if (currentPlaylistId) {
+    const currentSongRefCard = document.querySelector(
+      `[data-refurl="${currentSongUrl}"]`
+    );
+
+    const currentPlaylistRefSongs = document.querySelectorAll(
+      `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
+    );
+
+    let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
+      currentSongRefCard
+    );
+
+    currentSongIndex--;
+    if (currentSongIndex < 0)
+      currentSongIndex = currentPlaylistRefSongs.length - 1;
+
+    const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
+
+    nextSongCard.click();
+  }
+};
+
+const currentSongLoader = function () {
+  const currentSongCard = document.querySelector(
+    `[data-url="${currentSongUrl}"]`
+  );
+
+  currentSongCard.click();
+};
+
 const appFunctionality = async function () {
   let res = await fetch(url + "/api/songs");
 
@@ -944,27 +992,7 @@ const appFunctionality = async function () {
   });
 
   playPrevBtn.addEventListener("click", function () {
-    if (currentPlaylistId) {
-      const currentSongRefCard = document.querySelector(
-        `[data-refurl="${currentSongUrl}"]`
-      );
-
-      const currentPlaylistRefSongs = document.querySelectorAll(
-        `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
-      );
-
-      let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
-        currentSongRefCard
-      );
-
-      currentSongIndex--;
-      if (currentSongIndex < 0)
-        currentSongIndex = currentPlaylistRefSongs.length - 1;
-
-      const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
-
-      nextSongCard.click();
-    }
+    prevSongLoader();
   });
 
   playlistLoopBtn.addEventListener("click", function () {
