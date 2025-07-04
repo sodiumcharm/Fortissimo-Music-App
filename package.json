@@ -1,0 +1,28 @@
+{
+  "name": "fortissimo-music-app",
+  "version": "1.0.0",
+  "description": "An online music streaming web application",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sodiumcharm/Fortissimo-Music-App.git"
+  },
+  "keywords": [
+    "music",
+    "songs"
+  ],
+  "author": "Soumik Roy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sodiumcharm/Fortissimo-Music-App/issues"
+  },
+  "homepage": "https://github.com/sodiumcharm/Fortissimo-Music-App#readme",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.15.4",
+    "parcel": "^2.15.4",
+    "sass": "^1.89.2"
+  }
+}

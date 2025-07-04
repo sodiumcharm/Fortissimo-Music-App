@@ -500,7 +500,7 @@ const songLoader = function (songs, container, context) {
               '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
 
             if (currentPlaylistCardEl)
-              currentPlaylistCardEl.classList.remove("playlist-active");
+              currentPlaylistCardEl.classList.remove("playlist--active");
             currentRefCardImg.classList.remove("rotate");
           }
         }, 0);
@@ -745,7 +745,7 @@ const songReferenceLoader = function (songs, container, context) {
             });
 
             if (currentPlaylistCardEl) {
-              currentPlaylistCardEl.classList.remove("playlist-active");
+              currentPlaylistCardEl.classList.remove("playlist--active");
             }
 
             const targetPlaylistId = card.dataset.refplaylist;
@@ -768,7 +768,7 @@ const songReferenceLoader = function (songs, container, context) {
             currentPlaylistBtn = targetPlaylistBtn;
 
             currentPlaylistCardEl = targetPlaylist;
-            targetPlaylist.classList.add("playlist-active");
+            targetPlaylist.classList.add("playlist--active");
 
             return;
           }
@@ -897,21 +897,21 @@ const appFunctionality = async function () {
 
   const playlistCards = document.querySelectorAll(".card");
 
-  playlistCards.forEach((card) => {
-    const observer = new MutationObserver((mutationsList) => {
-      for (const mutation of mutationsList) {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "class" &&
-          card.classList.contains("playlist-active")
-        ) {
-          card.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }
-    });
+  // playlistCards.forEach((card) => {
+  //   const observer = new MutationObserver((mutationsList) => {
+  //     for (const mutation of mutationsList) {
+  //       if (
+  //         mutation.type === "attributes" &&
+  //         mutation.attributeName === "class" &&
+  //         card.classList.contains("playlist--active")
+  //       ) {
+  //         card.scrollIntoView({ behavior: "smooth", block: "center" });
+  //       }
+  //     }
+  //   });
 
-    observer.observe(card, { attributes: true });
-  });
+  //   observer.observe(card, { attributes: true });
+  // });
 
   const allFloatingMenu = document.querySelectorAll(".playlist-right-click");
 
@@ -1046,17 +1046,17 @@ const appFunctionality = async function () {
 
   playlistLoopBtn.addEventListener("click", function () {
     isPlaylistLoop = isPlaylistLoop === false ? true : false;
-    playlistLoopBtn.classList.toggle("btn-active");
+    playlistLoopBtn.classList.toggle("btn--active");
 
-    songLoopBtn.classList.remove("btn-active");
+    songLoopBtn.classList.remove("btn--active");
     isSongLoop = false;
   });
 
   songLoopBtn.addEventListener("click", function () {
     isSongLoop = isSongLoop === false ? true : false;
-    songLoopBtn.classList.toggle("btn-active");
+    songLoopBtn.classList.toggle("btn--active");
 
-    playlistLoopBtn.classList.remove("btn-active");
+    playlistLoopBtn.classList.remove("btn--active");
     isPlaylistLoop = false;
   });
 
@@ -1583,11 +1583,11 @@ const audioManipulator = function () {
 
     if (eqEnabled) {
       connectEQ();
-      eqToggleBtn.classList.add("btn-active");
+      eqToggleBtn.classList.add("btn--active");
       eqBtn.classList.remove("hidden");
     } else {
       disconnectEQ();
-      eqToggleBtn.classList.remove("btn-active");
+      eqToggleBtn.classList.remove("btn--active");
       eqBtn.classList.add("hidden");
     }
   });
