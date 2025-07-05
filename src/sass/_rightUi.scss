@@ -22,7 +22,7 @@
 }
 
 .btn-nav {
-  display: flex;
+  @include mixin.flex-center;
   background: none;
   border: none;
   text-align: center;
@@ -31,8 +31,6 @@
   border-radius: 50%;
   height: 4rem;
   width: 4rem;
-  align-items: center;
-  justify-content: center;
   @include mixin.setTransition;
 }
 

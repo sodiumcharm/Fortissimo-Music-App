@@ -20,13 +20,10 @@
   left: 50%;
   transform: translate(-50%, -100%);
 
-  display: flex;
+  @include mixin.flex-center;
   width: 6rem;
   height: 3rem;
   border-radius: 100px 100px 0 0;
-  justify-content: center;
-  align-items: center;
-
   background-color: var(--primary-color);
   border: none;
   cursor: pointer;
@@ -45,10 +42,10 @@
 }
 
 .total-control {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
   gap: 0.5rem;
 }
 
@@ -145,18 +142,14 @@
 }
 
 .control-btns {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixin.flex-center;
   gap: 5rem;
   width: 50%;
 }
 
 .control-btn {
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixin.flex-center;
   height: 5.5rem;
   width: 5.5rem;
   border-radius: 50%;
@@ -176,19 +169,15 @@
 }
 
 .volume-control {
+  @include mixin.flex-center;
   width: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 1.8rem;
   font-size: 4rem;
   color: var(--primary-color);
 }
 
 .speaker-iconbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include mixin.flex-center;
 }
 
 .volume-bar {

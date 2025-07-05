@@ -103,9 +103,7 @@
 }
 
 .search-mic-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include mixin.flex-center;
   border: none;
   background-color: #121212;
   color: var(--primary-color);

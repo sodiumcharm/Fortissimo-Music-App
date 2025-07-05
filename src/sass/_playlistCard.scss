@@ -28,9 +28,7 @@
 }
 
 .card-btn-play {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  @include mixin.flex-center;
   position: absolute;
   bottom: var(--card-playBtn-pos);
   right: var(--card-playBtn-pos);
@@ -99,8 +97,8 @@
 .floating-btn {
   font-family: inherit;
   display: flex;
-  width: 100%;
   align-items: center;
+  width: 100%;
   gap: 0.5rem;
   border: none;
   background-color: transparent;
