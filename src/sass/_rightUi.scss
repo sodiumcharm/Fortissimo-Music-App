@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .right {
   flex-grow: 1;
   margin: var(--ui-gap) var(--ui-gap) var(--ui-gap) 0;
@@ -31,7 +33,7 @@
   width: 4rem;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .btn-nav-1 {
@@ -61,7 +63,7 @@
   font-size: var(--default-font-size);
   font-weight: 650;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .btn-trnsp:hover {

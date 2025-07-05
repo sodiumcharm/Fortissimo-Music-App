@@ -1,10 +1,12 @@
+@use './mixins' as mixin;
+
 .song-card {
   height: 7rem;
   gap: 1rem;
   justify-content: space-between;
   padding: 1rem;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .song-card:hover {
@@ -50,8 +52,8 @@
   width: 2.4rem;
   display: flex;
   align-items: center;
-  transition: all 0.3s;
   color: var(--primary-color);
+  @include mixin.setTransition;
 }
 
 .like-container:hover {
@@ -68,7 +70,7 @@
   font-size: 4rem;
   color: var(--primary-color);
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .song-card-play:hover {

@@ -1,10 +1,7 @@
+@use './mixins' as mixin;
+
 .equalizer-box {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* width: 75rem;
-  width: 115rem; */
+  @include mixin.position-center;
   height: 60rem;
   background-color: #222;
   z-index: 1800;
@@ -18,20 +15,15 @@
 }
 
 .eq-control-ui {
-  display: flex;
+  @include mixin.flex-center;
   gap: 3.5rem;
   height: 100%;
-  align-items: center;
-  justify-content: center;
 }
 
 .control-ui {
   height: 100%;
-  display: flex;
-  flex-direction: column;
   gap: 2.3rem;
-  align-items: center;
-  justify-content: center;
+  @include mixin.flex-center(column);
 }
 
 .display,
@@ -58,9 +50,7 @@
 }
 
 .thumb {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  @include mixin.position-center;
   width: 4rem;
   height: 4rem;
   background-image: linear-gradient(
@@ -69,15 +59,11 @@
     var(--primary-color) 60%
   );
   border-radius: 50%;
-  transform: translate(-50%, -50%);
   cursor: pointer;
 }
 
 .knob-ui {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  @include mixin.flex-center(column);
   gap: 2rem;
   height: 100%;
 }

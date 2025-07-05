@@ -1,10 +1,9 @@
+@use './mixins' as mixin;
+
 .history-container {
+  @include mixin.position-center;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 80rem;
   height: 60rem;
   padding: 3rem;
@@ -30,7 +29,7 @@
   padding: 1.2rem;
   cursor: pointer;
   border-radius: 7px;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .history-card-imgbox {
@@ -88,7 +87,7 @@
   border-radius: 7px;
   background-color: #252525;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .history-playlist-card:hover {

@@ -1,8 +1,7 @@
+@use './mixins' as mixin;
+
 .error-note {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  @include mixin.position-center;
   width: 40vw;
   height: 50vh;
   border-radius: 11px;
@@ -16,7 +15,7 @@
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .error-icon {
@@ -39,7 +38,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .err-btn:hover {

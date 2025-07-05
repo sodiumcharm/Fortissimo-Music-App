@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .card {
   display: block;
   width: 20rem;
@@ -5,7 +7,7 @@
   padding: 1.2rem;
   background-color: #252525;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
   box-shadow: 0 0 0 0 var(--primary-color),
     1px 5px 3rem rgba(var(--primary-rgb), 0.18);
 
@@ -45,13 +47,13 @@
   box-shadow: 5px 20px 3rem rgba(0, 0, 0, 0.7);
 
   transform: translateY(0.9rem);
-  transition: all 0.3s;
+  @include mixin.setTransition;
   opacity: 0;
   cursor: pointer;
 }
 
 .card-play-icons {
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .card:hover .card-btn-play {
@@ -91,7 +93,7 @@
   border-radius: 7px;
   overflow: hidden;
   border: 1px solid var(--primary-color);
-  transition: opacity 0.3s;
+  @include mixin.setTransition(opacity);
 }
 
 .floating-btn {
@@ -106,8 +108,8 @@
   font-size: 1.4rem;
   font-weight: 600;
   color: #fff;
-  transition: all 0.3s;
   cursor: pointer;
+  @include mixin.setTransition;
 }
 
 .floating-btn:hover {

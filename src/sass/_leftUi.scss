@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .left {
   width: var(--left-width);
   padding: var(--ui-gap) 0 var(--ui-gap) var(--ui-gap);
@@ -25,7 +27,7 @@
   right: var(--default-padding);
   cursor: pointer;
   z-index: 15;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .settings:hover {
@@ -64,7 +66,7 @@
   gap: var(--icon-text-gap);
   font-weight: 500;
   border-radius: 7px;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .search-box {
@@ -97,7 +99,7 @@
 
 .input::placeholder {
   color: rgba(255, 255, 255, 0.2);
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .search-mic-btn {
@@ -111,7 +113,7 @@
   height: 4rem;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .search-mic-btn:hover {
@@ -131,7 +133,7 @@
   border-radius: 7px;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .active-left-windowtab {
@@ -169,7 +171,7 @@
 
 .footer a:link,
 .footer a:visited {
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .footer a:hover,

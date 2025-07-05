@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .playlist-detail-box {
   padding: 3.5rem;
   position: sticky;
@@ -13,7 +15,7 @@
   gap: 3rem;
   overflow-y: auto;
   opacity: 1;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .playlist-details-section {
@@ -96,7 +98,7 @@
   width: 4rem;
   height: 4rem;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .exit-playlistbox {

@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .playbar {
   position: absolute;
   bottom: 0;
@@ -8,8 +10,8 @@
   border-top: 3px solid var(--primary-color);
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
-  transition: all 0.3s;
   z-index: 300;
+  @include mixin.setTransition;
 }
 
 .playbar-close-btn {
@@ -166,7 +168,7 @@
   );
   color: #121212;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .control-btn:hover {

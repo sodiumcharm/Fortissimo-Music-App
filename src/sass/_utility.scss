@@ -1,3 +1,5 @@
+@use './mixins' as mixin;
+
 .border {
   border: 1px solid #333;
 }
@@ -146,7 +148,7 @@
   border: none;
   color: var(--primary-color);
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .close-btn:hover {
@@ -195,7 +197,7 @@
   justify-content: space-between;
   padding: 1rem;
   cursor: pointer;
-  transition: all 0.3s;
+  @include mixin.setTransition;
 }
 
 .song-reference-card:hover {
