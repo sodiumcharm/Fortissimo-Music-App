@@ -1,5 +1,6 @@
 "use strict";
 
+import { url } from "./config.js";
 import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
 import { singleMatchCheck, timeFormatter } from "./utilities.js";
 import { addHistoryCard } from "./historyManager.js";
@@ -16,7 +17,7 @@ const searchInput = document.querySelector(".input");
 const allSongsDisplayer = document.querySelector(".all-songs-display");
 const likedSongsDisplayer = document.querySelector(".liked-songs-display");
 
-const url = "https://music-backend-4gc1.onrender.com";
+
 const loadingUI = document.querySelector(".loading-ui");
 const overlay = document.querySelector(".overlay");
 const errorNote = document.querySelector(".error-note");
@@ -108,6 +109,9 @@ let currentPlaylistId = null;
 let playbarSwipedDown = false;
 
 let playlistCardBtnPressed = false;
+
+const insertedSongIds = [];
+let songData;
 
 // *************************************************************
 // FUNCTION EXPRESSIONS FOR UI MODIFICATIONS
@@ -297,19 +301,46 @@ const handleSearch = function () {
 
   const resultArr = [];
 
-  targets.forEach((card) => {
-    if (
-      singleMatchCheck(
-        searchText.split(" "),
-        card.dataset.name.toLowerCase().split(" ")
-      )
-    ) {
-      card.classList.remove("hide");
-      resultArr.push(card);
-    } else {
-      card.classList.add("hide");
+  const searchData = [];
+
+  const searchDom = function () {
+    targets.forEach((card) => {
+      if (
+        singleMatchCheck(
+          searchText.split(" "),
+          card.dataset.name.toLowerCase().split(" ")
+        )
+      ) {
+        card.classList.remove("hide");
+        resultArr.push(card);
+      } else {
+        card.classList.add("hide");
+      }
+    });
+  };
+
+  searchDom();
+
+  if (resultArr.length === 0) {
+    songData.songs.forEach((obj) => {
+      if (
+        singleMatchCheck(
+          searchText.split(" "),
+          obj.title.toLowerCase().split(" ")
+        )
+      ) {
+        searchData.push(obj);
+      }
+    });
+
+    if (searchData.length > 0) {
+      songLoader(searchData, songsContainer, "global", "all");
+
+      searchDom();
     }
-  });
+  }
+
+  console.log(searchData);
 
   playlistTargets.forEach((card) => {
     if (
@@ -331,13 +362,22 @@ const handleSearch = function () {
   }
 };
 
-const songLoader = function (songs, container, context) {
-  for (let obj of songs) {
-    const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
-      url + obj.url
-    }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
-      url + obj.img
-    }" data-id="${obj.id}" data-context="${context}">
+const songLoader = function (songs, container, context, batchSize, songId = 0) {
+  if (songId === 0) {
+    if (batchSize !== "all") {
+      let sizeCount = 0;
+
+      for (let obj of songs) {
+        if (!insertedSongIds.includes(obj.id) && sizeCount < batchSize) {
+          sizeCount += 1;
+
+          const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
+            url + obj.url
+          }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
+            url + obj.img
+          }" data-id="${
+            obj.id
+          }" data-context="${context}" data-eventlistener="">
                 <div class="song-card-imgbox">
                   <img src="${
                     url + obj.img
@@ -351,80 +391,175 @@ const songLoader = function (songs, container, context) {
                 <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
               </div>`;
 
-    container.insertAdjacentHTML("beforeend", html);
+          container.insertAdjacentHTML("beforeend", html);
+
+          insertedSongIds.push(obj.id);
+        }
+      }
+    } else {
+      for (let obj of songs) {
+        if (!insertedSongIds.includes(obj.id)) {
+          const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
+            url + obj.url
+          }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
+            url + obj.img
+          }" data-id="${
+            obj.id
+          }" data-context="${context}" data-eventlistener="">
+                <div class="song-card-imgbox">
+                  <img src="${
+                    url + obj.img
+                  }" alt="Song Image" class="song-card-img" />
+                </div>
+                <div class="song-card-info">
+                  <p class="song-card-name">${obj.title}</p>
+                  <p class="song-card-artist">${obj.artist}</p>
+                </div>
+                <div class="like-container"><span class="mingcute--thumb-up-2-line"></span></div>
+                <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
+              </div>`;
+
+          container.insertAdjacentHTML("beforeend", html);
+
+          insertedSongIds.push(obj.id);
+        }
+      }
+    }
+  } else if (songId !== 0) {
+    for (let obj of songs) {
+      if (!insertedSongIds.includes(obj.id) && songId === obj.id) {
+        const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
+          url + obj.url
+        }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
+          url + obj.img
+        }" data-id="${obj.id}" data-context="${context}" data-eventlistener="">
+                <div class="song-card-imgbox">
+                  <img src="${
+                    url + obj.img
+                  }" alt="Song Image" class="song-card-img" />
+                </div>
+                <div class="song-card-info">
+                  <p class="song-card-name">${obj.title}</p>
+                  <p class="song-card-artist">${obj.artist}</p>
+                </div>
+                <div class="like-container" data-likelistener=""><span class="mingcute--thumb-up-2-line"></span></div>
+                <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
+              </div>`;
+
+        container.insertAdjacentHTML("beforeend", html);
+
+        insertedSongIds.push(obj.id);
+      }
+    }
   }
 
   const songCards = document.querySelectorAll(".song-card");
 
   songCards.forEach((card) => {
-    card.addEventListener("click", function (e) {
-      if (
-        !e.target.classList.contains("like-container") &&
-        !e.target.classList.contains("mingcute--thumb-up-2-line") &&
-        !e.target.classList.contains("mingcute--thumb-up-2-fill")
-      ) {
-        const currentSongName = card.getAttribute("data-name");
-        const currentArtistName = card.getAttribute("data-artist");
-        const currentSongImg = card.getAttribute("data-img");
-        const songUrl = card.getAttribute("data-url");
-        const cardImg = card.querySelector(".song-card-imgbox");
-        const btn = card.querySelector(".song-card-play");
+    if (card.dataset.eventlistener !== "added") {
+      card.setAttribute("data-eventlistener", "added");
 
-        setTimeout(function () {
-          const context = card.dataset.context;
-          const triggeredBy = card.getAttribute("data-triggeredby");
+      card.addEventListener("click", function (e) {
+        if (
+          !e.target.classList.contains("like-container") &&
+          !e.target.classList.contains("mingcute--thumb-up-2-line") &&
+          !e.target.classList.contains("mingcute--thumb-up-2-fill")
+        ) {
+          const currentSongName = card.getAttribute("data-name");
+          const currentArtistName = card.getAttribute("data-artist");
+          const currentSongImg = card.getAttribute("data-img");
+          const songUrl = card.getAttribute("data-url");
+          const cardImg = card.querySelector(".song-card-imgbox");
+          const btn = card.querySelector(".song-card-play");
 
-          addHistoryCard(
-            songUrl,
-            currentSongName,
-            currentArtistName,
-            currentSongImg,
-            context,
-            triggeredBy
-          );
+          setTimeout(function () {
+            const context = card.dataset.context;
+            const triggeredBy = card.getAttribute("data-triggeredby");
 
-          if (context === "global" && currentRefBtn) {
-            currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-            currentPlaylistBtn.innerHTML =
-              '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+            addHistoryCard(
+              songUrl,
+              currentSongName,
+              currentArtistName,
+              currentSongImg,
+              context,
+              triggeredBy
+            );
 
-            if (currentPlaylistCardEl)
-              currentPlaylistCardEl.classList.remove("playlist--active");
-            currentRefCardImg.classList.remove("rotate");
+            if (context === "global" && currentRefBtn) {
+              currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+              currentPlaylistBtn.innerHTML =
+                '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+
+              if (currentPlaylistCardEl)
+                currentPlaylistCardEl.classList.remove("playlist--active");
+              currentRefCardImg.classList.remove("rotate");
+            }
+          }, 0);
+
+          setTimeout(function () {
+            card.setAttribute("data-context", "global");
+            card.removeAttribute("data-triggeredby");
+          }, 1);
+
+          songConTitle.textContent = currentSongName;
+          songConArtist.textContent = currentArtistName;
+          songConImg.src = currentSongImg;
+
+          if (songUrl !== currentSongUrl) {
+            if (currentBtn)
+              currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+            if (currentCardImg) currentCardImg.classList.remove("rotate");
           }
-        }, 0);
 
-        setTimeout(function () {
-          card.setAttribute("data-context", "global");
-          card.removeAttribute("data-triggeredby");
-        }, 1);
+          audio.src = songUrl;
 
-        songConTitle.textContent = currentSongName;
-        songConArtist.textContent = currentArtistName;
-        songConImg.src = currentSongImg;
+          audio.play();
 
-        if (songUrl !== currentSongUrl) {
-          if (currentBtn)
-            currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-          if (currentCardImg) currentCardImg.classList.remove("rotate");
+          updateVolumeBar(audio.volume);
+
+          btn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+          songPlayBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+          cardImg.classList.add("rotate");
+          currentSongUrl = songUrl;
+          currentBtn = btn;
+          currentCardImg = cardImg;
+
+          playbar.classList.remove("hidden");
         }
+      });
+    }
+  });
 
-        audio.src = songUrl;
+  document.querySelectorAll(".like-container").forEach(function (btn) {
+    if (btn.dataset.likelistener !== "added") {
+      btn.setAttribute("data-likelistener", "added");
 
-        audio.play();
+      btn.addEventListener("click", function () {
+        const parentCard = btn.closest(".song-card");
 
-        updateVolumeBar(audio.volume);
+        const parentId = parentCard.getAttribute("data-id");
 
-        btn.innerHTML = '<ion-icon name="pause"></ion-icon>';
-        songPlayBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
-        cardImg.classList.add("rotate");
-        currentSongUrl = songUrl;
-        currentBtn = btn;
-        currentCardImg = cardImg;
+        const targetRefCard = document.querySelector(
+          `[data-refid="${parentId}"]`
+        );
 
-        playbar.classList.remove("hidden");
-      }
-    });
+        const targetRefLikeBtn = targetRefCard.querySelector(
+          ".ref-like-container"
+        );
+
+        parentCard.classList.toggle("liked");
+
+        if (parentCard.classList.contains("liked")) {
+          btn.innerHTML = '<span class="mingcute--thumb-up-2-fill"></span>';
+          targetRefLikeBtn.innerHTML =
+            '<span class="mingcute--thumb-up-2-fill"></span>';
+        } else {
+          btn.innerHTML = '<span class="mingcute--thumb-up-2-line"></span>';
+          targetRefLikeBtn.innerHTML =
+            '<span class="mingcute--thumb-up-2-line"></span>';
+        }
+      });
+    }
   });
 };
 
@@ -497,16 +632,10 @@ const playlistLoader = function (playlists) {
           savePlaylistBtn.innerHTML =
             '<span class="mingcute--bookmark-add-fill"></span>';
         }
-        // playlistBox.classList.remove("hide-playlist");
 
-        // document.querySelector(".playlist").classList.add("stop-scroll");
-
-        // const songlist = JSON.parse(playlistCard.getAttribute("data-songs"));
         const playlistId = playlistCard.getAttribute("data-playlistid");
         currentPlaylistId = playlistId;
         playlistBox.setAttribute("data-activatorid", playlistId);
-
-        // playlistDisplayer.innerHTML = playlistName;
 
         const allSongRefCards = songsSection.querySelectorAll(
           ".song-reference-card"
@@ -582,8 +711,20 @@ const songReferenceLoader = function (songs, container, context) {
         !e.target.classList.contains("mingcute--thumb-up-2-line") &&
         !e.target.classList.contains("mingcute--thumb-up-2-fill")
       ) {
+        const refId = card.dataset.refid;
+
+        if (!insertedSongIds.includes(Number(refId))) {
+          songLoader(
+            songData.songs,
+            songsContainer,
+            "global",
+            undefined,
+            Number(refId)
+          );
+        }
+
         document.querySelectorAll(".song-card").forEach((globalCard) => {
-          if (card.dataset.refid === globalCard.dataset.id) {
+          if (refId === globalCard.dataset.id) {
             globalCard.click();
             globalCard.setAttribute("data-context", `${card.dataset.context}`);
 
@@ -604,7 +745,6 @@ const songReferenceLoader = function (songs, container, context) {
             currentRefCardImg = refCardImg;
             currentRefSongUrl = refUrl;
 
-            // card.setAttribute("data-refplaylist", currentPlaylistId);
             document.querySelectorAll(".song-reference-card").forEach((el) => {
               if (!el.classList.contains("hide")) {
                 el.setAttribute("data-refplaylist", currentPlaylistId);
@@ -652,12 +792,14 @@ const songReferenceLoader = function (songs, container, context) {
 const appFunctionality = async function () {
   let res = await fetch(url + "/api/songs");
 
-  let songData = await res.json();
+  songData = await res.json();
 
   errorNoteManager("hide");
   loadingUI.classList.add("hidden");
 
-  songLoader(songData.songs, songsContainer, "global");
+  songLoader(songData.songs, songsContainer, "global", 20);
+
+  console.log(insertedSongIds);
 
   playlistLoader(songData.playlists);
 
@@ -666,6 +808,20 @@ const appFunctionality = async function () {
   const allSongCards = songsSection.querySelectorAll(".song-card");
   allSongCards.forEach((card) => {
     card.classList.add("hide");
+  });
+
+  songsContainer.addEventListener("scroll", function () {
+    const scrollTop = this.scrollTop;
+
+    const scrollHeight = this.scrollHeight;
+
+    const rect = this.getBoundingClientRect();
+
+    const containerHeight = rect.height;
+
+    if (scrollTop + containerHeight >= scrollHeight - 100) {
+      songLoader(songData.songs, songsContainer, "global", 20);
+    }
   });
 
   document.querySelectorAll(".playlist-right-click").forEach((menu) => {
@@ -1019,34 +1175,6 @@ const appFunctionality = async function () {
         }
       } else {
         playlist.style.display = "block";
-      }
-    });
-  });
-
-  document.querySelectorAll(".like-container").forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const parentCard = btn.closest(".song-card");
-
-      const parentId = parentCard.getAttribute("data-id");
-
-      const targetRefCard = document.querySelector(
-        `[data-refid="${parentId}"]`
-      );
-
-      const targetRefLikeBtn = targetRefCard.querySelector(
-        ".ref-like-container"
-      );
-
-      parentCard.classList.toggle("liked");
-
-      if (parentCard.classList.contains("liked")) {
-        btn.innerHTML = '<span class="mingcute--thumb-up-2-fill"></span>';
-        targetRefLikeBtn.innerHTML =
-          '<span class="mingcute--thumb-up-2-fill"></span>';
-      } else {
-        btn.innerHTML = '<span class="mingcute--thumb-up-2-line"></span>';
-        targetRefLikeBtn.innerHTML =
-          '<span class="mingcute--thumb-up-2-line"></span>';
       }
     });
   });
