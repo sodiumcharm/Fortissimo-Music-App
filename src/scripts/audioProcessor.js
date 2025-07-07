@@ -1,3 +1,5 @@
+import { eqSetter, createKnob } from "./draggableUi.js";
+
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
 
@@ -213,39 +215,6 @@ export const audioManipulator = function () {
     }
   });
 
-  const eqSetter = function (track, thumb, condition, eqBand, displayer) {
-    thumb.addEventListener("mousedown", function (e) {
-      condition = true;
-      e.preventDefault();
-    });
-
-    document.addEventListener("mousemove", function (e) {
-      if (condition) {
-        const rect = track.getBoundingClientRect();
-
-        let offsetY = e.clientY - rect.top;
-
-        offsetY = Math.max(0, Math.min(offsetY, rect.height));
-
-        thumb.style.top = `${offsetY}px`;
-
-        const percent = 1 - offsetY / rect.height;
-
-        const gain = percent * 30 - 15;
-
-        eqBand.gain.value = gain;
-
-        document.querySelector(`${displayer}`).textContent = `${Math.round(
-          eqBand.gain.value
-        )}`.padStart(2, "0");
-      }
-    });
-
-    document.addEventListener("mouseup", function () {
-      condition = false;
-    });
-  };
-
   eqSetter(
     subBassTrack,
     subBassThumb,
@@ -281,68 +250,6 @@ export const audioManipulator = function () {
     trebleEQ,
     ".treble-display"
   );
-
-  const createKnob = function (knobEl, gainNode, displayer) {
-    let isDragging = false;
-    let angle = 0;
-    let startAngle = 0;
-    let startMouseAngle = 0;
-
-    const minAngle = -135;
-    const maxAngle = 135;
-
-    const updateRotation = function (newAngle) {
-      angle = Math.max(minAngle, Math.min(maxAngle, newAngle));
-      knobEl.style.transform = `rotate(${angle}deg)`;
-      const gain = (angle - minAngle) / (maxAngle - minAngle);
-      gainNode.gain.value = gain;
-      displayer.textContent = `${(gain * 100).toFixed(0)}`.padStart(2, "0");
-    };
-
-    const getMouseAngle = function (e, rect) {
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const dx = e.clientX - centerX;
-      const dy = e.clientY - centerY;
-      const rad = Math.atan2(dy, dx);
-      let deg = rad * (180 / Math.PI) - 90;
-      if (deg < -180) deg += 360;
-      if (deg > 180) deg -= 360;
-      return deg;
-    };
-
-    knobEl.addEventListener("mousedown", function (e) {
-      isDragging = true;
-      e.preventDefault();
-
-      const rect = knobEl.getBoundingClientRect();
-      startMouseAngle = getMouseAngle(e, rect);
-      startAngle = angle;
-    });
-
-    document.addEventListener("mousemove", function (e) {
-      if (!isDragging) return;
-
-      const rect = knobEl.getBoundingClientRect();
-      const currentMouseAngle = getMouseAngle(e, rect);
-      let angleDelta = currentMouseAngle - startMouseAngle;
-
-      // Normalize to prevent jumps across -180/180
-      if (angleDelta > 180) angleDelta -= 360;
-      if (angleDelta < -180) angleDelta += 360;
-
-      updateRotation(startAngle + angleDelta);
-    });
-
-    document.addEventListener("mouseup", function () {
-      isDragging = false;
-    });
-
-    // === NEW: Sync knob rotation with initial gain value ===
-    const gainValue = gainNode.gain.value; // should be between 0 and 1
-    const initialAngle = minAngle + gainValue * (maxAngle - minAngle);
-    updateRotation(initialAngle);
-  };
 
   createKnob(
     document.querySelector(".left-knob"),

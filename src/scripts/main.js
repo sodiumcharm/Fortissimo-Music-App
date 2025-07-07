@@ -2,8 +2,9 @@
 
 import { url } from "./config.js";
 import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
-import { singleMatchCheck, timeFormatter } from "./utilities.js";
+import { singleMatchCheck } from "./utilities.js";
 import { addHistoryCard } from "./historyManager.js";
+import { initSeekbar, updateVolumeBar, initVolumebar } from "./draggableUi.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -16,7 +17,6 @@ const leftSection = document.querySelector(".left");
 const searchInput = document.querySelector(".input");
 const allSongsDisplayer = document.querySelector(".all-songs-display");
 const likedSongsDisplayer = document.querySelector(".liked-songs-display");
-
 
 const loadingUI = document.querySelector(".loading-ui");
 const overlay = document.querySelector(".overlay");
@@ -93,8 +93,6 @@ let scrollLeft;
 let currentBtn = null;
 let currentSongUrl = null;
 let currentCardImg = null;
-let isDragging = false;
-let isDraggingVolume = false;
 let isDraggingUi = false;
 let currentPlaylistBtn = null;
 let currentPlaylistCardEl = null;
@@ -144,63 +142,6 @@ const errorNoteManager = function (action) {
   } else if (action === "show") {
     overlay.classList.remove("hidden");
     errorNote.classList.remove("hidden");
-  }
-};
-
-const updateSeekbar = function (percentage) {
-  seekbarThumb.style.left = `${percentage}%`;
-  seekbarProgressFill.style.width = `${percentage}%`;
-};
-
-const updateVolumeBar = function (percent) {
-  volumeThumb.style.left = `${percent * 100}%`;
-  volumeFill.style.width = `${percent * 100}%`;
-};
-
-const updateSeekForDrag = function (e) {
-  const rect = seekbar.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const percentage = Math.max(0, Math.min(offsetX / rect.width, 1)); // clamp between 0 and 1
-
-  const newTime = percentage * audio.duration;
-  if (!isNaN(newTime)) {
-    audio.currentTime = newTime;
-  }
-
-  // Move thumb and progress fill
-  seekbarThumb.style.left = `${percentage * 100}%`;
-  seekbarProgressFill.style.width = `${percentage * 100}%`;
-};
-
-const updateBuffered = function () {
-  if (audio.buffered.length > 0) {
-    const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
-    const duration = audio.duration;
-
-    if (duration > 0) {
-      const percentage = (bufferedEnd / duration) * 100;
-      bufferedBar.style.width = `${percentage}%`;
-    }
-  }
-};
-
-const updateVolume = function (e) {
-  const rect = volumeBar.getBoundingClientRect();
-  const offsetX = e.clientX - rect.left;
-  const percent = Math.max(0, Math.min(offsetX / rect.width, 1)); // reverse for bottom-up control
-  audio.volume = percent;
-
-  // Update UI
-  updateVolumeBar(percent);
-
-  if (audio.volume === 0) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-mute"></ion-icon>';
-  } else if (audio.volume > 0 && audio.volume < 0.34) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-low"></ion-icon>';
-  } else if (audio.volume >= 0.34 && audio.volume < 0.68) {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-medium"></ion-icon>';
-  } else {
-    volumeIconCont.innerHTML = '<ion-icon name="volume-high"></ion-icon>';
   }
 };
 
@@ -515,7 +456,7 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
 
           audio.play();
 
-          updateVolumeBar(audio.volume);
+          updateVolumeBar(audio.volume, volumeThumb, volumeFill);
 
           btn.innerHTML = '<ion-icon name="pause"></ion-icon>';
           songPlayBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
@@ -789,7 +730,7 @@ const songReferenceLoader = function (songs, container, context) {
 // MAIN FUNCTION FOR IMPLEMENTATION OF ALL FEATURES
 // *************************************************************
 
-const appFunctionality = async function () {
+const initApp = async function () {
   let res = await fetch(url + "/api/songs");
 
   songData = await res.json();
@@ -809,6 +750,18 @@ const appFunctionality = async function () {
   allSongCards.forEach((card) => {
     card.classList.add("hide");
   });
+
+  initSeekbar(
+    audio,
+    seekbar,
+    seekbarThumb,
+    seekbarProgressFill,
+    bufferedBar,
+    currentTimeEl,
+    totalDurationEl
+  );
+
+  initVolumebar(audio, volumeBar, volumeThumb, volumeFill, volumeIconCont);
 
   songsContainer.addEventListener("scroll", function () {
     const scrollTop = this.scrollTop;
@@ -1008,56 +961,6 @@ const appFunctionality = async function () {
 
     playlistLoopBtn.classList.remove("btn--active");
     isPlaylistLoop = false;
-  });
-
-  setInterval(updateBuffered, 500);
-
-  audio.addEventListener("timeupdate", function () {
-    if (!isDragging) {
-      const percentage = (audio.currentTime / audio.duration) * 100;
-      updateSeekbar(percentage);
-    }
-
-    currentTimeEl.textContent = timeFormatter(audio.currentTime);
-    totalDurationEl.textContent = timeFormatter(audio.duration);
-  });
-
-  seekbar.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    isDragging = true;
-    updateSeekForDrag(e); // Update immediately
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (isDragging) {
-      updateSeekForDrag(e);
-    }
-  });
-
-  document.addEventListener("mouseup", (e) => {
-    if (isDragging) {
-      updateSeekForDrag(e);
-      isDragging = false;
-    }
-  });
-
-  volumeBar.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    isDraggingVolume = true;
-    updateVolume(e);
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (isDraggingVolume) {
-      updateVolume(e);
-    }
-  });
-
-  document.addEventListener("mouseup", (e) => {
-    if (isDraggingVolume) {
-      updateVolume(e);
-      isDraggingVolume = false;
-    }
   });
 
   document.querySelectorAll(".card-btn-play").forEach((btn) => {
@@ -1319,7 +1222,7 @@ window.addEventListener("offline", function () {
   loadingUI.classList.remove("hidden");
 
   try {
-    await appFunctionality();
+    await initApp();
     audioManipulator();
   } catch (err) {
     console.log(err);
