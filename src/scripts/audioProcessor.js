@@ -7,27 +7,21 @@ const canvas = document.querySelector(".canvas");
 
 const subBassTrack = document.querySelector(".sub-bass-track");
 const subBassThumb = document.querySelector(".sub-bass-thumb");
-let isDraggingSubBass = false;
 
 const bassTrack = document.querySelector(".bass-track");
 const bassThumb = document.querySelector(".bass-thumb");
-let isDraggingBass = false;
 
 const lowmidTrack = document.querySelector(".lowmid-track");
 const lowmidThumb = document.querySelector(".lowmid-thumb");
-let isDraggingLowmid = false;
 
 const midTrack = document.querySelector(".mid-track");
 const midThumb = document.querySelector(".mid-thumb");
-let isDraggingMid = false;
 
 const highmidTrack = document.querySelector(".highmid-track");
 const highmidThumb = document.querySelector(".highmid-thumb");
-let isDraggingHighmid = false;
 
 const trebleTrack = document.querySelector(".treble-track");
 const trebleThumb = document.querySelector(".treble-thumb");
-let isDraggingTreble = false;
 
 let eqEnabled = false;
 const eqToggleBtn = document.querySelector(".eq-toggle");
@@ -218,27 +212,24 @@ export const audioManipulator = function () {
   eqSetter(
     subBassTrack,
     subBassThumb,
-    isDraggingSubBass,
     subBassEQ,
     ".sub-bass-display"
   );
 
-  eqSetter(bassTrack, bassThumb, isDraggingBass, bassEQ, ".bass-display");
+  eqSetter(bassTrack, bassThumb, bassEQ, ".bass-display");
 
   eqSetter(
     lowmidTrack,
     lowmidThumb,
-    isDraggingLowmid,
     lowMidEQ,
     ".lowmid-display"
   );
 
-  eqSetter(midTrack, midThumb, isDraggingMid, midEQ, ".mid-display");
+  eqSetter(midTrack, midThumb, midEQ, ".mid-display");
 
   eqSetter(
     highmidTrack,
     highmidThumb,
-    isDraggingHighmid,
     highMidEQ,
     ".highmid-display"
   );
@@ -246,7 +237,6 @@ export const audioManipulator = function () {
   eqSetter(
     trebleTrack,
     trebleThumb,
-    isDraggingTreble,
     trebleEQ,
     ".treble-display"
   );

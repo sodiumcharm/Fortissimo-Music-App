@@ -18,3 +18,17 @@ export const timeFormatter = function (time) {
 
   return `${minute}:${seconds}`;
 };
+
+export const clickAnywhereToBring = function (e, elementToBring, parentEl) {
+  const rect = parentEl.getBoundingClientRect();
+
+  const offsetX = e.clientX - rect.left;
+
+  const offsetY = e.clientY - rect.top;
+
+  const leftPercent = (offsetX / rect.width) * 100;
+  const topPercent = (offsetY / rect.height) * 100;
+
+  elementToBring.style.left = `${leftPercent}%`;
+  elementToBring.style.top = `${topPercent}%`;
+};

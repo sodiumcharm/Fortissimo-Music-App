@@ -1,6 +1,113 @@
 import { timeFormatter } from "./utilities.js";
-let isDragging = false;
-let isDraggingVolume = false;
+
+export const initDraggableWindow = function (divider, container, leftSection) {
+  let isDraggingUi = false;
+
+  const updateLeftWidth = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = container.getBoundingClientRect();
+
+    const pointerRelativeXpos = clientX - rect.left;
+
+    const leftWidth = (pointerRelativeXpos / rect.width) * 100;
+
+    if (leftWidth > 26 && leftWidth < 48) {
+      leftSection.style.width = `${leftWidth}%`;
+    }
+  };
+
+  divider.addEventListener("mousedown", function (e) {
+    e.preventDefault();
+    isDraggingUi = true;
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (!isDraggingUi) return;
+    updateLeftWidth(e);
+  });
+
+  document.addEventListener("mouseup", function () {
+    isDraggingUi = false;
+  });
+
+  divider.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    isDraggingUi = true;
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (!isDraggingUi) return;
+    updateLeftWidth(e);
+  });
+
+  document.addEventListener("touchend", function () {
+    isDraggingUi = false;
+  });
+};
+
+export const initDraggableFilterTags = function (filterContainer) {
+  let startX;
+  let scrollLeft;
+  let isDown = false;
+
+  const initialUpdate = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = filterContainer.getBoundingClientRect();
+
+    startX = clientX - rect.left;
+
+    scrollLeft = filterContainer.scrollLeft;
+  };
+
+  const finalUpdate = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = filterContainer.getBoundingClientRect();
+
+    const x = clientX - rect.left;
+
+    const walk = x - startX;
+
+    filterContainer.scrollLeft = scrollLeft - walk;
+  };
+
+  filterContainer.addEventListener("mousedown", function (e) {
+    isDown = true;
+
+    initialUpdate(e);
+  });
+
+  filterContainer.addEventListener("mousemove", function (e) {
+    if (isDown) {
+      finalUpdate(e);
+    }
+  });
+
+  filterContainer.addEventListener("mouseup", function (e) {
+    isDown = false;
+  });
+
+  filterContainer.addEventListener("mouseleave", function (e) {
+    isDown = false;
+  });
+
+  filterContainer.addEventListener("touchstart", function (e) {
+    isDown = true;
+    initialUpdate(e);
+  });
+
+  filterContainer.addEventListener("touchmove", function (e) {
+    if (isDown) {
+      finalUpdate(e);
+    }
+  });
+
+  filterContainer.addEventListener("touchend", function (e) {
+    isDown = false;
+  });
+};
 
 export const initSeekbar = function (
   audio,
@@ -11,6 +118,8 @@ export const initSeekbar = function (
   currentTimeEl,
   totalDurationEl
 ) {
+  let isDragging = false;
+
   const updateSeekbar = function (percentage) {
     seekbarThumb.style.left = `${percentage}%`;
     seekbarProgressFill.style.width = `${percentage}%`;
@@ -116,6 +225,8 @@ export const initVolumebar = function (
   volumeFill,
   volumeIconCont
 ) {
+  let isDraggingVolume = false;
+
   const updateVolumeBar = function (percent) {
     volumeThumb.style.left = `${percent * 100}%`;
     volumeFill.style.width = `${percent * 100}%`;
@@ -190,7 +301,9 @@ export const initVolumebar = function (
   });
 };
 
-export const eqSetter = function (track, thumb, condition, eqBand, displayer) {
+export const eqSetter = function (track, thumb, eqBand, displayer) {
+  let condition = false;
+
   const updateEqBar = function (e) {
     const clientY = e.touches ? e.touches[0].clientY : e.clientY; // handle touch/mouse
 
@@ -252,7 +365,7 @@ export const createKnob = function (knobEl, gainNode, displayer) {
   let isDragging = false;
   let angle = 0;
   let startAngle = 0;
-  let startMouseAngle = 0;
+  let startPointerAngle = 0;
 
   const minAngle = -135;
   const maxAngle = 135;
@@ -265,11 +378,12 @@ export const createKnob = function (knobEl, gainNode, displayer) {
     displayer.textContent = `${(gain * 100).toFixed(0)}`.padStart(2, "0");
   };
 
-  const getMouseAngle = function (e, rect) {
+  const getAngleFromEvent = function (event, rect) {
+    const touch = event.touches ? event.touches[0] : event;
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    const dx = e.clientX - centerX;
-    const dy = e.clientY - centerY;
+    const dx = touch.clientX - centerX;
+    const dy = touch.clientY - centerY;
     const rad = Math.atan2(dy, dx);
     let deg = rad * (180 / Math.PI) - 90;
     if (deg < -180) deg += 360;
@@ -277,34 +391,44 @@ export const createKnob = function (knobEl, gainNode, displayer) {
     return deg;
   };
 
-  knobEl.addEventListener("mousedown", function (e) {
+  const startDrag = function (e) {
     isDragging = true;
     e.preventDefault();
 
     const rect = knobEl.getBoundingClientRect();
-    startMouseAngle = getMouseAngle(e, rect);
+    startPointerAngle = getAngleFromEvent(e, rect);
     startAngle = angle;
-  });
+  };
 
-  document.addEventListener("mousemove", function (e) {
+  const onDrag = function (e) {
     if (!isDragging) return;
 
     const rect = knobEl.getBoundingClientRect();
-    const currentMouseAngle = getMouseAngle(e, rect);
-    let angleDelta = currentMouseAngle - startMouseAngle;
+    const currentPointerAngle = getAngleFromEvent(e, rect);
+    let angleDelta = currentPointerAngle - startPointerAngle;
 
     // Normalize to prevent jumps across -180/180
     if (angleDelta > 180) angleDelta -= 360;
     if (angleDelta < -180) angleDelta += 360;
 
     updateRotation(startAngle + angleDelta);
-  });
+  };
 
-  document.addEventListener("mouseup", function () {
+  const endDrag = function () {
     isDragging = false;
-  });
+  };
 
-  // === NEW: Sync knob rotation with initial gain value ===
+  // Mouse events
+  knobEl.addEventListener("mousedown", startDrag);
+  document.addEventListener("mousemove", onDrag);
+  document.addEventListener("mouseup", endDrag);
+
+  // Touch events
+  knobEl.addEventListener("touchstart", startDrag, { passive: false });
+  document.addEventListener("touchmove", onDrag, { passive: false });
+  document.addEventListener("touchend", endDrag);
+
+  // Sync knob with gain node's initial value
   const gainValue = gainNode.gain.value; // should be between 0 and 1
   const initialAngle = minAngle + gainValue * (maxAngle - minAngle);
   updateRotation(initialAngle);

@@ -2,9 +2,15 @@
 
 import { url } from "./config.js";
 import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
-import { singleMatchCheck } from "./utilities.js";
+import { singleMatchCheck, clickAnywhereToBring } from "./utilities.js";
 import { addHistoryCard } from "./historyManager.js";
-import { initSeekbar, updateVolumeBar, initVolumebar } from "./draggableUi.js";
+import {
+  initDraggableWindow,
+  initDraggableFilterTags,
+  initSeekbar,
+  updateVolumeBar,
+  initVolumebar,
+} from "./draggableUi.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -86,14 +92,10 @@ let isSongLoop = false;
 let allTabIsOpen = true;
 let likedTabIsOpen = false;
 
-let isDown = false;
-let startX;
-let scrollLeft;
-
 let currentBtn = null;
 let currentSongUrl = null;
 let currentCardImg = null;
-let isDraggingUi = false;
+
 let currentPlaylistBtn = null;
 let currentPlaylistCardEl = null;
 
@@ -598,24 +600,14 @@ const playlistLoader = function (playlists) {
 
     playlistCard.addEventListener("contextmenu", function (e) {
       e.preventDefault();
-      console.log(e);
+
       const floatingMenu = playlistCard.querySelector(".playlist-right-click");
 
       if (currentFloatingMenu) currentFloatingMenu.classList.add("hidden");
 
       currentFloatingMenu = floatingMenu;
 
-      const rect = playlistCard.getBoundingClientRect();
-
-      const offsetX = e.clientX - rect.left;
-
-      const offsetY = e.clientY - rect.top;
-
-      const leftPercent = (offsetX / rect.width) * 100;
-      const topPercent = (offsetY / rect.height) * 100;
-
-      floatingMenu.style.left = `${leftPercent}%`;
-      floatingMenu.style.top = `${topPercent}%`;
+      clickAnywhereToBring(e, floatingMenu, playlistCard);
 
       floatingMenu.classList.remove("hidden");
     });
@@ -740,8 +732,6 @@ const initApp = async function () {
 
   songLoader(songData.songs, songsContainer, "global", 20);
 
-  console.log(insertedSongIds);
-
   playlistLoader(songData.playlists);
 
   songReferenceLoader(songData.songs, songsSection, "playlist");
@@ -762,6 +752,10 @@ const initApp = async function () {
   );
 
   initVolumebar(audio, volumeBar, volumeThumb, volumeFill, volumeIconCont);
+
+  initDraggableWindow(divider, container, leftSection);
+
+  initDraggableFilterTags(filterContainer);
 
   songsContainer.addEventListener("scroll", function () {
     const scrollTop = this.scrollTop;
@@ -990,66 +984,12 @@ const initApp = async function () {
     });
   });
 
-  divider.addEventListener("mousedown", function () {
-    isDraggingUi = true;
-    document.body.style.userSelect = "none";
-  });
-
-  document.addEventListener("mousemove", function (e) {
-    if (!isDraggingUi) return;
-
-    const rect = container.getBoundingClientRect();
-
-    const pointerRelativeXpos = e.clientX - rect.left;
-
-    const leftWidth = (pointerRelativeXpos / rect.width) * 100;
-
-    if (leftWidth > 26 && leftWidth < 48) {
-      leftSection.style.width = `${leftWidth}%`;
-    }
-  });
-
-  document.addEventListener("mouseup", function () {
-    isDraggingUi = false;
-    document.body.style.userSelect = "";
-  });
-
   historyBtn.addEventListener("click", function () {
     historyManager("show");
   });
 
   eqBtn.addEventListener("click", function () {
     eqManager("show");
-  });
-
-  filterContainer.addEventListener("mousedown", function (e) {
-    isDown = true;
-
-    const rect = filterContainer.getBoundingClientRect();
-
-    startX = e.clientX - rect.left;
-
-    scrollLeft = filterContainer.scrollLeft;
-  });
-
-  filterContainer.addEventListener("mousemove", function (e) {
-    if (isDown) {
-      const rect = filterContainer.getBoundingClientRect();
-
-      const x = e.clientX - rect.left;
-
-      const walk = x - startX;
-
-      filterContainer.scrollLeft = scrollLeft - walk;
-    }
-  });
-
-  filterContainer.addEventListener("mouseup", function (e) {
-    isDown = false;
-  });
-
-  filterContainer.addEventListener("mouseleave", function (e) {
-    isDown = false;
   });
 
   filterContainer.addEventListener("click", function (e) {
