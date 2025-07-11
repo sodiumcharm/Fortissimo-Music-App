@@ -23,6 +23,12 @@ const highmidThumb = document.querySelector(".highmid-thumb");
 const trebleTrack = document.querySelector(".treble-track");
 const trebleThumb = document.querySelector(".treble-thumb");
 
+const brillianceTrack = document.querySelector(".brilliance-track");
+const brillianceThumb = document.querySelector(".brilliance-thumb");
+
+const airTrack = document.querySelector(".air-track");
+const airThumb = document.querySelector(".air-thumb");
+
 let eqEnabled = false;
 const eqToggleBtn = document.querySelector(".eq-toggle");
 
@@ -153,6 +159,8 @@ export const audioManipulator = function () {
   const midEQ = createEQBand(audioCtx, 1000);
   const highMidEQ = createEQBand(audioCtx, 2500);
   const trebleEQ = createEQBand(audioCtx, 6000);
+  const brillianceEQ = createEQBand(audioCtx, 10000);
+  const airEQ = createEQBand(audioCtx, 16000);
 
   const connectEQ = function () {
     // Always disconnect first to avoid multiple connections
@@ -164,6 +172,8 @@ export const audioManipulator = function () {
     midEQ.disconnect();
     highMidEQ.disconnect();
     trebleEQ.disconnect();
+    brillianceEQ.disconnect();
+    airEQ.disconnect();
 
     // Chain all EQ bands
     source
@@ -174,8 +184,8 @@ export const audioManipulator = function () {
       .connect(midEQ)
       .connect(highMidEQ)
       .connect(trebleEQ)
+      .connect(brillianceEQ).connect(airEQ)
       .connect(splitter);
-    // .connect(audioCtx.destination);
 
     connectStereoVolume();
   };
@@ -190,6 +200,8 @@ export const audioManipulator = function () {
     midEQ.disconnect();
     highMidEQ.disconnect();
     trebleEQ.disconnect();
+    brillianceEQ.disconnect();
+    airEQ.disconnect();
 
     // Bypass EQ: connect source directly to destination
     source.connect(analyser).connect(audioCtx.destination);
@@ -209,37 +221,21 @@ export const audioManipulator = function () {
     }
   });
 
-  eqSetter(
-    subBassTrack,
-    subBassThumb,
-    subBassEQ,
-    ".sub-bass-display"
-  );
+  eqSetter(subBassTrack, subBassThumb, subBassEQ, ".sub-bass-display");
 
   eqSetter(bassTrack, bassThumb, bassEQ, ".bass-display");
 
-  eqSetter(
-    lowmidTrack,
-    lowmidThumb,
-    lowMidEQ,
-    ".lowmid-display"
-  );
+  eqSetter(lowmidTrack, lowmidThumb, lowMidEQ, ".lowmid-display");
 
   eqSetter(midTrack, midThumb, midEQ, ".mid-display");
 
-  eqSetter(
-    highmidTrack,
-    highmidThumb,
-    highMidEQ,
-    ".highmid-display"
-  );
+  eqSetter(highmidTrack, highmidThumb, highMidEQ, ".highmid-display");
 
-  eqSetter(
-    trebleTrack,
-    trebleThumb,
-    trebleEQ,
-    ".treble-display"
-  );
+  eqSetter(trebleTrack, trebleThumb, trebleEQ, ".treble-display");
+
+  eqSetter(brillianceTrack, brillianceThumb, brillianceEQ, ".brilliance-display");
+
+  eqSetter(airTrack, airThumb, airEQ, ".air-display");
 
   createKnob(
     document.querySelector(".left-knob"),

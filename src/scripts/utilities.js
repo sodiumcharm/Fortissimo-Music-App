@@ -32,3 +32,25 @@ export const clickAnywhereToBring = function (e, elementToBring, parentEl) {
   elementToBring.style.left = `${leftPercent}%`;
   elementToBring.style.top = `${topPercent}%`;
 };
+
+export const scrollResponder = function (
+  callback,
+  container,
+  threshold,
+  callbackDependencyArr = null
+) {
+  container.addEventListener("scroll", function () {
+    const scrollTop = this.scrollTop;
+
+    const scrollHeight = this.scrollHeight;
+
+    const rect = this.getBoundingClientRect();
+
+    const containerHeight = rect.height;
+
+    if (scrollTop + containerHeight >= scrollHeight - threshold) {
+      if (callbackDependencyArr) callback(...callbackDependencyArr);
+      else callback();
+    }
+  });
+};

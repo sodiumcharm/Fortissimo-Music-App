@@ -1,5 +1,6 @@
 export const addHistoryCard = function (
   songUrl,
+  songId,
   songName,
   artistName,
   cardImg,
@@ -23,7 +24,7 @@ export const addHistoryCard = function (
   const year = now.getFullYear();
 
   if (context === "global") {
-    const html = `<div class="history-card bg-yel-grey-3" data-histurl="${songUrl}" data-histcontext="${context}">
+    const html = `<div class="history-card bg-yel-grey-3" data-histid="${songId}" data-histurl="${songUrl}" data-histcontext="${context}">
             <div class="history-card-imgbox">
               <img
                 src="${cardImg}"
@@ -79,7 +80,7 @@ export const addHistoryCard = function (
             </div>
 
             <div class="history-playlist-container">
-              <div class="history-card bg-yel-grey-3" data-histurl="${songUrl}" data-histcontext="${context}" data-targetplaylist="${triggeredBy}">
+              <div class="history-card bg-yel-grey-3" data-histid="${songId}" data-histurl="${songUrl}" data-histcontext="${context}" data-targetplaylist="${triggeredBy}">
                 <div class="history-card-imgbox">
                   <img
                     src="${cardImg}"
