@@ -1,5 +1,6 @@
 "use strict";
 
+// IMPORTS
 import { url } from "./config.js";
 import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
 import {
@@ -157,53 +158,76 @@ const errorNoteManager = function (action) {
 // FUNCTION EXPRESSIONS FOR CHANGING SONGS
 // *************************************************************
 
+// 1. [****nextSongLoader() is a function which plays next song card of the currently active song card****]
+
 const nextSongLoader = function () {
+  // check if a playlist is currently active
   if (currentPlaylistId) {
+    // DOM, take the current song url and please give me the currently active song Reference card
     const currentSongRefCard = document.querySelector(
       `[data-refurl="${currentSongUrl}"]`
     );
 
+    // DOM, give me all song reference cards which belong to the same playlist where current reference card is playing
     const currentPlaylistRefSongs = document.querySelectorAll(
       `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
     );
 
+    // Determining the index of currently playing ref card
     let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
       currentSongRefCard
     );
 
+    // Update (increment) the index value by one
     currentSongIndex++;
+
+    // Decrease the index back to 0 if index exceeds the length of current playlist songs array to implement a loop effect
     if (currentSongIndex >= currentPlaylistRefSongs.length)
       currentSongIndex = 0;
 
+    // Give me the next ref song card of the currently playing card based on the updated index
     const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
 
+    // Click the next song card to play it
     nextSongCard.click();
   }
 };
 
+// 2. [****prevSongLoader() is a function which plays the previous song card of the currently active song card****]
+
 const prevSongLoader = function () {
   if (currentPlaylistId) {
+    // DOM, take the current song url and please give me the currently active song Reference card
     const currentSongRefCard = document.querySelector(
       `[data-refurl="${currentSongUrl}"]`
     );
 
+    // DOM, give me all song reference cards which belong to the same playlist where current reference card is playing
     const currentPlaylistRefSongs = document.querySelectorAll(
       `[data-refplaylist="${currentSongRefCard.dataset.refplaylist}"]`
     );
 
+    // Determining the index of currently playing ref card
     let currentSongIndex = Array.from(currentPlaylistRefSongs).indexOf(
       currentSongRefCard
     );
 
+    // Update (Decrement) the index value by one
     currentSongIndex--;
+
+    // Increase the index back to the last index number if index exceeds length 0 of current playlist songs array to implement a loop effect
     if (currentSongIndex < 0)
       currentSongIndex = currentPlaylistRefSongs.length - 1;
 
+    // Give me the previous ref song card of the currently playing card based on the updated index
     const nextSongCard = currentPlaylistRefSongs[currentSongIndex];
 
+    // Click the previous song card to play it
     nextSongCard.click();
   }
 };
+
+// 3. [****currentSongLoader() is a function which plays the current song card again****]
 
 const currentSongLoader = function () {
   const currentSongCard = document.querySelector(
