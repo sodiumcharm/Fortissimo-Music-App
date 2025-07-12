@@ -54,3 +54,100 @@ export const scrollResponder = function (
     }
   });
 };
+
+export const songCardMaker = function (
+  obj,
+  url,
+  container,
+  insertedSongIds,
+  context
+) {
+  const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
+    url + obj.url
+  }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
+    url + obj.img
+  }" data-id="${obj.id}" data-context="${context}" data-eventlistener="">
+                  <div class="song-card-imgbox">
+                    <img src="${
+                      url + obj.img
+                    }" alt="Song Image" class="song-card-img" />
+                  </div>
+                  <div class="song-card-info">
+                    <p class="song-card-name">${obj.title}</p>
+                    <p class="song-card-artist">${obj.artist}</p>
+                  </div>
+                  <div class="like-container"><span class="mingcute--thumb-up-2-line"></span></div>
+                  <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
+                </div>`;
+
+  container.insertAdjacentHTML("beforeend", html);
+
+  insertedSongIds.push(obj.id);
+};
+
+export const playlistCardMaker = function (
+  playlist,
+  url,
+  container,
+  insertedPlaylistIds
+) {
+  const html = `<div class="card rounded" data-playlistid="${
+    playlist.id
+  }" data-playlistname="${playlist.title}" data-playlistType='${JSON.stringify(
+    playlist.type
+  )}' data-creator="${playlist.creator}" data-creatorimg="${
+    url + playlist.creatorImg
+  }" data-description="${playlist.description}" data-coverimg="${
+    url + playlist.coverImg
+  }" data-songs='${JSON.stringify(playlist.songs)}' data-eventlistener="">
+                  <div class="card-imgbox rounded">
+                    <img src="${
+                      url + playlist.coverImg
+                    }" alt="Image" class="card-img" />
+  
+                    <button class="card-btn-play" data-eventlistener="">
+                      <ion-icon
+                        class="icons card-play-icons"
+                        name="play"
+                      ></ion-icon>
+                    </button>
+                  </div>
+                  <h2>${playlist.title}</h2>
+                  <p>
+                    ${playlist.description}.
+                  </p>
+                  <div class="playlist-right-click hidden">
+                    <button class="floating-btn floating-save-btn">
+                      <ion-icon class="floating-icons" name="bookmark-outline"></ion-icon>Save playlist
+                    </button>
+                    <button class="floating-btn floating-creator-btn">
+                      <ion-icon class="floating-icons" name="person-circle-outline"></ion-icon>Creator Info
+                    </button>
+                  </div>
+                </div>`;
+
+  container.insertAdjacentHTML("beforeend", html);
+  insertedPlaylistIds.push(playlist.id);
+};
+
+export const referenceCardMaker = function (obj, url, container, context) {
+  const html = `<div class="song-reference-card flex align-center rounded bg-yel-grey-3" data-refname="${
+    obj.title
+  }" data-refid="${obj.id}" data-context="${context}" data-refurl="${
+    url + obj.url
+  }" data-refplaylist="">
+                  <div class="song-card-imgbox">
+                    <img src="${
+                      url + obj.img
+                    }" alt="Song Image" class="song-card-img" />
+                  </div>
+                  <div class="song-card-info">
+                    <p class="song-card-name">${obj.title}</p>
+                    <p class="song-card-artist">${obj.artist}</p>
+                  </div>
+                  <div class="like-container ref-like-container"><span class="mingcute--thumb-up-2-line"></span></div>
+                  <button class="song-card-play"><ion-icon name="play"></ion-icon></button>
+                </div>`;
+
+  container.insertAdjacentHTML("beforeend", html);
+};

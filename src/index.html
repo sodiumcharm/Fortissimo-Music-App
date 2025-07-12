@@ -158,14 +158,17 @@
               <div data-genre="anime" class="filter-tag">Anime</div>
               <div data-genre="romantic" class="filter-tag">Romantic</div>
               <div data-genre="game" class="filter-tag">Game</div>
-              <div data-genre="english" class="filter-tag">English</div>
-              <div data-genre="hindi" class="filter-tag">Hindi</div>
-              <div data-genre="bengali" class="filter-tag">Bengali</div>
-              <div data-genre="telugu" class="filter-tag">Telugu</div>
-              <div data-genre="japanese" class="filter-tag">Japanese</div>
-              <div data-genre="ai song" class="filter-tag">AI Songs</div>
+              <div data-genre="ai-song" class="filter-tag">AI Songs</div>
               <div data-genre="nature" class="filter-tag">Nature</div>
               <div data-genre="patriotic" class="filter-tag">Patriotic</div>
+              <div data-genre="hollywood" class="filter-tag">Hollywood</div>
+              <div data-genre="motivational" class="filter-tag">
+                Motivational
+              </div>
+              <div data-genre="concert-band" class="filter-tag">
+                Concert Bands
+              </div>
+              <div data-genre="regional" class="filter-tag">Regional</div>
             </div>
 
             <h1>Fortissimo Playlists</h1>
@@ -391,7 +394,9 @@
             </div>
 
             <div class="control-ui">
-              <p class="display"><span class="brilliance-display">00</span> dB</p>
+              <p class="display">
+                <span class="brilliance-display">00</span> dB
+              </p>
               <div class="track brilliance-track">
                 <span class="thumb brilliance-thumb"></span>
               </div>
@@ -420,9 +425,126 @@
       </div>
 
       <div class="main-settings hidden">
-        <div class="left-settings-tab"></div>
+        <div class="left-settings-tab">
+          <h2 class="box-heading">
+            <span class="rotate mingcute--settings-3-fill"></span>Settings
+          </h2>
 
-        <div class="right-settings-container"></div>
+          <div class="settings-tab-btns">
+            <button class="settings-tab-btn bg-yel-grey-3" data-settingstab="playback">
+              <ion-icon class="main-settings-icon" name="play"></ion-icon
+              >Playback
+            </button>
+            <button class="settings-tab-btn" data-settingstab="theme">
+              <ion-icon
+                class="main-settings-icon"
+                name="color-palette"
+              ></ion-icon
+              >Theme
+            </button>
+            <button class="settings-tab-btn" data-settingstab="visualizer">
+              <ion-icon class="main-settings-icon" name="barcode"></ion-icon
+              >Visualizer
+            </button>
+            <button class="settings-tab-btn" data-settingstab="about">
+              <ion-icon
+                class="main-settings-icon"
+                name="information-circle"
+              ></ion-icon
+              >About
+            </button>
+          </div>
+        </div>
+
+        <div class="right-settings-container playback-container">
+          <h2 class="box-heading">Playback</h2>
+        </div>
+
+        <div class="right-settings-container theme-container hide">
+          <h2 class="box-heading">Theme</h2>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">1. Set color themes</h3>
+            <p class="settings-sub-box__text">
+              Change the color scheme of the UI and give it a new look.
+            </p>
+
+            <div class="settings-grid">
+              <div
+                class="theme-color theme-color-1 theme--active"
+                data-theme="#f3ba3e"
+                data-rgb="243, 186, 62"
+                data-secondary="#f08c00"
+              ></div>
+              <div
+                class="theme-color theme-color-2"
+                data-theme="#1c7ed6"
+                data-rgb="28, 126, 214"
+                data-secondary="#1864ab"
+              ></div>
+              <div
+                class="theme-color theme-color-3"
+                data-theme="#ae3ec9"
+                data-rgb="174, 62, 201"
+                data-secondary="#862e9c"
+              ></div>
+              <div
+                class="theme-color theme-color-4"
+                data-theme="#d6336c"
+                data-rgb="214, 51, 108"
+                data-secondary="#a61e4d"
+              ></div>
+              <div
+                class="theme-color theme-color-5"
+                data-theme="#74b816"
+                data-rgb="116, 184, 22"
+                data-secondary="#5c940d"
+              ></div>
+              <div
+                class="theme-color theme-color-6"
+                data-theme="#37b24d"
+                data-rgb="55, 178, 77"
+                data-secondary="#2b8a3e"
+              ></div>
+              <div
+                class="theme-color theme-color-7"
+                data-theme="#c084fc"
+                data-rgb="192, 132, 252"
+                data-secondary="#a855f7"
+              ></div>
+              <div
+                class="theme-color theme-color-8"
+                data-theme="#ff3c9e"
+                data-rgb="255, 60, 158"
+                data-secondary="#ff6b00"
+              ></div>
+              <div
+                class="theme-color theme-color-9"
+                data-theme="#5b21b6"
+                data-rgb="91, 33, 182"
+                data-secondary="#9333ea"
+              ></div>
+              <div
+                class="theme-color theme-color-10"
+                data-theme="#15aabf"
+                data-rgb="21, 170, 191"
+                data-secondary="#0c8599"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-settings-container visualizer-container hide">
+          <h2 class="box-heading">Visualizer</h2>
+        </div>
+
+        <div class="right-settings-container about-container hide">
+          <h2 class="box-heading">About</h2>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
       </div>
     </main>
 

@@ -203,3 +203,7 @@
 .song-reference-card:hover {
   transform: scale(1.05);
 }
+
+.theme--active {
+  box-shadow: 0 0 0 6px var(--primary-color);
+}
