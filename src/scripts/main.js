@@ -99,7 +99,7 @@ const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
 
 // *************************************************************
-// INITIAL STATE VARIABLES
+// INITIAL STATE VARIABLE DECLARATIONS
 // *************************************************************
 
 let isPlaylistLoop = false;
