@@ -207,3 +207,8 @@
 .theme--active {
   box-shadow: 0 0 0 6px var(--primary-color);
 }
+
+.visualizer-color--active {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px var(--primary-color);
+}

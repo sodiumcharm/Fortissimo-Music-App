@@ -19,7 +19,7 @@ import {
   updateVolumeBar,
   initVolumebar,
 } from "./draggableUi.js";
-import { initSettingsOptions, initThemeColorBtns } from "./settings.js";
+import { initSettingsOptions, initThemeColorBtns, initSettingsToggleBtn, initVisualizerColorOptions } from "./settings.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -97,6 +97,7 @@ const settingsEl = document.querySelector(".main-settings");
 const settingsTabs = document.querySelectorAll(".settings-tab-btn");
 const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
+const visColorBtns = document.querySelectorAll('.visualizer-color');
 
 // *************************************************************
 // INITIAL STATE VARIABLE DECLARATIONS
@@ -1251,6 +1252,10 @@ const initApp = async function () {
   initSettingsOptions(settingsTabs, settingsSections);
 
   initThemeColorBtns(themeColorBtns);
+
+  initSettingsToggleBtn(settingsEl);
+
+  initVisualizerColorOptions(visColorBtns);
 };
 
 retryLoadBtn.addEventListener("click", async function () {

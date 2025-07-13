@@ -1,3 +1,7 @@
+import { canvas } from "./audioProcessor.js";
+
+let visualizerIsOn = true;
+
 export const initSettingsOptions = function (settingsTabs, settingsSections) {
   settingsTabs.forEach((tab) => {
     tab.addEventListener("click", function () {
@@ -42,6 +46,46 @@ export const initThemeColorBtns = function (btns) {
       });
 
       btn.classList.add("theme--active");
+    });
+  });
+};
+
+export const initSettingsToggleBtn = function (settingsEl) {
+  settingsEl.addEventListener("click", function (e) {
+    if (e.target.closest(".toggle-switch__track")) {
+      const track = e.target.closest(".toggle-switch__track");
+
+      const targetThumb = track.querySelector(".toggle-switch__thumb");
+
+      visualizerIsOn = !visualizerIsOn;
+
+      const targetOverlay = document.querySelector(".overlay-vis");
+
+      if (visualizerIsOn) {
+        targetThumb.style.left = "100%";
+        canvas.classList.remove("hidden");
+        targetOverlay.classList.add("hidden");
+      } else {
+        targetThumb.style.left = "0%";
+        canvas.classList.add("hidden");
+        targetOverlay.classList.remove("hidden");
+      }
+    }
+  });
+};
+
+export const initVisualizerColorOptions = function (visColorBtns) {
+  visColorBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const colorCode = btn.dataset.color;
+
+      canvas.setAttribute("data-colorcode", colorCode);
+
+      visColorBtns.forEach((el) => {
+        el.classList.remove("visualizer-color--active");
+      });
+
+      btn.classList.add("visualizer-color--active");
     });
   });
 };

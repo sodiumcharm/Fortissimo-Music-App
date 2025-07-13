@@ -3,7 +3,7 @@ import { eqSetter, createKnob } from "./draggableUi.js";
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
 
-const canvas = document.querySelector(".canvas");
+export const canvas = document.querySelector(".canvas");
 
 const subBassTrack = document.querySelector(".sub-bass-track");
 const subBassThumb = document.querySelector(".sub-bass-thumb");
@@ -59,9 +59,56 @@ export const audioManipulator = function () {
 
     for (let i = 0; i < bufferLength; i++) {
       const barHeight = (dataArray[i] / 255) * canvas.height;
-      const r = 255;
-      const g = 200 - barHeight / 2;
-      const b = 50;
+
+      let r, g, b;
+
+      if (canvas.dataset.colorcode === "1") {
+        r = 255;
+        g = 200 - barHeight / 2;
+        b = 50;
+      } else if (canvas.dataset.colorcode === "2") {
+        r = 120;
+        g = 200 - barHeight / 2;
+        b = 50;
+      } else if (canvas.dataset.colorcode === "3") {
+        r = 255 - barHeight / 2;
+        g = 200;
+        b = 255;
+      } else if (canvas.dataset.colorcode === "4") {
+        r = 255 - barHeight / 2;
+        g = 220;
+        b = 150;
+      } else if (canvas.dataset.colorcode === "5") {
+        r = 50;
+        g = 150 - barHeight / 3;
+        b = 255;
+      } else if (canvas.dataset.colorcode === "6") {
+        r = 200;
+        g = 200 - barHeight;
+        b = 150 + barHeight / 4;
+      } else if (canvas.dataset.colorcode === "7") {
+        r = 180 + barHeight / 5;
+        g = 50;
+        b = 255 - barHeight / 4;
+      } else if (canvas.dataset.colorcode === "8") {
+        r = 100 + barHeight / 2;
+        g = 255 - barHeight / 3;
+        b = 200 + barHeight / 5;
+      } else if (canvas.dataset.colorcode === "9") {
+        r = 120 + barHeight / 2;
+        g = 220;
+        b = 30 + barHeight / 5;
+      } else if (canvas.dataset.colorcode === "10") {
+        r = 180;
+        g = 250 - barHeight / 2;
+        b = 255;
+      }
+
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+
+      // const r = 255;
+      // const g = 200 - barHeight / 2;
+      // const b = 50;
 
       // const r = 120;
       // const g = 200 - barHeight / 2;
@@ -99,7 +146,7 @@ export const audioManipulator = function () {
       // const g = 250 - barHeight / 2;
       // const b = 255;
 
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      // ctx.fillStyle = `rgb(${r},${g},${b})`;
       ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
       x += barWidth + 1;
@@ -184,7 +231,8 @@ export const audioManipulator = function () {
       .connect(midEQ)
       .connect(highMidEQ)
       .connect(trebleEQ)
-      .connect(brillianceEQ).connect(airEQ)
+      .connect(brillianceEQ)
+      .connect(airEQ)
       .connect(splitter);
 
     connectStereoVolume();
@@ -233,7 +281,12 @@ export const audioManipulator = function () {
 
   eqSetter(trebleTrack, trebleThumb, trebleEQ, ".treble-display");
 
-  eqSetter(brillianceTrack, brillianceThumb, brillianceEQ, ".brilliance-display");
+  eqSetter(
+    brillianceTrack,
+    brillianceThumb,
+    brillianceEQ,
+    ".brilliance-display"
+  );
 
   eqSetter(airTrack, airThumb, airEQ, ".air-display");
 

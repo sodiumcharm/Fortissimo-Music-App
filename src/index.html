@@ -24,7 +24,7 @@
             <button class="settings">
               <span class="mingcute--settings-3-fill"></span>
             </button>
-            <canvas class="canvas"></canvas>
+            <canvas class="canvas" data-colorcode="1"></canvas>
 
             <ul>
               <li class="home-li">
@@ -431,7 +431,10 @@
           </h2>
 
           <div class="settings-tab-btns">
-            <button class="settings-tab-btn bg-yel-grey-3" data-settingstab="playback">
+            <button
+              class="settings-tab-btn bg-yel-grey-3"
+              data-settingstab="playback"
+            >
               <ion-icon class="main-settings-icon" name="play"></ion-icon
               >Playback
             </button>
@@ -464,7 +467,7 @@
           <h2 class="box-heading">Theme</h2>
 
           <div class="settings-sub-box">
-            <h3 class="settings-sub-box__heading">1. Set color themes</h3>
+            <h3 class="settings-sub-box__heading">Set Color Themes</h3>
             <p class="settings-sub-box__text">
               Change the color scheme of the UI and give it a new look.
             </p>
@@ -536,6 +539,66 @@
 
         <div class="right-settings-container visualizer-container hide">
           <h2 class="box-heading">Visualizer</h2>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Toggle Visualizer</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Turn on/off the visualizer (You won't be able to set visualizer
+                color when visualizer is turned off)
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track visualizer-toggle">
+                  <span class="toggle-switch__thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+
+            <h3 class="settings-sub-box__heading">Visualizer Color Effect</h3>
+
+            <p class="settings-sub-box__text">
+              Change the visualizer color effect by choosing a color scheme.
+            </p>
+
+            <div class="settings-grid">
+              <div class="visualizer-color visualizer-color-1 visualizer-color--active" data-color="1">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-2" data-color="2">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-3" data-color="3">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-4" data-color="4">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-5" data-color="5">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-6" data-color="6">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-7" data-color="7">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-8" data-color="8">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-9" data-color="9">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-10" data-color="10">
+                III
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="right-settings-container about-container hide">
