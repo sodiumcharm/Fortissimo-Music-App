@@ -137,6 +137,7 @@
   width: 100%;
   pointer-events: none;
   z-index: 2;
+  @include mixin.setTransition;
 }
 
 .close-btn {

@@ -2,6 +2,41 @@ import { canvas } from "./audioProcessor.js";
 
 let visualizerIsOn = true;
 
+export const settingsProfile = {
+  theme: "1",
+  visualizerIsOn: true,
+  visualizerColor: "1",
+};
+
+export const loadSettings = function () {
+  const saved = localStorage.getItem("fortissimoSettings");
+
+  if (saved) {
+    const settings = JSON.parse(saved);
+
+    const targetTheme = document.querySelector(
+      `[data-themecode="${settings.theme}"]`
+    );
+
+    const targetVisualizerColor = document.querySelector(
+      `[data-color="${settings.visualizerColor}"]`
+    );
+
+    visualizerIsOn = settings.visualizerIsOn;
+
+    settingsProfile.visualizerIsOn = visualizerIsOn;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      targetTheme.click();
+      targetVisualizerColor.click();
+    });
+  }
+};
+
+const saveSettings = function (settingsProfile) {
+  localStorage.setItem("fortissimoSettings", JSON.stringify(settingsProfile));
+};
+
 export const initSettingsOptions = function (settingsTabs, settingsSections) {
   settingsTabs.forEach((tab) => {
     tab.addEventListener("click", function () {
@@ -22,7 +57,7 @@ export const initSettingsOptions = function (settingsTabs, settingsSections) {
   });
 };
 
-export const initThemeColorBtns = function (btns) {
+export const initThemeColorBtns = function (btns, settingsProfile) {
   btns.forEach(function (btn) {
     btn.addEventListener("click", function () {
       const primaryColor = btn.dataset.theme;
@@ -46,35 +81,50 @@ export const initThemeColorBtns = function (btns) {
       });
 
       btn.classList.add("theme--active");
+
+      const themeCode = btn.dataset.themecode;
+      settingsProfile.theme = themeCode;
+
+      saveSettings(settingsProfile);
     });
   });
 };
 
-export const initSettingsToggleBtn = function (settingsEl) {
+export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
+  const updateVisualizerToggle = function (visualizerIsOn) {
+    const thumb = document.querySelector(".toggle-switch__thumb");
+    const overlay = document.querySelector(".overlay-vis");
+
+    if (visualizerIsOn) {
+      thumb.style.left = "100%";
+      canvas.classList.remove("hidden");
+      overlay.classList.add("hidden");
+    } else {
+      thumb.style.left = "0%";
+      canvas.classList.add("hidden");
+      overlay.classList.remove("hidden");
+    }
+  };
+
+  updateVisualizerToggle(visualizerIsOn);
+
   settingsEl.addEventListener("click", function (e) {
     if (e.target.closest(".toggle-switch__track")) {
-      const track = e.target.closest(".toggle-switch__track");
-
-      const targetThumb = track.querySelector(".toggle-switch__thumb");
-
       visualizerIsOn = !visualizerIsOn;
+      
+      updateVisualizerToggle(visualizerIsOn);
 
-      const targetOverlay = document.querySelector(".overlay-vis");
+      settingsProfile.visualizerIsOn = visualizerIsOn;
 
-      if (visualizerIsOn) {
-        targetThumb.style.left = "100%";
-        canvas.classList.remove("hidden");
-        targetOverlay.classList.add("hidden");
-      } else {
-        targetThumb.style.left = "0%";
-        canvas.classList.add("hidden");
-        targetOverlay.classList.remove("hidden");
-      }
+      saveSettings(settingsProfile);
     }
   });
 };
 
-export const initVisualizerColorOptions = function (visColorBtns) {
+export const initVisualizerColorOptions = function (
+  visColorBtns,
+  settingsProfile
+) {
   visColorBtns.forEach((btn) => {
     btn.addEventListener("click", function () {
       const colorCode = btn.dataset.color;
@@ -86,6 +136,10 @@ export const initVisualizerColorOptions = function (visColorBtns) {
       });
 
       btn.classList.add("visualizer-color--active");
+
+      settingsProfile.visualizerColor = colorCode;
+
+      saveSettings(settingsProfile);
     });
   });
 };

@@ -19,7 +19,14 @@ import {
   updateVolumeBar,
   initVolumebar,
 } from "./draggableUi.js";
-import { initSettingsOptions, initThemeColorBtns, initSettingsToggleBtn, initVisualizerColorOptions } from "./settings.js";
+import {
+  settingsProfile,
+  loadSettings,
+  initSettingsOptions,
+  initThemeColorBtns,
+  initSettingsToggleBtn,
+  initVisualizerColorOptions,
+} from "./settings.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -97,7 +104,7 @@ const settingsEl = document.querySelector(".main-settings");
 const settingsTabs = document.querySelectorAll(".settings-tab-btn");
 const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
-const visColorBtns = document.querySelectorAll('.visualizer-color');
+const visColorBtns = document.querySelectorAll(".visualizer-color");
 
 // *************************************************************
 // INITIAL STATE VARIABLE DECLARATIONS
@@ -1249,13 +1256,13 @@ const initApp = async function () {
     settingsManager("show");
   });
 
-  initSettingsOptions(settingsTabs, settingsSections);
+  // initSettingsOptions(settingsTabs, settingsSections);
 
-  initThemeColorBtns(themeColorBtns);
+  // initThemeColorBtns(themeColorBtns, settingsProfile);
 
-  initSettingsToggleBtn(settingsEl);
+  // initSettingsToggleBtn(settingsEl);
 
-  initVisualizerColorOptions(visColorBtns);
+  // initVisualizerColorOptions(visColorBtns, settingsProfile);
 };
 
 retryLoadBtn.addEventListener("click", async function () {
@@ -1273,8 +1280,19 @@ window.addEventListener("offline", function () {
 (async function () {
   loadingUI.classList.remove("hidden");
 
+  loadSettings();
+
+  initSettingsToggleBtn(settingsEl, settingsProfile);
+
+  initSettingsOptions(settingsTabs, settingsSections);
+
+  initThemeColorBtns(themeColorBtns, settingsProfile);
+
+  initVisualizerColorOptions(visColorBtns, settingsProfile);
+
   try {
     await initApp();
+
     audioManipulator();
   } catch (err) {
     console.log(err);
