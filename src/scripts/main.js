@@ -2,7 +2,9 @@
 
 // IMPORTS
 import { url } from "./config.js";
+
 import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
+
 import {
   singleMatchCheck,
   clickAnywhereToBring,
@@ -11,7 +13,9 @@ import {
   songCardMaker,
   referenceCardMaker,
 } from "./utilities.js";
+
 import { addHistoryCard } from "./historyManager.js";
+
 import {
   initDraggableWindow,
   initDraggableFilterTags,
@@ -19,6 +23,7 @@ import {
   updateVolumeBar,
   initVolumebar,
 } from "./draggableUi.js";
+
 import {
   settingsProfile,
   loadSettings,
@@ -27,6 +32,8 @@ import {
   initSettingsToggleBtn,
   initVisualizerColorOptions,
 } from "./settings.js";
+
+import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -106,6 +113,8 @@ const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
 const visColorBtns = document.querySelectorAll(".visualizer-color");
 
+const toggleShuffleBtn = document.querySelector(".shuffle-toggle");
+
 // *************************************************************
 // INITIAL STATE VARIABLE DECLARATIONS
 // *************************************************************
@@ -133,6 +142,8 @@ let currentPlaylistId = null;
 let playbarSwipedDown = false;
 
 let playlistCardBtnPressed = false;
+
+let isShuffled = false;
 
 let currentPlaylistType = "all";
 
@@ -1080,6 +1091,22 @@ const initApp = async function () {
     historyManager("show");
   });
 
+  let originalOrder = document.querySelectorAll(".song-reference-card");
+
+  toggleShuffleBtn.addEventListener("click", function () {
+    if (isShuffled) {
+      deShufflePlaylists(originalOrder);
+    } else {
+      originalOrder = document.querySelectorAll(".song-reference-card");
+
+      shufflePlaylists();
+    }
+
+    isShuffled = !isShuffled;
+
+    this.classList.toggle("btn--active");
+  });
+
   eqBtn.addEventListener("click", function () {
     eqManager("show");
   });
@@ -1255,14 +1282,6 @@ const initApp = async function () {
   settingsBtn.addEventListener("click", function () {
     settingsManager("show");
   });
-
-  // initSettingsOptions(settingsTabs, settingsSections);
-
-  // initThemeColorBtns(themeColorBtns, settingsProfile);
-
-  // initSettingsToggleBtn(settingsEl);
-
-  // initVisualizerColorOptions(visColorBtns, settingsProfile);
 };
 
 retryLoadBtn.addEventListener("click", async function () {

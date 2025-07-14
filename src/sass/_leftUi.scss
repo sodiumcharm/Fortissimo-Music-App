@@ -1,4 +1,4 @@
-@use './mixins' as mixin;
+@use "./mixins" as mixin;
 
 .left {
   width: var(--left-width);
@@ -15,22 +15,28 @@
   z-index: 1;
 }
 
-.settings {
+.home-btns {
+  position: absolute;
+  top: var(--default-padding);
+  right: var(--default-padding);
+
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.home-btn {
   border: none;
   color: var(--primary-color);
   width: 3.5rem;
   height: 3.5rem;
   background: none;
-
-  position: absolute;
-  top: var(--default-padding);
-  right: var(--default-padding);
   cursor: pointer;
   z-index: 15;
   @include mixin.setTransition;
 }
 
-.settings:hover {
+.home-btn:hover {
   transform: scale(1.2);
 }
 

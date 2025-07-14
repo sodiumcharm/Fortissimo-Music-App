@@ -21,9 +21,16 @@
       <div class="container flex">
         <div class="left flex-column">
           <div class="home bg-yel-grey rounded">
-            <button class="settings">
-              <span class="mingcute--settings-3-fill"></span>
-            </button>
+            <div class="home-btns">
+              <button class="home-btn history-toggle" title="History">
+                <span class="mingcute--time-duration-line"></span>
+              </button>
+
+              <button class="home-btn settings">
+                <span class="mingcute--settings-3-fill"></span>
+              </button>
+            </div>
+
             <canvas class="canvas" data-colorcode="1"></canvas>
 
             <ul>
@@ -99,6 +106,9 @@
               <button class="btn-nav btn-nav-1 song-loop-btn" title="Loop one">
                 <span class="mingcute--repeat icon-repeat-1"></span>
               </button>
+              <button class="btn-nav btn-nav-1 shuffle-toggle" title="Shuffle">
+                <span class="mingcute--shuffle-2-line"></span>
+              </button>
               <button
                 class="btn-nav btn-nav-1 eq-toggle"
                 title="Enable Equalizer"
@@ -111,10 +121,10 @@
             </div>
 
             <div class="buttons flex">
-              <button class="btn-nav btn-nav-2 history-toggle" title="History">
-                <span class="mingcute--time-duration-line"></span>
+              <button class="btn-nav btn-nav-2 saved-playlist-btn" title="Saved Playlists">
+                <span class="mingcute--bookmarks-line"></span>
               </button>
-              <button class="btn btn-trnsp">Sign up</button>
+              <!-- <button class="btn btn-trnsp">Sign up</button> -->
               <button class="btn btn-orange">Log in</button>
             </div>
           </div>
@@ -435,8 +445,7 @@
               class="settings-tab-btn bg-yel-grey-3"
               data-settingstab="playback"
             >
-              <ion-icon class="main-settings-icon" name="play"></ion-icon
-              >Playback
+              <ion-icon class="main-settings-icon" name="play"></ion-icon>Audio
             </button>
             <button class="settings-tab-btn" data-settingstab="theme">
               <ion-icon
