@@ -10,6 +10,14 @@ export const singleMatchCheck = function (arr1, arr2) {
   return false;
 };
 
+export const valueToPercentage = function (value, min, max) {
+  return ((value - min) / (max - min)) * 100;
+};
+
+export const percentageToValue = function (percent, min, max) {
+  return min + ((percent / 100) * (max - min));
+};
+
 export const timeFormatter = function (time) {
   if (isNaN(time)) return "00:00";
 

@@ -1,4 +1,5 @@
 import { eqSetter, createKnob } from "./draggableUi.js";
+import { audioProfile } from "./settings.js";
 
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
@@ -48,7 +49,7 @@ export const audioManipulator = function () {
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
 
-  function draw() {
+  const draw = function () {
     requestAnimationFrame(draw);
     analyser.getByteFrequencyData(dataArray);
 
@@ -106,57 +107,62 @@ export const audioManipulator = function () {
 
       ctx.fillStyle = `rgb(${r},${g},${b})`;
 
-      // const r = 255;
-      // const g = 200 - barHeight / 2;
-      // const b = 50;
-
-      // const r = 120;
-      // const g = 200 - barHeight / 2;
-      // const b = 50;
-
-      // const r = 255 - barHeight / 2;
-      // const g = 200;
-      // const b = 255;
-
-      // const r = 255 - barHeight / 2;
-      // const g = 220;
-      // const b = 150;
-
-      // const r = 50;
-      // const g = 150 - barHeight / 3;
-      // const b = 255;
-
-      // const r = 30;
-      // const g = 200 - barHeight / 2;
-      // const b = 150 + barHeight / 4;
-
-      // const r = 180 + barHeight / 5;
-      // const g = 50;
-      // const b = 255 - barHeight / 4;
-
-      // const r = 100 + barHeight / 2;
-      // const g = 255 - barHeight / 3;
-      // const b = 200 + barHeight / 5;
-
-      // const r = 120 + barHeight / 2;
-      // const g = 220;
-      // const b = 30 + barHeight / 5;
-
-      // const r = 180;
-      // const g = 250 - barHeight / 2;
-      // const b = 255;
-
-      // ctx.fillStyle = `rgb(${r},${g},${b})`;
       ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
       x += barWidth + 1;
     }
-  }
+  };
+
+  // === Volume Normalization ===
+  const normalizationGain = audioCtx.createGain();
+
+  normalizationGain.gain.value = 1;
+
+  const normalizationAnalyser = audioCtx.createAnalyser();
+
+  normalizationAnalyser.fftSize = 2048;
+
+  const normalizationBuffer = new Uint8Array(normalizationAnalyser.fftSize);
+
+  const estimateRMS = function () {
+    normalizationAnalyser.getByteTimeDomainData(normalizationBuffer);
+    let sum = 0;
+    for (let i = 0; i < normalizationBuffer.length; i++) {
+      const val = (normalizationBuffer[i] - 128) / 128;
+      sum += val * val;
+    }
+    return Math.sqrt(sum / normalizationBuffer.length);
+  };
+
+  const normalizeVolumeLoop = function () {
+    if (audioProfile.normalizeVolume) {
+      const targetRMS = 0.05;
+      const currentRMS = estimateRMS();
+      if (currentRMS > 0.001) {
+        let gain = targetRMS / currentRMS;
+        gain = Math.max(0.5, Math.min(gain, 2.0)); // Clamp gain
+        normalizationGain.gain.setTargetAtTime(gain, audioCtx.currentTime, 0.2);
+      }
+    } else {
+      normalizationGain.gain.value = 1;
+    }
+
+    requestAnimationFrame(normalizeVolumeLoop);
+  };
+
+  const connectNormalization = function () {
+    source.disconnect();
+    source.connect(normalizationGain);
+    normalizationGain.connect(normalizationAnalyser);
+    normalizationGain.connect(analyser);
+    normalizeVolumeLoop();
+  };
 
   audio.onplay = () => {
     if (audioCtx.state === "suspended") {
       audioCtx.resume();
     }
+    connectNormalization();
     draw();
   };
 
@@ -224,6 +230,8 @@ export const audioManipulator = function () {
 
     // Chain all EQ bands
     source
+      .connect(normalizationGain)
+      .connect(normalizationAnalyser)
       .connect(analyser)
       .connect(subBassEQ)
       .connect(bassEQ)
@@ -251,8 +259,12 @@ export const audioManipulator = function () {
     brillianceEQ.disconnect();
     airEQ.disconnect();
 
-    // Bypass EQ: connect source directly to destination
-    source.connect(analyser).connect(audioCtx.destination);
+    // Bypass EQ
+    source
+      .connect(normalizationGain)
+      .connect(normalizationAnalyser)
+      .connect(analyser)
+      .connect(audioCtx.destination);
   };
 
   eqToggleBtn.addEventListener("click", () => {

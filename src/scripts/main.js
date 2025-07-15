@@ -7,6 +7,7 @@ import { audio, audioManipulator, eqBtn } from "./audioProcessor.js";
 
 import {
   singleMatchCheck,
+  shuffle,
   clickAnywhereToBring,
   scrollResponder,
   playlistCardMaker,
@@ -21,7 +22,7 @@ import {
   initDraggableFilterTags,
   initSeekbar,
   updateVolumeBar,
-  initVolumebar,
+  initVolumebar, initPlaybackSpeedSlider
 } from "./draggableUi.js";
 
 import {
@@ -31,6 +32,7 @@ import {
   initThemeColorBtns,
   initSettingsToggleBtn,
   initVisualizerColorOptions,
+  audioProfile,
 } from "./settings.js";
 
 import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
@@ -112,6 +114,8 @@ const settingsTabs = document.querySelectorAll(".settings-tab-btn");
 const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
 const visColorBtns = document.querySelectorAll(".visualizer-color");
+const speedTrack = document.querySelector('.playback-rate-track');
+const speedThumb = document.querySelector('.playback-rate-thumb');
 
 const toggleShuffleBtn = document.querySelector(".shuffle-toggle");
 
@@ -403,11 +407,18 @@ const handleSearch = function () {
 };
 
 const songLoader = function (songs, container, context, batchSize, songId = 0) {
+  const shuffledSongs = [];
+  for (let obj of songs) {
+    shuffledSongs.push(obj);
+  }
+
+  shuffle(shuffledSongs);
+
   if (songId === 0) {
     if (batchSize !== "all") {
       let sizeCount = 0;
 
-      for (let obj of songs) {
+      for (let obj of shuffledSongs) {
         if (!insertedSongIds.includes(obj.id) && sizeCount < batchSize) {
           sizeCount += 1;
 
@@ -415,14 +426,14 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
         }
       }
     } else {
-      for (let obj of songs) {
+      for (let obj of shuffledSongs) {
         if (!insertedSongIds.includes(obj.id)) {
           songCardMaker(obj, url, container, insertedSongIds, context);
         }
       }
     }
   } else if (songId !== 0) {
-    for (let obj of songs) {
+    for (let obj of shuffledSongs) {
       if (!insertedSongIds.includes(obj.id) && songId === obj.id) {
         songCardMaker(obj, url, container, insertedSongIds, context);
       }
@@ -492,6 +503,8 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           audio.src = songUrl;
 
           audio.play();
+
+          audio.playbackRate = audioProfile.playbackRate;
 
           updateVolumeBar(audio.volume, volumeThumb, volumeFill);
 
@@ -1308,6 +1321,8 @@ window.addEventListener("offline", function () {
   initThemeColorBtns(themeColorBtns, settingsProfile);
 
   initVisualizerColorOptions(visColorBtns, settingsProfile);
+
+  initPlaybackSpeedSlider(speedTrack, speedThumb);
 
   try {
     await initApp();

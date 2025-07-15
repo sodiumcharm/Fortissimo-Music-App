@@ -1,4 +1,10 @@
-import { timeFormatter } from "./utilities.js";
+import {
+  timeFormatter,
+  valueToPercentage,
+  percentageToValue,
+} from "./utilities.js";
+import { audioProfile } from "./settings.js";
+import { audio } from "./audioProcessor.js";
 
 export const initDraggableWindow = function (divider, container, leftSection) {
   let isDraggingUi = false;
@@ -432,4 +438,77 @@ export const createKnob = function (knobEl, gainNode, displayer) {
   const gainValue = gainNode.gain.value; // should be between 0 and 1
   const initialAngle = minAngle + gainValue * (maxAngle - minAngle);
   updateRotation(initialAngle);
+};
+
+export const initPlaybackSpeedSlider = function (track, thumb) {
+  const min = 0.5;
+  const max = 2.5;
+  let isDragging = false;
+  const resetBtn = document.querySelector(".playback-rate-reset");
+
+  const updatePlaybackRateUI = function (value) {
+    const percent = valueToPercentage(value, min, max);
+
+    document.querySelector(".playback-rate-thumb").style.left = `${percent}%`;
+
+    document.querySelector(".playback-rate-fill").style.width = `${percent}%`;
+
+    document.querySelector(
+      ".playback-rate-display"
+    ).textContent = `${value.toFixed(1)}`;
+  };
+
+  updatePlaybackRateUI(audioProfile.playbackRate);
+
+  const updatePlaybackRateForDrag = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = track.getBoundingClientRect();
+
+    const offsetX = clientX - rect.left;
+
+    const percent = (offsetX / rect.width) * 100;
+
+    let value = percentageToValue(percent, min, max);
+
+    value = Math.max(0.5, Math.min(2.5, value));
+
+    updatePlaybackRateUI(value);
+
+    audio.playbackRate = value;
+
+    audioProfile.playbackRate = value;
+  };
+
+  thumb.addEventListener("mousedown", function (e) {
+    e.preventDefault();
+    isDragging = true;
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (isDragging) updatePlaybackRateForDrag(e);
+  });
+
+  document.addEventListener("mouseup", function () {
+    isDragging = false;
+  });
+
+  thumb.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    isDragging = true;
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (isDragging) updatePlaybackRateForDrag(e);
+  });
+
+  document.addEventListener("touchend", function () {
+    isDragging = false;
+  });
+
+  resetBtn.addEventListener("click", () => {
+    updatePlaybackRateUI(1);
+    audio.playbackRate = 1;
+    audioProfile.playbackRate = 1;
+  });
 };

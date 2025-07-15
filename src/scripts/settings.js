@@ -8,6 +8,8 @@ export const settingsProfile = {
   visualizerColor: "1",
 };
 
+export const audioProfile = { playbackRate: 1, normalizeVolume: true };
+
 export const loadSettings = function () {
   const saved = localStorage.getItem("fortissimoSettings");
 
@@ -91,32 +93,39 @@ export const initThemeColorBtns = function (btns, settingsProfile) {
 };
 
 export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
-  const updateVisualizerToggle = function (visualizerIsOn) {
-    const thumb = document.querySelector(".toggle-switch__thumb");
-    const overlay = document.querySelector(".overlay-vis");
+  const visOverlay = document.querySelector(".overlay-vis");
 
-    if (visualizerIsOn) {
+  const updateToggle = function (condition, thumbClass, canvas = null, overlay = null) {
+    const thumb = document.querySelector(thumbClass);
+    
+    if (condition) {
       thumb.style.left = "100%";
-      canvas.classList.remove("hidden");
-      overlay.classList.add("hidden");
+      canvas?.classList.remove("hidden");
+      overlay?.classList.add("hidden");
     } else {
       thumb.style.left = "0%";
-      canvas.classList.add("hidden");
-      overlay.classList.remove("hidden");
+      canvas?.classList.add("hidden");
+      overlay?.classList.remove("hidden");
     }
   };
 
-  updateVisualizerToggle(visualizerIsOn);
+  updateToggle(visualizerIsOn, '.visualizer-thumb', canvas, visOverlay);
 
   settingsEl.addEventListener("click", function (e) {
-    if (e.target.closest(".toggle-switch__track")) {
+    if (e.target.closest(".visualizer-toggle")) {
       visualizerIsOn = !visualizerIsOn;
-      
-      updateVisualizerToggle(visualizerIsOn);
+
+      updateToggle(visualizerIsOn, '.visualizer-thumb', canvas, visOverlay);
 
       settingsProfile.visualizerIsOn = visualizerIsOn;
 
       saveSettings(settingsProfile);
+    }
+
+    if (e.target.closest('.normalization-toggle')) {
+      audioProfile.normalizeVolume = !audioProfile.normalizeVolume;
+
+      updateToggle(audioProfile.normalizeVolume, '.normalization-thumb');
     }
   });
 };

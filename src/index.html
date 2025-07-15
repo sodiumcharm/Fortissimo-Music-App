@@ -121,7 +121,10 @@
             </div>
 
             <div class="buttons flex">
-              <button class="btn-nav btn-nav-2 saved-playlist-btn" title="Saved Playlists">
+              <button
+                class="btn-nav btn-nav-2 saved-playlist-btn"
+                title="Saved Playlists"
+              >
                 <span class="mingcute--bookmarks-line"></span>
               </button>
               <!-- <button class="btn btn-trnsp">Sign up</button> -->
@@ -469,7 +472,46 @@
         </div>
 
         <div class="right-settings-container playback-container">
-          <h2 class="box-heading">Playback</h2>
+          <h2 class="box-heading">Audio</h2>
+
+          <div class="settings-sub-box">
+            <div class="settings-sub-box__heading">
+              Set Playback Speed:
+              <span class="playback-rate-display">1.0</span>x
+            </div>
+
+            <p class="settings-sub-box__text">
+              This setting is not recommended to use as music and songs are not
+              supposed to listen at altered speed.
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track playback-rate-track">
+                <div class="settings-slider__fill playback-rate-fill"></div>
+                <span class="settings-slider__thumb playback-rate-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn playback-rate-reset">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Volume Normalisation</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Set same loudness level for all sections of different tracks.
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track normalization-toggle">
+                  <span class="toggle-switch__thumb normalization-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="right-settings-container theme-container hide">
@@ -570,7 +612,7 @@
 
               <div class="toggle-switch">
                 <div class="toggle-switch__track visualizer-toggle">
-                  <span class="toggle-switch__thumb"></span>
+                  <span class="toggle-switch__thumb visualizer-thumb"></span>
                 </div>
               </div>
             </div>
