@@ -218,6 +218,9 @@ export const audioManipulator = function () {
   const connectEQ = function () {
     // Always disconnect first to avoid multiple connections
     source.disconnect();
+    normalizationGain.disconnect();
+    normalizationAnalyser.disconnect();
+    analyser.disconnect();
     disconnectStereoVolume();
     subBassEQ.disconnect();
     bassEQ.disconnect();

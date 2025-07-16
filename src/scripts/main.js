@@ -1295,6 +1295,14 @@ const initApp = async function () {
   settingsBtn.addEventListener("click", function () {
     settingsManager("show");
   });
+
+  document.querySelector('.song-section-btn').addEventListener('click', function() {
+    leftSection.classList.add('bring-left');
+  });
+
+  document.querySelector('.left-section-exit').addEventListener('click', function() {
+    leftSection.classList.remove('bring-left');
+  });
 };
 
 retryLoadBtn.addEventListener("click", async function () {

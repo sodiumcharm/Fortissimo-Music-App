@@ -1,6 +1,7 @@
 import { canvas } from "./audioProcessor.js";
 
 let visualizerIsOn = true;
+let equalizerIsOn = false;
 
 export const settingsProfile = {
   theme: "1",
@@ -8,7 +9,10 @@ export const settingsProfile = {
   visualizerColor: "1",
 };
 
-export const audioProfile = { playbackRate: 1, normalizeVolume: true };
+export const audioProfile = {
+  playbackRate: 1,
+  normalizeVolume: true,
+};
 
 export const loadSettings = function () {
   const saved = localStorage.getItem("fortissimoSettings");
@@ -94,10 +98,16 @@ export const initThemeColorBtns = function (btns, settingsProfile) {
 
 export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
   const visOverlay = document.querySelector(".overlay-vis");
+  const eqOverlay = document.querySelector(".overlay-eq");
 
-  const updateToggle = function (condition, thumbClass, canvas = null, overlay = null) {
+  const updateToggle = function (
+    condition,
+    thumbClass,
+    canvas = null,
+    overlay = null
+  ) {
     const thumb = document.querySelector(thumbClass);
-    
+
     if (condition) {
       thumb.style.left = "100%";
       canvas?.classList.remove("hidden");
@@ -109,23 +119,46 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
     }
   };
 
-  updateToggle(visualizerIsOn, '.visualizer-thumb', canvas, visOverlay);
+  updateToggle(visualizerIsOn, ".visualizer-thumb", canvas, visOverlay);
+
+  updateToggle(equalizerIsOn, ".equalizer-thumb", null, eqOverlay);
 
   settingsEl.addEventListener("click", function (e) {
     if (e.target.closest(".visualizer-toggle")) {
       visualizerIsOn = !visualizerIsOn;
 
-      updateToggle(visualizerIsOn, '.visualizer-thumb', canvas, visOverlay);
+      updateToggle(visualizerIsOn, ".visualizer-thumb", canvas, visOverlay);
 
       settingsProfile.visualizerIsOn = visualizerIsOn;
 
       saveSettings(settingsProfile);
     }
 
-    if (e.target.closest('.normalization-toggle')) {
+    if (e.target.closest(".normalization-toggle")) {
       audioProfile.normalizeVolume = !audioProfile.normalizeVolume;
 
-      updateToggle(audioProfile.normalizeVolume, '.normalization-thumb');
+      updateToggle(audioProfile.normalizeVolume, ".normalization-thumb");
+    }
+
+    if (e.target.closest(".equalizer-toggle-2")) {
+      equalizerIsOn = !equalizerIsOn;
+
+      const targetBtn = document.querySelector(".eq-toggle");
+
+      targetBtn.click();
+
+      updateToggle(
+        equalizerIsOn,
+        ".equalizer-thumb",
+        null,
+        eqOverlay
+      );
+    }
+
+    if (e.target.closest(".settings-eq-unhide")) {
+      const targetBtn = document.querySelector(".eq-btn");
+
+      targetBtn.click();
     }
   });
 };

@@ -117,6 +117,26 @@
   }
 }
 
+.settings-icon-text {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1.5rem;
+  border-radius: 7px;
+  cursor: pointer;
+  @include mixin.setTransition;
+
+  &__icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+  }
+
+  &:hover {
+    background-color: #333;
+  }
+}
+
 .toggle-switch {
   &__track {
     width: 4.5rem;
@@ -311,4 +331,8 @@
       transform: scale(1.1);
     }
   }
+}
+
+.eq-settings {
+  display: none;
 }

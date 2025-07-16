@@ -112,7 +112,7 @@
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .hidden {
@@ -212,4 +212,10 @@
 .visualizer-color--active {
   transform: scale(1.15);
   box-shadow: 0 0 0 3px var(--primary-color);
+}
+
+.bring-left {
+  transform: translateX(0) !important;
+  width: 100% !important;
+  height: 100%;
 }
