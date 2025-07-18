@@ -76,7 +76,7 @@
   // flex-grow: 1;
   width: 70%;
   background-color: #222;
-  padding: 2.5rem 3.5rem;
+  padding: 3rem 3.5rem;
   overflow: auto;
 
   display: flex;
@@ -85,6 +85,10 @@
 
   & .box-heading {
     margin-bottom: 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #444;
   }
 }
 
@@ -335,4 +339,41 @@
 
 .eq-settings {
   display: none;
+}
+
+.settings-input {
+  @include mixin.flex-center;
+  margin-top: 0.8rem;
+
+  &__field {
+    flex-grow: 1;
+    font-size: 1.4rem;
+    font-weight: 600;
+    padding: 0 1.5rem;
+    outline: none;
+    border-radius: 50px 0 0 50px;
+    border: none;
+    background-color: #353535;
+    color: #eee;
+
+    &::placeholder {
+      color: #666;
+    }
+  }
+
+  &__btn {
+    display: inline-block;
+    font-family: inherit;
+    font-size: 1.4rem;
+    padding: 0 1.5rem;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 0 50px 50px 0;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  &__field, &__btn {
+    height: 4rem;
+  }
 }

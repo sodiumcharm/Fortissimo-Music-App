@@ -15,7 +15,7 @@ export const valueToPercentage = function (value, min, max) {
 };
 
 export const percentageToValue = function (percent, min, max) {
-  return min + ((percent / 100) * (max - min));
+  return min + (percent / 100) * (max - min);
 };
 
 export const timeFormatter = function (time) {
@@ -25,6 +25,41 @@ export const timeFormatter = function (time) {
   const seconds = String(Math.trunc(time % 60)).padStart(2, "0");
 
   return `${minute}:${seconds}`;
+};
+
+export const toHexColor = function (color) {
+  // If the input is already a hex code, return it directly
+  if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(color)) {
+    return color;
+  }
+
+  // If the input is in rgb(...) format
+  const rgbMatch = color.match(
+    /^rgb\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/
+  );
+
+  if (rgbMatch) {
+    const r = parseInt(rgbMatch[1], 10);
+    const g = parseInt(rgbMatch[2], 10);
+    const b = parseInt(rgbMatch[3], 10);
+
+    if ([r, g, b].every((val) => val >= 0 && val <= 255)) {
+      return (
+        "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")
+      );
+    }
+  }
+
+  // Invalid input
+  throw new Error("Invalid color format");
+};
+
+export const randomRGBGenerator = function () {
+  const r = Math.floor(Math.random() * 256);
+  const g = Math.floor(Math.random() * 256);
+  const b = Math.floor(Math.random() * 256);
+
+  return `rgb(${r}, ${g}, ${b})`;
 };
 
 export const shuffle = function (arr) {
@@ -168,4 +203,42 @@ export const referenceCardMaker = function (obj, url, container, context) {
                 </div>`;
 
   container.insertAdjacentHTML("beforeend", html);
+};
+
+export const initDragResponse = function (fnArr, thumb) {
+  let isDragging = false;
+
+  thumb.addEventListener("mousedown", function (e) {
+    e.preventDefault();
+    isDragging = true;
+    if (fnArr[0]) fnArr[0](e);
+  });
+
+  document.addEventListener("mousemove", function (e) {
+    if (isDragging) {
+      fnArr[1](e);
+    }
+  });
+
+  document.addEventListener("mouseup", function () {
+    isDragging = false;
+    if (fnArr[2]) fnArr[2](e);
+  });
+
+  thumb.addEventListener("touchstart", function (e) {
+    e.preventDefault();
+    isDragging = true;
+    if (fnArr[0]) fnArr[0](e);
+  });
+
+  document.addEventListener("touchmove", function (e) {
+    if (isDragging) {
+      fnArr[1](e);
+    }
+  });
+
+  document.addEventListener("touchend", function () {
+    isDragging = false;
+    if (fnArr[2]) fnArr[2](e);
+  });
 };

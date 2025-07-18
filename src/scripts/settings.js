@@ -1,4 +1,5 @@
 import { canvas } from "./audioProcessor.js";
+import { randomRGBGenerator, toHexColor } from "./utilities.js";
 
 let visualizerIsOn = true;
 let equalizerIsOn = false;
@@ -7,11 +8,14 @@ export const settingsProfile = {
   theme: "1",
   visualizerIsOn: true,
   visualizerColor: "1",
+  eyeCareMode: false,
 };
 
 export const audioProfile = {
   playbackRate: 1,
   normalizeVolume: true,
+  fftSize: 256,
+  boostValue: 1.0,
 };
 
 export const loadSettings = function () {
@@ -31,6 +35,12 @@ export const loadSettings = function () {
     visualizerIsOn = settings.visualizerIsOn;
 
     settingsProfile.visualizerIsOn = visualizerIsOn;
+
+    settingsProfile.eyeCareMode = settings.eyeCareMode;
+
+    if (settings.eyeCareMode) {
+      document.body.classList.add('eye-care-mode');
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       targetTheme.click();
@@ -97,31 +107,33 @@ export const initThemeColorBtns = function (btns, settingsProfile) {
 };
 
 export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
-  const visOverlay = document.querySelector(".overlay-vis");
-  const eqOverlay = document.querySelector(".overlay-eq");
+  const visOverlay = document.querySelectorAll(".overlay-vis");
+  const eqOverlay = document.querySelectorAll(".overlay-eq");
 
   const updateToggle = function (
     condition,
     thumbClass,
     canvas = null,
-    overlay = null
+    overlays = null
   ) {
     const thumb = document.querySelector(thumbClass);
 
     if (condition) {
       thumb.style.left = "100%";
       canvas?.classList.remove("hidden");
-      overlay?.classList.add("hidden");
+      overlays?.forEach((el) => el.classList.add("hidden"));
     } else {
       thumb.style.left = "0%";
       canvas?.classList.add("hidden");
-      overlay?.classList.remove("hidden");
+      overlays?.forEach((el) => el.classList.remove("hidden"));
     }
   };
 
   updateToggle(visualizerIsOn, ".visualizer-thumb", canvas, visOverlay);
 
   updateToggle(equalizerIsOn, ".equalizer-thumb", null, eqOverlay);
+
+  updateToggle(settingsProfile.eyeCareMode, ".eyecare-thumb");
 
   settingsEl.addEventListener("click", function (e) {
     if (e.target.closest(".visualizer-toggle")) {
@@ -147,18 +159,23 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
 
       targetBtn.click();
 
-      updateToggle(
-        equalizerIsOn,
-        ".equalizer-thumb",
-        null,
-        eqOverlay
-      );
+      updateToggle(equalizerIsOn, ".equalizer-thumb", null, eqOverlay);
     }
 
     if (e.target.closest(".settings-eq-unhide")) {
       const targetBtn = document.querySelector(".eq-btn");
 
       targetBtn.click();
+    }
+
+    if (e.target.closest(".eyecare-toggle")) {
+      document.body.classList.toggle("eye-care-mode");
+
+      settingsProfile.eyeCareMode = !settingsProfile.eyeCareMode;
+
+      updateToggle(settingsProfile.eyeCareMode, ".eyecare-thumb");
+
+      saveSettings(settingsProfile);
     }
   });
 };
@@ -183,5 +200,28 @@ export const initVisualizerColorOptions = function (
 
       saveSettings(settingsProfile);
     });
+  });
+};
+
+export const initSettingsInput = function () {
+  const applyBtn = document.querySelector(".apply-custom-color");
+  const inputVisColor = document.querySelector(".input-vis-color");
+
+  applyBtn.addEventListener("click", function () {
+    let inputColor = inputVisColor.value;
+
+    if (inputColor === "") {
+      inputVisColor.value = randomRGBGenerator();
+
+      inputColor = inputVisColor.value;
+    }
+
+    const validColor = toHexColor(inputColor);
+
+    settingsProfile.customVisualizerColor = validColor;
+
+    canvas.setAttribute("data-colorcode", "custom");
+
+    settingsProfile.visualizerColor = "custom";
   });
 };

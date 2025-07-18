@@ -22,7 +22,10 @@ import {
   initDraggableFilterTags,
   initSeekbar,
   updateVolumeBar,
-  initVolumebar, initPlaybackSpeedSlider
+  initVolumebar,
+  initPlaybackSpeedSlider,
+  initFftSizeSlider,
+  initVolumeBoostSlider,
 } from "./draggableUi.js";
 
 import {
@@ -33,6 +36,7 @@ import {
   initSettingsToggleBtn,
   initVisualizerColorOptions,
   audioProfile,
+  initSettingsInput,
 } from "./settings.js";
 
 import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
@@ -114,10 +118,21 @@ const settingsTabs = document.querySelectorAll(".settings-tab-btn");
 const settingsSections = document.querySelectorAll(".right-settings-container");
 const themeColorBtns = document.querySelectorAll(".theme-color");
 const visColorBtns = document.querySelectorAll(".visualizer-color");
-const speedTrack = document.querySelector('.playback-rate-track');
-const speedThumb = document.querySelector('.playback-rate-thumb');
+const speedTrack = document.querySelector(".playback-rate-track");
+const speedThumb = document.querySelector(".playback-rate-thumb");
+const speedFill = document.querySelector(".playback-rate-fill");
+const fftTrack = document.querySelector(".fft-track");
+const fftThumb = document.querySelector(".fft-thumb");
+const fftFill = document.querySelector(".fft-fill");
+const gainTrack = document.querySelector(".gain-track");
+const gainThumb = document.querySelector(".gain-thumb");
+const gainFill = document.querySelector(".gain-fill");
 
 const toggleShuffleBtn = document.querySelector(".shuffle-toggle");
+
+// FOR TABS AND MOBILES
+const leftSongSectionBtn = document.querySelector(".song-section-btn");
+const rightPlaylistSectionBtn = document.querySelector(".left-section-exit");
 
 // *************************************************************
 // INITIAL STATE VARIABLE DECLARATIONS
@@ -1296,12 +1311,12 @@ const initApp = async function () {
     settingsManager("show");
   });
 
-  document.querySelector('.song-section-btn').addEventListener('click', function() {
-    leftSection.classList.add('bring-left');
+  leftSongSectionBtn.addEventListener("click", function () {
+    leftSection.classList.add("bring-left");
   });
 
-  document.querySelector('.left-section-exit').addEventListener('click', function() {
-    leftSection.classList.remove('bring-left');
+  rightPlaylistSectionBtn.addEventListener("click", function () {
+    leftSection.classList.remove("bring-left");
   });
 };
 
@@ -1322,6 +1337,8 @@ window.addEventListener("offline", function () {
 
   loadSettings();
 
+  initSettingsInput();
+
   initSettingsToggleBtn(settingsEl, settingsProfile);
 
   initSettingsOptions(settingsTabs, settingsSections);
@@ -1330,8 +1347,12 @@ window.addEventListener("offline", function () {
 
   initVisualizerColorOptions(visColorBtns, settingsProfile);
 
-  initPlaybackSpeedSlider(speedTrack, speedThumb);
+  initPlaybackSpeedSlider(speedTrack, speedThumb, speedFill);
 
+  initFftSizeSlider(fftTrack, fftThumb, fftFill);
+
+  initVolumeBoostSlider(gainTrack, gainThumb, gainFill);
+  
   try {
     await initApp();
 

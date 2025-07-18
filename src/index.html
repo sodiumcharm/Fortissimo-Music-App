@@ -543,13 +543,54 @@
                 Adjust Equalizer settings here.
               </p>
 
-              <ion-icon class="settings-icon-text__icon" name="chevron-forward-outline"></ion-icon>
+              <ion-icon
+                class="settings-icon-text__icon"
+                name="chevron-forward-outline"
+              ></ion-icon>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-sub-box__heading">
+              Boost Volume:
+              <span class="gain-display">0</span>%
+            </div>
+
+            <p class="settings-sub-box__text">
+              Boost volume carefully if necessary as higher percentages can
+              damage your ears.
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track gain-track">
+                <div class="settings-slider__fill gain-fill"></div>
+                <span class="settings-slider__thumb gain-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn gain-reset">Reset</button>
             </div>
           </div>
         </div>
 
         <div class="right-settings-container theme-container hide">
           <h2 class="box-heading">Theme</h2>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Eye Care Mode</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Use it during night time to protect your eyes from becoming
+                strained.
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track eyecare-toggle">
+                  <span class="toggle-switch__thumb eyecare-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div class="settings-sub-box">
             <h3 class="settings-sub-box__heading">Set Color Themes</h3>
@@ -655,6 +696,26 @@
           <div class="settings-sub-box">
             <div class="settings-deactive-overlay overlay-vis hidden"></div>
 
+            <div class="settings-sub-box__heading">Analyzer Sensitivity</div>
+
+            <p class="settings-sub-box__text">
+              Control details of the visualizer by changing FFT size (Higher
+              values can reduce performance).
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track fft-track">
+                <div class="settings-slider__fill fft-fill"></div>
+                <span class="settings-slider__thumb fft-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn fft-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+
             <h3 class="settings-sub-box__heading">Visualizer Color Effect</h3>
 
             <p class="settings-sub-box__text">
@@ -695,6 +756,28 @@
               <div class="visualizer-color visualizer-color-10" data-color="10">
                 III
               </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+            <h3 class="settings-sub-box__heading">Set Custom Color</h3>
+
+            <p class="settings-sub-box__text">
+              You can set custom visualizer color here by inputting your desired
+              Hex or RGB code. If you click apply without any color code, it
+              will set a random color.
+            </p>
+
+            <div class="settings-input">
+              <input
+                type="text"
+                class="settings-input__field input-vis-color"
+                placeholder="#be4bdb"
+              />
+              <button class="settings-input__btn apply-custom-color">
+                Apply
+              </button>
             </div>
           </div>
         </div>

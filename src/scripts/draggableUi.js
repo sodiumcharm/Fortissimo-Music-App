@@ -2,13 +2,12 @@ import {
   timeFormatter,
   valueToPercentage,
   percentageToValue,
+  initDragResponse,
 } from "./utilities.js";
 import { audioProfile } from "./settings.js";
 import { audio } from "./audioProcessor.js";
 
 export const initDraggableWindow = function (divider, container, leftSection) {
-  let isDraggingUi = false;
-
   const updateLeftWidth = function (e) {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
 
@@ -23,33 +22,7 @@ export const initDraggableWindow = function (divider, container, leftSection) {
     }
   };
 
-  divider.addEventListener("mousedown", function (e) {
-    e.preventDefault();
-    isDraggingUi = true;
-  });
-
-  document.addEventListener("mousemove", function (e) {
-    if (!isDraggingUi) return;
-    updateLeftWidth(e);
-  });
-
-  document.addEventListener("mouseup", function () {
-    isDraggingUi = false;
-  });
-
-  divider.addEventListener("touchstart", function (e) {
-    e.preventDefault();
-    isDraggingUi = true;
-  });
-
-  document.addEventListener("touchmove", function (e) {
-    if (!isDraggingUi) return;
-    updateLeftWidth(e);
-  });
-
-  document.addEventListener("touchend", function () {
-    isDraggingUi = false;
-  });
+  initDragResponse([0, updateLeftWidth, 0], divider);
 };
 
 export const initDraggableFilterTags = function (filterContainer) {
@@ -176,7 +149,7 @@ export const initSeekbar = function (
   seekbar.addEventListener("mousedown", (e) => {
     e.preventDefault();
     isDragging = true;
-    updateSeekForDrag(e); // Update immediately
+    updateSeekForDrag(e);
   });
 
   document.addEventListener("mousemove", (e) => {
@@ -231,8 +204,6 @@ export const initVolumebar = function (
   volumeFill,
   volumeIconCont
 ) {
-  let isDraggingVolume = false;
-
   const updateVolumeBar = function (percent) {
     volumeThumb.style.left = `${percent * 100}%`;
     volumeFill.style.width = `${percent * 100}%`;
@@ -259,57 +230,10 @@ export const initVolumebar = function (
     }
   };
 
-  // Mouse Based
-
-  volumeBar.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    isDraggingVolume = true;
-    updateVolume(e);
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (isDraggingVolume) {
-      updateVolume(e);
-    }
-  });
-
-  document.addEventListener("mouseup", (e) => {
-    if (isDraggingVolume) {
-      isDraggingVolume = false;
-    }
-  });
-
-  // Touch Based
-
-  volumeBar.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    isDraggingVolume = true;
-    updateVolume(e); // Update immediately
-  });
-
-  document.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    if (isDraggingVolume) {
-      updateVolume(e);
-    }
-  });
-
-  document.addEventListener("touchend", (e) => {
-    if (isDraggingVolume) {
-      isDraggingVolume = false;
-    }
-  });
-
-  document.addEventListener("touchcancel", (e) => {
-    if (isDraggingVolume) {
-      isDraggingVolume = false;
-    }
-  });
+  initDragResponse([updateVolume, updateVolume, 0], volumeBar);
 };
 
 export const eqSetter = function (track, thumb, eqBand, displayer) {
-  let condition = false;
-
   const updateEqBar = function (e) {
     const clientY = e.touches ? e.touches[0].clientY : e.clientY; // handle touch/mouse
 
@@ -332,39 +256,7 @@ export const eqSetter = function (track, thumb, eqBand, displayer) {
     )}`.padStart(2, "0");
   };
 
-  thumb.addEventListener("mousedown", function (e) {
-    condition = true;
-    e.preventDefault();
-  });
-
-  document.addEventListener("mousemove", function (e) {
-    if (condition) {
-      updateEqBar(e);
-    }
-  });
-
-  document.addEventListener("mouseup", function () {
-    condition = false;
-  });
-
-  thumb.addEventListener("touchstart", function (e) {
-    condition = true;
-    e.preventDefault();
-  });
-
-  document.addEventListener("touchmove", function (e) {
-    if (condition) {
-      updateEqBar(e);
-    }
-  });
-
-  document.addEventListener("touchend", function () {
-    condition = false;
-  });
-
-  document.addEventListener("touchcancel", function () {
-    condition = false;
-  });
+  initDragResponse([updateEqBar, updateEqBar, 0], track);
 };
 
 export const createKnob = function (knobEl, gainNode, displayer) {
@@ -440,7 +332,7 @@ export const createKnob = function (knobEl, gainNode, displayer) {
   updateRotation(initialAngle);
 };
 
-export const initPlaybackSpeedSlider = function (track, thumb) {
+export const initPlaybackSpeedSlider = function (track, thumb, fill) {
   const min = 0.5;
   const max = 2.5;
   let isDragging = false;
@@ -449,9 +341,9 @@ export const initPlaybackSpeedSlider = function (track, thumb) {
   const updatePlaybackRateUI = function (value) {
     const percent = valueToPercentage(value, min, max);
 
-    document.querySelector(".playback-rate-thumb").style.left = `${percent}%`;
+    thumb.style.left = `${percent}%`;
 
-    document.querySelector(".playback-rate-fill").style.width = `${percent}%`;
+    fill.style.width = `${percent}%`;
 
     document.querySelector(
       ".playback-rate-display"
@@ -471,7 +363,7 @@ export const initPlaybackSpeedSlider = function (track, thumb) {
 
     let value = percentageToValue(percent, min, max);
 
-    value = Math.max(0.5, Math.min(2.5, value));
+    value = Math.max(min, Math.min(max, value));
 
     updatePlaybackRateUI(value);
 
@@ -480,35 +372,112 @@ export const initPlaybackSpeedSlider = function (track, thumb) {
     audioProfile.playbackRate = value;
   };
 
-  thumb.addEventListener("mousedown", function (e) {
-    e.preventDefault();
-    isDragging = true;
-  });
-
-  document.addEventListener("mousemove", function (e) {
-    if (isDragging) updatePlaybackRateForDrag(e);
-  });
-
-  document.addEventListener("mouseup", function () {
-    isDragging = false;
-  });
-
-  thumb.addEventListener("touchstart", function (e) {
-    e.preventDefault();
-    isDragging = true;
-  });
-
-  document.addEventListener("touchmove", function (e) {
-    if (isDragging) updatePlaybackRateForDrag(e);
-  });
-
-  document.addEventListener("touchend", function () {
-    isDragging = false;
-  });
+  initDragResponse(
+    [updatePlaybackRateForDrag, updatePlaybackRateForDrag, 0],
+    track
+  );
 
   resetBtn.addEventListener("click", () => {
     updatePlaybackRateUI(1);
     audio.playbackRate = 1;
     audioProfile.playbackRate = 1;
+  });
+};
+
+export const initFftSizeSlider = function (track, thumb, fill) {
+  const min = 128;
+  const max = 4096;
+  const resetBtn = document.querySelector(".fft-reset");
+
+  const allowedValues = [];
+
+  for (let v = min; v <= max; v *= 2) {
+    allowedValues.push(v);
+  }
+
+  const updateFftsizeSliderUI = function (value) {
+    const percent =
+      (allowedValues.indexOf(value) / (allowedValues.length - 1)) * 100;
+
+    thumb.style.left = `${percent}%`;
+
+    fill.style.width = `${percent}%`;
+  };
+
+  updateFftsizeSliderUI(audioProfile.fftSize);
+
+  const updateFftsizeForDrag = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = track.getBoundingClientRect();
+
+    const offsetX = clientX - rect.left;
+
+    let percent = offsetX / rect.width;
+
+    percent = Math.max(0, Math.min(percent, 1));
+
+    const allowedIndex = Math.round(percent * (allowedValues.length - 1));
+
+    const value = allowedValues[allowedIndex];
+
+    updateFftsizeSliderUI(value);
+
+    audioProfile.fftSize = value;
+  };
+
+  initDragResponse([updateFftsizeForDrag, updateFftsizeForDrag, 0], track);
+
+  resetBtn.addEventListener("click", function () {
+    audioProfile.fftSize = 256;
+
+    updateFftsizeSliderUI(audioProfile.fftSize);
+  });
+};
+
+export const initVolumeBoostSlider = function (track, thumb, fill) {
+  const min = 1.0;
+  const max = 2.0;
+  const resetBtn = document.querySelector(".gain-reset");
+
+  const updateBoosterUI = function (value) {
+    const percent = valueToPercentage(value, min, max);
+
+    const relativePercent = (value / 1.0) * 100 - 100;
+
+    thumb.style.left = `${percent}%`;
+
+    fill.style.width = `${percent}%`;
+
+    document.querySelector(
+      ".gain-display"
+    ).textContent = `${relativePercent.toFixed(0)}`;
+  };
+
+  updateBoosterUI(audioProfile.boostValue);
+
+  const updateBoosterForDrag = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = track.getBoundingClientRect();
+
+    const offsetX = clientX - rect.left;
+
+    const percent = (offsetX / rect.width) * 100;
+
+    let value = percentageToValue(percent, min, max);
+
+    value = Math.max(min, Math.min(max, value));
+
+    updateBoosterUI(value);
+
+    audioProfile.boostValue = value;
+  };
+
+  initDragResponse([updateBoosterForDrag, updateBoosterForDrag, 0], track);
+
+  resetBtn.addEventListener("click", function () {
+    audioProfile.boostValue = 1.0;
+    updateBoosterUI(1.0);
   });
 };

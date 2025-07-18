@@ -1,5 +1,5 @@
 import { eqSetter, createKnob } from "./draggableUi.js";
-import { audioProfile } from "./settings.js";
+import { audioProfile, settingsProfile } from "./settings.js";
 
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
@@ -41,16 +41,23 @@ export const audioManipulator = function () {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+  const booster = audioCtx.createGain();
+
   const analyser = audioCtx.createAnalyser();
+
   source.connect(analyser);
-  analyser.connect(audioCtx.destination);
+  analyser.connect(booster);
+  booster.connect(audioCtx.destination);
 
-  analyser.fftSize = 256;
-  const bufferLength = analyser.frequencyBinCount;
-  const dataArray = new Uint8Array(bufferLength);
+  const drawBars = function () {
+    requestAnimationFrame(drawBars);
 
-  const draw = function () {
-    requestAnimationFrame(draw);
+    analyser.fftSize = audioProfile.fftSize;
+
+    const bufferLength = analyser.frequencyBinCount;
+
+    const dataArray = new Uint8Array(bufferLength);
+
     analyser.getByteFrequencyData(dataArray);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -103,14 +110,27 @@ export const audioManipulator = function () {
         r = 180;
         g = 250 - barHeight / 2;
         b = 255;
+      } else if (canvas.dataset.colorcode === "custom") {
+        ctx.fillStyle = settingsProfile.customVisualizerColor;
       }
 
-      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      if (
+        ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"].includes(
+          canvas.dataset.colorcode
+        )
+      ) {
+        ctx.fillStyle = `rgb(${r},${g},${b})`;
+      }
 
       ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
 
       x += barWidth + 1;
     }
+  };
+
+  const volumeBooster = function () {
+    requestAnimationFrame(volumeBooster);
+    booster.gain.value = audioProfile.boostValue;
   };
 
   // === Volume Normalization ===
@@ -163,7 +183,8 @@ export const audioManipulator = function () {
       audioCtx.resume();
     }
     connectNormalization();
-    draw();
+    drawBars();
+    volumeBooster();
   };
 
   const createEQBand = function (
@@ -221,6 +242,7 @@ export const audioManipulator = function () {
     normalizationGain.disconnect();
     normalizationAnalyser.disconnect();
     analyser.disconnect();
+    booster.disconnect();
     disconnectStereoVolume();
     subBassEQ.disconnect();
     bassEQ.disconnect();
@@ -236,6 +258,7 @@ export const audioManipulator = function () {
       .connect(normalizationGain)
       .connect(normalizationAnalyser)
       .connect(analyser)
+      .connect(booster)
       .connect(subBassEQ)
       .connect(bassEQ)
       .connect(lowMidEQ)
@@ -267,6 +290,7 @@ export const audioManipulator = function () {
       .connect(normalizationGain)
       .connect(normalizationAnalyser)
       .connect(analyser)
+      .connect(booster)
       .connect(audioCtx.destination);
   };
 

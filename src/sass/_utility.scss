@@ -1,4 +1,4 @@
-@use './mixins' as mixin;
+@use "./mixins" as mixin;
 
 .border {
   border: 1px solid #333;
@@ -39,7 +39,11 @@
 }
 
 .bg-yel-grey {
-  background-image: linear-gradient(220deg, rgba(var(--primary-rgb), 0.875) -50%, #121212fa 70%),
+  background-image: linear-gradient(
+      220deg,
+      rgba(var(--primary-rgb), 0.875) -50%,
+      #121212fa 70%
+    ),
     url("../img/pattern-2.png");
 
   background-size: cover;
@@ -47,23 +51,43 @@
 }
 
 .bg-playlist {
-  background-image: linear-gradient(180deg, rgba(var(--primary-rgb), 0.15) 0%, #121212 40%);
+  background-image: linear-gradient(
+    180deg,
+    rgba(var(--primary-rgb), 0.15) 0%,
+    #121212 40%
+  );
 }
 
 .bg-yel-grey-2 {
-  background-image: linear-gradient(45deg, var(--primary-color) -70%, #121212 75%);
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -70%,
+    #121212 75%
+  );
 }
 
 .bg-yel-grey-2-1 {
-  background-image: linear-gradient(45deg, var(--primary-color) -200%, #121212 75%);
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -200%,
+    #121212 75%
+  );
 }
 
 .bg-yel-grey-3 {
-  background-image: linear-gradient(45deg, var(--primary-color) -20%, #171717 60%);
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -20%,
+    #171717 60%
+  );
 }
 
 .bg-yel-grey-4 {
-  background-image: linear-gradient(45deg, var(--primary-color) -40%, #171717 60%);
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -40%,
+    #171717 60%
+  );
 }
 
 .bg-trnsp-grey {
@@ -126,7 +150,8 @@
 }
 
 .playlist--active {
-  box-shadow: 0 0 0 6px var(--primary-color), 5px 13px 2.5rem rgba(var(--primary-rgb), 0.4) !important;
+  box-shadow: 0 0 0 6px var(--primary-color),
+    5px 13px 2.5rem rgba(var(--primary-rgb), 0.4) !important;
 }
 
 .canvas {
@@ -173,9 +198,15 @@
 }
 
 @keyframes pulse {
-  0% {transform: scale(1);}
-  50% {transform: scale(1.15);}
-  100% {transform: scale(1);}
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .swipedown-playbar {
@@ -218,4 +249,8 @@
   transform: translateX(0) !important;
   width: 100% !important;
   height: 100%;
+}
+
+.eye-care-mode {
+  filter: sepia(0.35) brightness(0.85) hue-rotate(-20deg);
 }
