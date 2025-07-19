@@ -60,6 +60,16 @@ export const loadForCasting = async function (song) {
 
     audioProfile.castVolume = 0;
     targetOverlay.classList.remove("hidden");
+
+    const deviceName = session.getCastDevice().friendlyName;
+
+    const targetEl = document.querySelector(".input");
+
+    targetEl.placeholder = `Casting to ${deviceName}`;
+
+    setTimeout(() => {
+      targetEl.placeholder = "Search music";
+    }, 8000);
   } else {
     audioProfile.castVolume = null;
     targetOverlay.classList.add("hidden");
