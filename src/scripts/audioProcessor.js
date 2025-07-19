@@ -130,7 +130,8 @@ export const audioManipulator = function () {
 
   const volumeBooster = function () {
     requestAnimationFrame(volumeBooster);
-    booster.gain.value = audioProfile.boostValue;
+    booster.gain.value =
+      audioProfile.castVolume === 0 ? 0 : audioProfile.boostValue;
   };
 
   // === Volume Normalization ===

@@ -16,6 +16,7 @@ export const audioProfile = {
   normalizeVolume: true,
   fftSize: 256,
   boostValue: 1.0,
+  castVolume: null,
 };
 
 export const loadSettings = function () {
@@ -39,7 +40,7 @@ export const loadSettings = function () {
     settingsProfile.eyeCareMode = settings.eyeCareMode;
 
     if (settings.eyeCareMode) {
-      document.body.classList.add('eye-care-mode');
+      document.body.classList.add("eye-care-mode");
     }
 
     document.addEventListener("DOMContentLoaded", () => {

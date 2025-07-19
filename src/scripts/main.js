@@ -41,6 +41,8 @@ import {
 
 import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
 
+import { initChromecast, loadForCasting } from "./cast.js";
+
 // *************************************************************
 // DOM ELEMENT SELECTION
 // *************************************************************
@@ -169,6 +171,15 @@ let currentPlaylistType = "all";
 const insertedSongIds = [];
 const insertedPlaylistIds = [];
 let songData;
+
+const songForCasting = {
+  url: "",
+  title: "",
+  artist: "",
+  coverImg: "",
+  playlistName: "",
+  platform: "Fortissimo",
+};
 
 // *************************************************************
 // FUNCTION EXPRESSIONS FOR UI MODIFICATIONS
@@ -489,6 +500,12 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
               triggeredBy
             );
 
+            if (triggeredBy) {
+              songForCasting.playlistName = document.querySelector(
+                `[data-playlistid="${triggeredBy}"]`
+              ).dataset.playlistname;
+            }
+
             if (context === "global" && currentRefBtn) {
               currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
               currentPlaylistBtn.innerHTML =
@@ -531,6 +548,14 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           currentCardImg = cardImg;
 
           playbar.classList.remove("hidden");
+
+          // Casting
+          songForCasting.url = songUrl;
+          songForCasting.title = currentSongName;
+          songForCasting.artist = currentArtistName;
+          songForCasting.coverImg = currentSongImg;
+
+          loadForCasting(songForCasting);
         }
       });
     }
@@ -1352,7 +1377,9 @@ window.addEventListener("offline", function () {
   initFftSizeSlider(fftTrack, fftThumb, fftFill);
 
   initVolumeBoostSlider(gainTrack, gainThumb, gainFill);
-  
+
+  initChromecast();
+
   try {
     await initApp();
 

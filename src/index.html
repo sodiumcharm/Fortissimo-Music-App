@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="sass/main.scss" />
 
     <script defer type="module" src="scripts/main.js"></script>
+
     <title>Fortissimo: Listen to Music Free, Anytime, Anywhere</title>
   </head>
   <body>
@@ -22,6 +23,7 @@
         <div class="left flex-column">
           <div class="home bg-yel-grey rounded">
             <div class="home-btns">
+              <google-cast-launcher class="home-btn cast-btn"></google-cast-launcher>
               <button class="home-btn history-toggle" title="History">
                 <span class="mingcute--time-duration-line"></span>
               </button>
@@ -551,6 +553,8 @@
           </div>
 
           <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-gain hidden"></div>
+
             <div class="settings-sub-box__heading">
               Boost Volume:
               <span class="gain-display">0</span>%
@@ -791,6 +795,8 @@
         </button>
       </div>
     </main>
+
+    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 
     <script
       type="module"

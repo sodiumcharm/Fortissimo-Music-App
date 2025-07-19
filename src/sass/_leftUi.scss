@@ -36,6 +36,12 @@
   @include mixin.setTransition;
 }
 
+.cast-btn {
+  font-size: 3rem;
+  --disconnected-color: var(--primary-color);
+  --connected-color: var(--primary-color);
+}
+
 .home-btn:hover {
   transform: scale(1.2);
 }
