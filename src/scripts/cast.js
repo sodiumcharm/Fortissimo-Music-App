@@ -30,6 +30,8 @@ export const initChromecast = function () {
 export const loadForCasting = async function (song) {
   const targetOverlay = document.querySelector(".overlay-gain");
 
+  const targetIcon = document.querySelector(".playbar-cast-icon");
+
   const context = cast.framework.CastContext.getInstance();
 
   let session = await context.getCurrentSession();
@@ -70,8 +72,13 @@ export const loadForCasting = async function (song) {
     setTimeout(() => {
       targetEl.placeholder = "Search music";
     }, 8000);
+
+    targetIcon.classList.remove("hidden");
   } else {
     audioProfile.castVolume = null;
+
     targetOverlay.classList.add("hidden");
+    
+    targetIcon.classList.add("hidden");
   }
 };

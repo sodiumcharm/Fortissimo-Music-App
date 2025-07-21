@@ -260,3 +260,21 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.lyric-line {
+  font-size: 2rem;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.lyric-line.active {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.btn--inactive {
+  filter: brightness(0.5);
+  pointer-events: none;
+}

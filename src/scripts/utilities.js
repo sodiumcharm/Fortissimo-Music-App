@@ -115,11 +115,13 @@ export const songCardMaker = function (
   insertedSongIds,
   context
 ) {
+  const lyrics = obj.lyrics ? url + obj.lyrics : null;
+
   const html = `<div class="song-card flex align-center rounded bg-yel-grey-3" data-url="${
     url + obj.url
   }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
     url + obj.img
-  }" data-id="${obj.id}" data-context="${context}" data-eventlistener="">
+  }" data-id="${obj.id}" data-context="${context}" data-eventlistener="" data-lyrics="${lyrics}">
                   <div class="song-card-imgbox">
                     <img src="${
                       url + obj.img

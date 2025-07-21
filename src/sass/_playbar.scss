@@ -34,6 +34,12 @@
   width: 10rem;
   overflow: hidden;
   border: 3px solid var(--primary-color);
+  position: relative;
+
+  & .playbar-cast-icon {
+    @include mixin.position-center;
+    color: var(--primary-color);
+  }
 }
 
 .control-img {
@@ -137,14 +143,15 @@
 
 .sound-control {
   display: flex;
-  gap: 1rem;
+  align-items: center;
+  gap: 2rem;
   flex: 1;
 }
 
 .control-btns {
   @include mixin.flex-center;
   gap: 5rem;
-  width: 50%;
+  width: 49%;
 }
 
 .control-btn {
@@ -168,10 +175,27 @@
   transform: scale(1.15);
 }
 
+.show-lyrics {
+  @include mixin.flex-center;
+  height: 4rem;
+  width: 4rem;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  @include mixin.setTransition;
+
+  &:hover {
+    transform: scale(1.09);
+  }
+}
+
 .volume-control {
   @include mixin.flex-center;
-  width: 50%;
-  gap: 1.8rem;
+  flex-grow: 1;
+  // width: 50%;
+  gap: 1.5rem;
   font-size: 4rem;
   color: var(--primary-color);
 }

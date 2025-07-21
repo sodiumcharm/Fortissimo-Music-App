@@ -43,6 +43,8 @@ import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
 
 import { initChromecast, loadForCasting } from "./cast.js";
 
+import { initLyrics, lyricsStatus } from "./lyricsProcessor.js";
+
 // *************************************************************
 // DOM ELEMENT SELECTION
 // *************************************************************
@@ -99,6 +101,7 @@ const totalDurationEl = document.querySelector(".total-time");
 const playbar = document.querySelector(".playbar");
 const playNextBtn = document.querySelector(".play-next");
 const playPrevBtn = document.querySelector(".play-prev");
+const lyricsBtn = document.querySelector(".show-lyrics");
 
 const playlistLoopBtn = document.querySelector(".playlist-loop-btn");
 const songLoopBtn = document.querySelector(".song-loop-btn");
@@ -113,6 +116,8 @@ const playlistUserImg = document.querySelector(".playlist-account-img");
 const playlistUsername = document.querySelector(".playlist-username");
 const exitPlaylistBtn = document.querySelector(".exit-playlistbox");
 const savePlaylistBtn = document.querySelector(".save-playlistbox");
+
+const lyricsBox = document.querySelector(".lyrics-box");
 
 const settingsBtn = document.querySelector(".settings");
 const settingsEl = document.querySelector(".main-settings");
@@ -222,6 +227,16 @@ const settingsManager = function (action) {
   } else if (action === "show") {
     overlay.classList.remove("hidden");
     settingsEl.classList.remove("hidden");
+  }
+};
+
+const lyricsManager = function (action) {
+  if (action === "hide") {
+    overlay.classList.add("hidden");
+    lyricsBox.classList.add("hidden");
+  } else if (action === "show") {
+    overlay.classList.remove("hidden");
+    lyricsBox.classList.remove("hidden");
   }
 };
 
@@ -482,6 +497,7 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           const currentArtistName = card.getAttribute("data-artist");
           const currentSongImg = card.getAttribute("data-img");
           const songUrl = card.getAttribute("data-url");
+          const songLyrics = card.getAttribute("data-lyrics");
           const id = card.getAttribute("data-id");
           const cardImg = card.querySelector(".song-card-imgbox");
           const btn = card.querySelector(".song-card-play");
@@ -525,6 +541,9 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           songConTitle.textContent = currentSongName;
           songConArtist.textContent = currentArtistName;
           songConImg.src = currentSongImg;
+          playbar.setAttribute("data-lyrics", songLyrics);
+          playbar.setAttribute("data-playbartitle", currentSongName);
+          playbar.setAttribute("data-artist", currentArtistName);
 
           if (songUrl !== currentSongUrl) {
             if (currentBtn)
@@ -556,6 +575,24 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           songForCasting.coverImg = currentSongImg;
 
           loadForCasting(songForCasting);
+
+          if (songLyrics === "null") {
+            lyricsBtn.classList.add("btn--inactive");
+          } else {
+            lyricsBtn.classList.remove("btn--inactive");
+          }
+
+          const lyricsContainer = document.querySelector(".lyrics-container");
+          lyricsContainer.innerHTML = "";
+
+          if (lyricsStatus.currentLyricsHandler) {
+            audio.removeEventListener(
+              "timeupdate",
+              lyricsStatus.currentLyricsHandler
+            );
+
+            lyricsStatus.currentLyricsHandler = null;
+          }
         }
       });
     }
@@ -1342,6 +1379,23 @@ const initApp = async function () {
 
   rightPlaylistSectionBtn.addEventListener("click", function () {
     leftSection.classList.remove("bring-left");
+  });
+
+  lyricsBtn.addEventListener("click", function () {
+    const songNameEl = document.querySelector(".lyrics-song-name");
+    const artistEl = document.querySelector(".lyrics-song-artist");
+
+    const title = playbar.dataset.playbartitle;
+    const artist = playbar.dataset.artist;
+
+    const lyricsUrl = playbar.dataset.lyrics;
+
+    songNameEl.textContent = title;
+    artistEl.textContent = artist;
+
+    lyricsManager("show");
+
+    initLyrics(lyricsUrl);
   });
 };
 

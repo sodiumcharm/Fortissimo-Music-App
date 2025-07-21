@@ -26,7 +26,7 @@
               <google-cast-launcher
                 class="home-btn cast-btn"
               ></google-cast-launcher>
-              
+
               <button class="home-btn history-toggle" title="History">
                 <span class="mingcute--time-duration-line"></span>
               </button>
@@ -232,6 +232,9 @@
 
             <div class="control-imgbox rounded">
               <img alt="Image" class="control-img" />
+              <span
+                class="ic--baseline-cast-connected playbar-cast-icon hidden"
+              ></span>
             </div>
 
             <div class="total-control">
@@ -265,6 +268,10 @@
                       <ion-icon name="play-skip-forward"></ion-icon>
                     </button>
                   </div>
+
+                  <button class="show-lyrics btn--inactive" title="Show lyrics">
+                    <span class="mynaui--music-waves-solid"></span>
+                  </button>
 
                   <div class="volume-control">
                     <div class="speaker-iconbox">
@@ -796,6 +803,21 @@
         <button class="close-btn">
           <ion-icon name="close-outline"></ion-icon>
         </button>
+      </div>
+
+      <div class="lyrics-box bg-yel-grey-2-1 hidden">
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+
+        <h2 class="lyrics-box__heading">Lyrics</h2>
+
+        <div class="lyrics-box__details">
+          <p class="lyrics-box__detail">Title:<span class="lyrics-song-name"></span></p>
+          <p class="lyrics-box__detail">Artist:<span class="lyrics-song-artist"></span></p>
+        </div>
+
+        <div class="lyrics-container"></div>
       </div>
     </main>
 
