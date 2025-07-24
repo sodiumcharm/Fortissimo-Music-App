@@ -8,15 +8,19 @@ export const settingsProfile = {
   theme: "1",
   visualizerIsOn: true,
   visualizerColor: "1",
+  customVisualizerColor: null,
   eyeCareMode: false,
 };
 
 export const audioProfile = {
   playbackRate: 1,
   normalizeVolume: true,
+  monoEnabled: false,
   fftSize: 256,
   boostValue: 1.0,
   castVolume: null,
+  currentVolume: 1,
+  isMuted: false,
 };
 
 export const loadSettings = function () {
@@ -136,6 +140,8 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
 
   updateToggle(settingsProfile.eyeCareMode, ".eyecare-thumb");
 
+  updateToggle(audioProfile.monoEnabled, '.mono-thumb');
+
   settingsEl.addEventListener("click", function (e) {
     if (e.target.closest(".visualizer-toggle")) {
       visualizerIsOn = !visualizerIsOn;
@@ -153,6 +159,12 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
       updateToggle(audioProfile.normalizeVolume, ".normalization-thumb");
     }
 
+    if (e.target.closest('.mono-toggle')) {
+      audioProfile.monoEnabled = !audioProfile.monoEnabled;
+
+      updateToggle(audioProfile.monoEnabled, '.mono-thumb');
+    }
+
     if (e.target.closest(".equalizer-toggle-2")) {
       equalizerIsOn = !equalizerIsOn;
 
@@ -167,6 +179,17 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
       const targetBtn = document.querySelector(".eq-btn");
 
       targetBtn.click();
+    }
+
+    if (e.target.closest('.show-lrc-generator')) {
+      const lrcGeneratorWindow = document.querySelector('.lrc-generator');
+      const btnPlay = document.querySelector('.control-btn-play');
+
+      lrcGeneratorWindow.classList.remove('hidden');
+
+      if (btnPlay.innerHTML.includes('pause')) {
+        btnPlay.click();
+      }
     }
 
     if (e.target.closest(".eyecare-toggle")) {

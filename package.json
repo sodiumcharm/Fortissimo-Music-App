@@ -24,5 +24,9 @@
     "@parcel/transformer-sass": "^2.15.4",
     "parcel": "^2.15.4",
     "sass": "^1.89.2"
+  },
+  "dependencies": {
+    "jspdf": "^3.0.1",
+    "wavesurfer.js": "^7.10.1"
   }
 }

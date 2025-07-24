@@ -27,6 +27,44 @@ export const timeFormatter = function (time) {
   return `${minute}:${seconds}`;
 };
 
+export const lrcTimeFormatter = function (seconds) {
+  const minute = String(Math.trunc(seconds / 60)).padStart(2, "0");
+
+  const second = String(Math.trunc(seconds % 60)).padStart(2, "0");
+
+  const centi = String(Math.trunc((seconds % 1) * 100)).padStart(2, "0");
+
+  return `[${minute}:${second}.${centi}]`;
+};
+
+export const insertAtCursor = function (textarea, text) {
+  const start = textarea.selectionStart;
+
+  const end = textarea.selectionEnd;
+
+  const before = textarea.value.slice(0, start);
+
+  const after = textarea.value.slice(end);
+
+  textarea.value = before + text + after;
+
+  const newCursorPos = start + text.length;
+
+  textarea.selectionStart = textarea.selectionEnd = newCursorPos;
+
+  textarea.focus();
+};
+
+export const fileSizeConverter = function (bytes, targetUnit = "kb") {
+  let result;
+
+  if (targetUnit === "mb") {
+    result = bytes / 1000000;
+  }
+
+  return result.toFixed(1);
+};
+
 export const toHexColor = function (color) {
   // If the input is already a hex code, return it directly
   if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(color)) {
@@ -121,7 +159,9 @@ export const songCardMaker = function (
     url + obj.url
   }" data-name="${obj.title}" data-artist="${obj.artist}" data-img="${
     url + obj.img
-  }" data-id="${obj.id}" data-context="${context}" data-eventlistener="" data-lyrics="${lyrics}">
+  }" data-id="${
+    obj.id
+  }" data-context="${context}" data-eventlistener="" data-lyrics="${lyrics}">
                   <div class="song-card-imgbox">
                     <img src="${
                       url + obj.img

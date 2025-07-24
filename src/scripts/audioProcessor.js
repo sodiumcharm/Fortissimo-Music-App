@@ -45,9 +45,65 @@ export const audioManipulator = function () {
 
   const analyser = audioCtx.createAnalyser();
 
+  const monoSplitter = audioCtx.createChannelSplitter(2);
+  const monoMerger = audioCtx.createChannelMerger(2);
+
   source.connect(analyser);
   analyser.connect(booster);
-  booster.connect(audioCtx.destination);
+  booster.connect(monoSplitter);
+  monoMerger.connect(audioCtx.destination);
+
+  // *************************************************************
+  // MANAGING VOLUME NORMALISATION
+  // *************************************************************
+
+  const normalizationGain = audioCtx.createGain();
+
+  normalizationGain.gain.value = 1;
+
+  const normalizationAnalyser = audioCtx.createAnalyser();
+
+  normalizationAnalyser.fftSize = 2048;
+
+  const normalizationBuffer = new Uint8Array(normalizationAnalyser.fftSize);
+
+  const estimateRMS = function () {
+    normalizationAnalyser.getByteTimeDomainData(normalizationBuffer);
+    let sum = 0;
+    for (let i = 0; i < normalizationBuffer.length; i++) {
+      const val = (normalizationBuffer[i] - 128) / 128;
+      sum += val * val;
+    }
+    return Math.sqrt(sum / normalizationBuffer.length);
+  };
+
+  const normalizeVolumeLoop = function () {
+    if (audioProfile.normalizeVolume) {
+      const targetRMS = 0.05;
+      const currentRMS = estimateRMS();
+      if (currentRMS > 0.001) {
+        let gain = targetRMS / currentRMS;
+        gain = Math.max(0.5, Math.min(gain, 2.0)); // Clamp gain
+        normalizationGain.gain.setTargetAtTime(gain, audioCtx.currentTime, 0.2);
+      }
+    } else {
+      normalizationGain.gain.value = 1;
+    }
+
+    requestAnimationFrame(normalizeVolumeLoop);
+  };
+
+  const connectNormalization = function () {
+    source.disconnect();
+    source.connect(normalizationGain);
+    normalizationGain.connect(normalizationAnalyser);
+    normalizationGain.connect(analyser);
+    normalizeVolumeLoop();
+  };
+
+  // *************************************************************
+  // MANAGING VISUALIZER
+  // *************************************************************
 
   const drawBars = function () {
     requestAnimationFrame(drawBars);
@@ -128,56 +184,55 @@ export const audioManipulator = function () {
     }
   };
 
+  // *************************************************************
+  // MANAGING VOLUME BOOSTING
+  // *************************************************************
+
   const volumeBooster = function () {
     requestAnimationFrame(volumeBooster);
     booster.gain.value =
       audioProfile.castVolume === 0 ? 0 : audioProfile.boostValue;
   };
 
-  // === Volume Normalization ===
-  const normalizationGain = audioCtx.createGain();
+  // *************************************************************
+  // MANAGING MONO MODE
+  // *************************************************************
 
-  normalizationGain.gain.value = 1;
+  const leftGainL = audioCtx.createGain();
+  const leftGainR = audioCtx.createGain();
+  const rightGainL = audioCtx.createGain();
+  const rightGainR = audioCtx.createGain();
 
-  const normalizationAnalyser = audioCtx.createAnalyser();
+  const monoManager = function () {
+    requestAnimationFrame(monoManager);
+    
+    const enableMono = function () {
+      leftGainL.gain.value = 0.5;
+      rightGainL.gain.value = 0.5;
+      leftGainR.gain.value = 0.5;
+      rightGainR.gain.value = 0.5;
+    };
 
-  normalizationAnalyser.fftSize = 2048;
+    const disableMono = function () {
+      leftGainL.gain.value = 1;
+      rightGainL.gain.value = 0;
+      leftGainR.gain.value = 0;
+      rightGainR.gain.value = 1;
+    };
 
-  const normalizationBuffer = new Uint8Array(normalizationAnalyser.fftSize);
-
-  const estimateRMS = function () {
-    normalizationAnalyser.getByteTimeDomainData(normalizationBuffer);
-    let sum = 0;
-    for (let i = 0; i < normalizationBuffer.length; i++) {
-      const val = (normalizationBuffer[i] - 128) / 128;
-      sum += val * val;
-    }
-    return Math.sqrt(sum / normalizationBuffer.length);
+    if (audioProfile.monoEnabled) enableMono();
+    else disableMono();
   };
 
-  const normalizeVolumeLoop = function () {
-    if (audioProfile.normalizeVolume) {
-      const targetRMS = 0.05;
-      const currentRMS = estimateRMS();
-      if (currentRMS > 0.001) {
-        let gain = targetRMS / currentRMS;
-        gain = Math.max(0.5, Math.min(gain, 2.0)); // Clamp gain
-        normalizationGain.gain.setTargetAtTime(gain, audioCtx.currentTime, 0.2);
-      }
-    } else {
-      normalizationGain.gain.value = 1;
-    }
+  monoSplitter.connect(leftGainL, 0);
+  monoSplitter.connect(rightGainL, 1);
+  monoSplitter.connect(leftGainR, 0);
+  monoSplitter.connect(rightGainR, 1);
 
-    requestAnimationFrame(normalizeVolumeLoop);
-  };
-
-  const connectNormalization = function () {
-    source.disconnect();
-    source.connect(normalizationGain);
-    normalizationGain.connect(normalizationAnalyser);
-    normalizationGain.connect(analyser);
-    normalizeVolumeLoop();
-  };
+  leftGainL.connect(monoMerger, 0, 0);
+  rightGainL.connect(monoMerger, 0, 0);
+  leftGainR.connect(monoMerger, 0, 1);
+  rightGainR.connect(monoMerger, 0, 1);
 
   audio.onplay = () => {
     if (audioCtx.state === "suspended") {
@@ -186,7 +241,12 @@ export const audioManipulator = function () {
     connectNormalization();
     drawBars();
     volumeBooster();
+    monoManager();
   };
+
+  // *************************************************************
+  // MANAGING EQUALIZER AND STEREO VOLUME CONTROL
+  // *************************************************************
 
   const createEQBand = function (
     audioCtx,
@@ -291,8 +351,9 @@ export const audioManipulator = function () {
       .connect(normalizationGain)
       .connect(normalizationAnalyser)
       .connect(analyser)
-      .connect(booster)
-      .connect(audioCtx.destination);
+      .connect(booster).connect(monoSplitter);
+      
+      monoMerger.connect(audioCtx.destination);
   };
 
   eqToggleBtn.addEventListener("click", () => {

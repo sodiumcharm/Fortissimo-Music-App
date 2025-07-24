@@ -532,6 +532,23 @@
             </div>
           </div>
 
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Mono Audio</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Left and right speakers will play the same audio (It has no
+                effect while equalizer is on).
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track mono-toggle">
+                  <span class="toggle-switch__thumb mono-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="settings-sub-box eq-settings">
             <h3 class="settings-sub-box__heading">Audio Equalizer</h3>
 
@@ -582,6 +599,27 @@
               </div>
 
               <button class="settings-slider__btn gain-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">LRC Generator</h3>
+
+            <p class="settings-sub-box__text">
+              Make your lrc files for your own song lyrics and upload them with your songs so that others can enjoy your song with its unique lyrics.
+            </p>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-icon-text show-lrc-generator">
+              <p class="settings-sub-box__text">
+                Make your lyrics with timestamps here.
+              </p>
+
+              <ion-icon
+                class="settings-icon-text__icon"
+                name="chevron-forward-outline"
+              ></ion-icon>
             </div>
           </div>
         </div>
@@ -813,11 +851,106 @@
         <h2 class="lyrics-box__heading">Lyrics</h2>
 
         <div class="lyrics-box__details">
-          <p class="lyrics-box__detail">Title:<span class="lyrics-song-name"></span></p>
-          <p class="lyrics-box__detail">Artist:<span class="lyrics-song-artist"></span></p>
+          <p class="lyrics-box__detail">
+            Title:<span class="lyrics-song-name"></span>
+          </p>
+          <p class="lyrics-box__detail">
+            Artist:<span class="lyrics-song-artist"></span>
+          </p>
         </div>
 
         <div class="lyrics-container"></div>
+      </div>
+
+      <div class="lrc-generator hidden">
+        <h2 class="box-heading">LRC Generator</h2>
+
+        <div class="lrc-generator__box">
+          <div class="lrc-generator__file-upload bg-yel-grey-2">
+            <div class="file-upload">
+              <input type="file" id="file-input" accept="audio/*" hidden />
+              <p class="file-upload__heading">Choose Audio File</p>
+              <label for="file-input" class="file-btn">Upload Song</label>
+              <p class="file-upload__display">
+                File Name: <span class="file-display">No File</span>
+              </p>
+              <p class="file-upload__display">
+                File Size: <span class="size-display">0MB</span>
+              </p>
+            </div>
+
+            <div class="file-download">
+              <div class="file-download__formats">
+                <button class="format-btn format-lrc-btn format--active">
+                  <span class="mingcute--file-music-fill"></span>.lrc
+                </button>
+                <button class="format-btn format-pdf-btn">
+                  <span class="mingcute--pdf-fill"></span>.pdf
+                </button>
+              </div>
+
+              <input
+                type="text"
+                class="lrc-generator__input lrc-generator__title"
+                placeholder="Lyrics Title"
+              />
+
+              <input
+                type="text"
+                class="lrc-generator__input lrc-generator__rename"
+                placeholder="File Name"
+              />
+
+              <button class="file-btn download-lrc">Download LRC</button>
+            </div>
+          </div>
+
+          <div class="lrc-generator__editor">
+            <textarea
+              class="lrc-generator__editor-textarea editor"
+              placeholder="Type your lyrics here"
+            ></textarea>
+
+            <button
+              class="lrc-generator__editor-btn capture"
+              title="Capture Timestamp"
+            >
+              <ion-icon name="hourglass-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="lrc-generator__controls">
+          <div class="lrc-seekbar"></div>
+          <div class="lrc-control">
+            <p class="lrc-currenttime">00:00</p>
+            <div class="lrc-control__btns">
+              <button class="lrc-control-btn lrc-decrement">
+                <span class="mingcute--rewind-backward-10-line"></span>
+              </button>
+              <button class="lrc-control-btn lrc-play">
+                <ion-icon name="play"></ion-icon>
+              </button>
+              <button class="lrc-control-btn lrc-increment">
+                <span class="mingcute--rewind-forward-10-line"></span>
+              </button>
+
+              <div class="lrc-generator__playbackrate">
+                <div class="lrc-generator__track">
+                  <div class="lrc-generator__fill"></div>
+                  <span class="lrc-generator__thumb"></span>
+                </div>
+
+                <div class="playbackrate-display">1.0x</div>
+              </div>
+            </div>
+            <p class="lrc-duration">00:00</p>
+          </div>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
       </div>
     </main>
 

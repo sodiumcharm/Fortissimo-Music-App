@@ -192,9 +192,25 @@ export const initSeekbar = function (
   });
 };
 
-export const updateVolumeBar = function (percent, volumeThumb, volumeFill) {
-  volumeThumb.style.left = `${percent * 100}%`;
-  volumeFill.style.width = `${percent * 100}%`;
+export const updateVolumeBar = function (volume, saveStatus = true) {
+  const volumeIconCont = document.querySelector(".speaker-iconbox");
+  const volumeFill = document.querySelector(".volume-fill");
+  const volumeThumb = document.querySelector(".volume-circle");
+
+  if (saveStatus) audioProfile.currentVolume = volume;
+
+  volumeThumb.style.left = `${volume * 100}%`;
+  volumeFill.style.width = `${volume * 100}%`;
+
+  if (audio.volume === 0) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-mute"></ion-icon>';
+  } else if (audio.volume > 0 && audio.volume < 0.34) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-low"></ion-icon>';
+  } else if (audio.volume >= 0.34 && audio.volume < 0.68) {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-medium"></ion-icon>';
+  } else {
+    volumeIconCont.innerHTML = '<ion-icon name="volume-high"></ion-icon>';
+  }
 };
 
 export const initVolumebar = function (
@@ -205,6 +221,8 @@ export const initVolumebar = function (
   volumeIconCont
 ) {
   const updateVolumeBar = function (percent) {
+    audioProfile.currentVolume = percent;
+
     volumeThumb.style.left = `${percent * 100}%`;
     volumeFill.style.width = `${percent * 100}%`;
   };

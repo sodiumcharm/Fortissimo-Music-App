@@ -278,3 +278,8 @@
   filter: brightness(0.5);
   pointer-events: none;
 }
+
+.format--active {
+  background-color: var(--primary-color);
+  color: #222;
+}

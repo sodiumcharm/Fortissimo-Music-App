@@ -45,6 +45,10 @@ import { initChromecast, loadForCasting } from "./cast.js";
 
 import { initLyrics, lyricsStatus } from "./lyricsProcessor.js";
 
+import { initKeyHandler } from "./keyShortcuts.js";
+
+import { initLRCGenerator } from "./lrcGenerator.js";
+
 // *************************************************************
 // DOM ELEMENT SELECTION
 // *************************************************************
@@ -557,7 +561,7 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
 
           audio.playbackRate = audioProfile.playbackRate;
 
-          updateVolumeBar(audio.volume, volumeThumb, volumeFill);
+          updateVolumeBar(audio.volume);
 
           btn.innerHTML = '<ion-icon name="pause"></ion-icon>';
           songPlayBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
@@ -1438,6 +1442,10 @@ window.addEventListener("offline", function () {
     await initApp();
 
     audioManipulator();
+
+    initKeyHandler();
+
+    initLRCGenerator();
   } catch (err) {
     console.log(err);
 
