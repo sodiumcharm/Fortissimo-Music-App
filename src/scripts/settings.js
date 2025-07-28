@@ -21,6 +21,9 @@ export const audioProfile = {
   castVolume: null,
   currentVolume: 1,
   isMuted: false,
+  tremoloEnabled: false,
+  lfoFrequency: 5,
+  lfoType: "sine",
 };
 
 export const loadSettings = function () {
@@ -114,6 +117,7 @@ export const initThemeColorBtns = function (btns, settingsProfile) {
 export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
   const visOverlay = document.querySelectorAll(".overlay-vis");
   const eqOverlay = document.querySelectorAll(".overlay-eq");
+  const tremoloOverlay = document.querySelectorAll('.overlay-tremolo');
 
   const updateToggle = function (
     condition,
@@ -140,7 +144,9 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
 
   updateToggle(settingsProfile.eyeCareMode, ".eyecare-thumb");
 
-  updateToggle(audioProfile.monoEnabled, '.mono-thumb');
+  updateToggle(audioProfile.monoEnabled, ".mono-thumb");
+
+  updateToggle(audioProfile.tremoloEnabled, ".tremolo-thumb", null, tremoloOverlay);
 
   settingsEl.addEventListener("click", function (e) {
     if (e.target.closest(".visualizer-toggle")) {
@@ -159,10 +165,16 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
       updateToggle(audioProfile.normalizeVolume, ".normalization-thumb");
     }
 
-    if (e.target.closest('.mono-toggle')) {
+    if (e.target.closest(".mono-toggle")) {
       audioProfile.monoEnabled = !audioProfile.monoEnabled;
 
-      updateToggle(audioProfile.monoEnabled, '.mono-thumb');
+      updateToggle(audioProfile.monoEnabled, ".mono-thumb");
+    }
+
+    if (e.target.closest(".tremolo-toggle")) {
+      audioProfile.tremoloEnabled = !audioProfile.tremoloEnabled;
+
+      updateToggle(audioProfile.tremoloEnabled, ".tremolo-thumb", null, tremoloOverlay);
     }
 
     if (e.target.closest(".equalizer-toggle-2")) {
@@ -181,13 +193,13 @@ export const initSettingsToggleBtn = function (settingsEl, settingsProfile) {
       targetBtn.click();
     }
 
-    if (e.target.closest('.show-lrc-generator')) {
-      const lrcGeneratorWindow = document.querySelector('.lrc-generator');
-      const btnPlay = document.querySelector('.control-btn-play');
+    if (e.target.closest(".show-lrc-generator")) {
+      const lrcGeneratorWindow = document.querySelector(".lrc-generator");
+      const btnPlay = document.querySelector(".control-btn-play");
 
-      lrcGeneratorWindow.classList.remove('hidden');
+      lrcGeneratorWindow.classList.remove("hidden");
 
-      if (btnPlay.innerHTML.includes('pause')) {
+      if (btnPlay.innerHTML.includes("pause")) {
         btnPlay.click();
       }
     }
@@ -247,5 +259,22 @@ export const initSettingsInput = function () {
     canvas.setAttribute("data-colorcode", "custom");
 
     settingsProfile.visualizerColor = "custom";
+  });
+};
+
+export const initChooseLFOWaveform = function () {
+  const allWaveformBtns = document.querySelectorAll(".waveform-types__imgbox");
+
+  allWaveformBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const btnWaveformType = btn.dataset.waveform;
+      audioProfile.lfoType = btnWaveformType;
+
+      allWaveformBtns.forEach((el) => {
+        el.classList.remove("waveform--active");
+      });
+
+      this.classList.add("waveform--active");
+    });
   });
 };

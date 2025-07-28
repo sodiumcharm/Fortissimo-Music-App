@@ -1,11 +1,13 @@
 import { eqSetter, createKnob } from "./draggableUi.js";
 import { audioProfile, settingsProfile } from "./settings.js";
+import { valueToPercentage } from "./utilities.js";
 
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
 
 export const canvas = document.querySelector(".canvas");
 
+const eqContainer = document.querySelector(".equalizer-box");
 const subBassTrack = document.querySelector(".sub-bass-track");
 const subBassThumb = document.querySelector(".sub-bass-thumb");
 
@@ -32,6 +34,92 @@ const airThumb = document.querySelector(".air-thumb");
 
 let eqEnabled = false;
 const eqToggleBtn = document.querySelector(".eq-toggle");
+const presetDropDown = document.querySelector(".preset-display");
+const presetDisplay = document.querySelector(".preset-displayer");
+const presetBtnBox = document.querySelector(".preset-btns");
+
+const eqPresets = {
+  pop: {
+    subBass: 4,
+    bass: 3,
+    lowMid: 2,
+    mid: 2,
+    highMid: 3,
+    treble: 4,
+    brilliance: 5,
+    air: 4,
+  },
+  rock: {
+    subBass: 6,
+    bass: 4,
+    lowMid: 2,
+    mid: 0,
+    highMid: 2,
+    treble: 3,
+    brilliance: 4,
+    air: 4,
+  },
+  jazz: {
+    subBass: 2,
+    bass: 2,
+    lowMid: 3,
+    mid: 4,
+    highMid: 3,
+    treble: 2,
+    brilliance: 2,
+    air: 1,
+  },
+  bassBoost: {
+    subBass: 12,
+    bass: 10,
+    lowMid: 6,
+    mid: 0,
+    highMid: -2,
+    treble: -4,
+    brilliance: -6,
+    air: -6,
+  },
+  vocal: {
+    subBass: -2,
+    bass: -2,
+    lowMid: 1,
+    mid: 4,
+    highMid: 6,
+    treble: 3,
+    brilliance: 1,
+    air: 0,
+  },
+  classical: {
+    subBass: 2,
+    bass: 1,
+    lowMid: 0,
+    mid: 1,
+    highMid: 2,
+    treble: 3,
+    brilliance: 3,
+    air: 2,
+  },
+  night: {
+    subBass: 0,
+    bass: 0,
+    lowMid: -2,
+    mid: -4,
+    highMid: -6,
+    treble: -10,
+    brilliance: -12,
+    air: -15,
+  },
+  trebleBoost: {
+    subBass: -4,
+    bass: -4,
+    lowMid: -2,
+    mid: 0,
+    highMid: 2,
+    treble: 6,
+    brilliance: 8,
+    air: 10,
+  },
+};
 
 export const audioManipulator = function () {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -48,10 +136,43 @@ export const audioManipulator = function () {
   const monoSplitter = audioCtx.createChannelSplitter(2);
   const monoMerger = audioCtx.createChannelMerger(2);
 
+  const lfoInducedGain = audioCtx.createGain();
+
   source.connect(analyser);
-  analyser.connect(booster);
+  analyser.connect(lfoInducedGain);
+  lfoInducedGain.connect(booster);
   booster.connect(monoSplitter);
   monoMerger.connect(audioCtx.destination);
+
+  // *************************************************************
+  // MANAGING TREMOLO EFFECT
+  // *************************************************************
+
+  const lfo = audioCtx.createOscillator();
+
+  lfo.start();
+
+  const enableTremolo = function () {
+    lfo.type = audioProfile.lfoType;
+
+    lfoInducedGain.gain.value = 0.5;
+
+    lfo.frequency.value = audioProfile.lfoFrequency;
+
+    lfo.connect(lfoInducedGain.gain);
+  };
+
+  const disableTremolo = function () {
+    lfoInducedGain.gain.value = 1;
+    lfo.disconnect();
+  };
+
+  const tremoloManager = function () {
+    requestAnimationFrame(tremoloManager);
+
+    if (audioProfile.tremoloEnabled) enableTremolo();
+    else disableTremolo();
+  };
 
   // *************************************************************
   // MANAGING VOLUME NORMALISATION
@@ -205,7 +326,7 @@ export const audioManipulator = function () {
 
   const monoManager = function () {
     requestAnimationFrame(monoManager);
-    
+
     const enableMono = function () {
       leftGainL.gain.value = 0.5;
       rightGainL.gain.value = 0.5;
@@ -242,6 +363,7 @@ export const audioManipulator = function () {
     drawBars();
     volumeBooster();
     monoManager();
+    tremoloManager();
   };
 
   // *************************************************************
@@ -303,6 +425,7 @@ export const audioManipulator = function () {
     normalizationGain.disconnect();
     normalizationAnalyser.disconnect();
     analyser.disconnect();
+    lfoInducedGain.disconnect();
     booster.disconnect();
     disconnectStereoVolume();
     subBassEQ.disconnect();
@@ -319,6 +442,7 @@ export const audioManipulator = function () {
       .connect(normalizationGain)
       .connect(normalizationAnalyser)
       .connect(analyser)
+      .connect(lfoInducedGain)
       .connect(booster)
       .connect(subBassEQ)
       .connect(bassEQ)
@@ -351,9 +475,11 @@ export const audioManipulator = function () {
       .connect(normalizationGain)
       .connect(normalizationAnalyser)
       .connect(analyser)
-      .connect(booster).connect(monoSplitter);
-      
-      monoMerger.connect(audioCtx.destination);
+      .connect(lfoInducedGain)
+      .connect(booster)
+      .connect(monoSplitter);
+
+    monoMerger.connect(audioCtx.destination);
   };
 
   eqToggleBtn.addEventListener("click", () => {
@@ -390,6 +516,68 @@ export const audioManipulator = function () {
   );
 
   eqSetter(airTrack, airThumb, airEQ, ".air-display");
+
+  presetDropDown.addEventListener("click", function () {
+    presetBtnBox.classList.toggle("dropdown--hidden");
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".preset-display")) {
+      presetBtnBox.classList.add("dropdown--hidden");
+    }
+  });
+
+  const updateEQBarUI = function (dbGain, thumb, displayClass) {
+    const displayer = document.querySelector(displayClass);
+    const min = -15;
+    const max = 15;
+
+    const dbPercent = valueToPercentage(dbGain, min, max);
+    const percent = 100 - dbPercent;
+
+    thumb.style.top = `${percent}%`;
+    displayer.textContent = `${Math.round(dbGain)}`.padStart(2, "0");
+  };
+
+  const applyPreset = function (preset) {
+    subBassEQ.gain.value = preset.subBass;
+    bassEQ.gain.value = preset.bass;
+    lowMidEQ.gain.value = preset.lowMid;
+    midEQ.gain.value = preset.mid;
+    highMidEQ.gain.value = preset.highMid;
+    trebleEQ.gain.value = preset.treble;
+    brillianceEQ.gain.value = preset.brilliance;
+    airEQ.gain.value = preset.air;
+
+    updateEQBarUI(preset.subBass, subBassThumb, ".sub-bass-display");
+    updateEQBarUI(preset.bass, bassThumb, ".bass-display");
+    updateEQBarUI(preset.lowMid, lowmidThumb, ".lowmid-display");
+    updateEQBarUI(preset.mid, midThumb, ".mid-display");
+    updateEQBarUI(preset.highMid, highmidThumb, ".highmid-display");
+    updateEQBarUI(preset.treble, trebleThumb, ".treble-display");
+    updateEQBarUI(preset.brilliance, brillianceThumb, ".brilliance-display");
+    updateEQBarUI(preset.air, airThumb, ".air-display");
+  };
+
+  eqContainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("preset-btn")) {
+      const btn = e.target;
+      const btnName = e.target.textContent;
+      presetDisplay.textContent = btnName;
+
+      if (btn.dataset.preset === "pop") applyPreset(eqPresets.pop);
+      else if (btn.dataset.preset === "rock") applyPreset(eqPresets.rock);
+      else if (btn.dataset.preset === "jazz") applyPreset(eqPresets.jazz);
+      else if (btn.dataset.preset === "bass-boost")
+        applyPreset(eqPresets.bassBoost);
+      else if (btn.dataset.preset === "vocal") applyPreset(eqPresets.vocal);
+      else if (btn.dataset.preset === "classical")
+        applyPreset(eqPresets.classical);
+      else if (btn.dataset.preset === "night") applyPreset(eqPresets.night);
+      else if (btn.dataset.preset === "treble-boost")
+        applyPreset(eqPresets.trebleBoost);
+    }
+  });
 
   createKnob(
     document.querySelector(".left-knob"),

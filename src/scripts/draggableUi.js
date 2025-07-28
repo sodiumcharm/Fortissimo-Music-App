@@ -252,25 +252,30 @@ export const initVolumebar = function (
 };
 
 export const eqSetter = function (track, thumb, eqBand, displayer) {
+  const min = -15;
+  const max = 15;
+
   const updateEqBar = function (e) {
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY; // handle touch/mouse
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
     const rect = track.getBoundingClientRect();
 
-    let offsetY = clientY - rect.top;
+    const offsetY = clientY - rect.top;
 
-    offsetY = Math.max(0, Math.min(offsetY, rect.height));
+    let percent = offsetY / rect.height;
 
-    thumb.style.top = `${offsetY}px`;
+    percent = Math.max(0, Math.min(1, percent)) * 100;
 
-    const percent = 1 - offsetY / rect.height;
+    const dbPercent = 100 - percent;
 
-    const gain = percent * 30 - 15;
+    thumb.style.top = `${percent}%`;
 
-    eqBand.gain.value = gain;
+    const dbGain = percentageToValue(dbPercent, min, max);
+
+    eqBand.gain.value = dbGain;
 
     document.querySelector(`${displayer}`).textContent = `${Math.round(
-      eqBand.gain.value
+      dbGain
     )}`.padStart(2, "0");
   };
 
@@ -497,5 +502,47 @@ export const initVolumeBoostSlider = function (track, thumb, fill) {
   resetBtn.addEventListener("click", function () {
     audioProfile.boostValue = 1.0;
     updateBoosterUI(1.0);
+  });
+};
+
+export const initLFOFrequencySlider = function (track, thumb, fill) {
+  const min = 0;
+  const max = 20;
+  const resetBtn = document.querySelector(".lfo-reset");
+
+  const updateLFOUI = function (value) {
+    const percent = valueToPercentage(value, min, max);
+
+    thumb.style.left = `${percent}%`;
+    fill.style.width = `${percent}%`;
+
+    document.querySelector(".lfo-display").textContent = value.toFixed(0);
+  };
+
+  updateLFOUI(audioProfile.lfoFrequency);
+
+  const updateLFOForDrag = function (e) {
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    const rect = track.getBoundingClientRect();
+
+    const offsetX = clientX - rect.left;
+
+    let percent = offsetX / rect.width;
+
+    percent = Math.max(0, Math.min(1, percent)) * 100;
+
+    const value = percentageToValue(percent, min, max);
+
+    updateLFOUI(value);
+
+    audioProfile.lfoFrequency = value;
+  };
+
+  initDragResponse([updateLFOForDrag, updateLFOForDrag, 0], track);
+
+  resetBtn.addEventListener("click", function () {
+    audioProfile.lfoFrequency = 5;
+    updateLFOUI(5);
   });
 };

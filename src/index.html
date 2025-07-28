@@ -369,6 +369,35 @@
       <div class="equalizer-box hidden">
         <h2 class="box-heading">Equalizer</h2>
 
+        <div class="preset-box">
+          <div class="preset-dropdown">
+            <div class="preset-display">
+              <span class="preset-displayer">Try Presets</span
+              ><ion-icon
+                class="preset-icon"
+                name="chevron-down-outline"
+              ></ion-icon>
+            </div>
+
+            <div class="preset-btns dropdown--hidden">
+              <button class="preset-btn" data-preset="pop">Pop</button>
+              <button class="preset-btn" data-preset="rock">Rock</button>
+              <button class="preset-btn" data-preset="jazz">Jazz</button>
+              <button class="preset-btn" data-preset="bass-boost">
+                Bass Boost
+              </button>
+              <button class="preset-btn" data-preset="vocal">Vocal</button>
+              <button class="preset-btn" data-preset="classical">
+                Classical
+              </button>
+              <button class="preset-btn" data-preset="night">Night</button>
+              <button class="preset-btn" data-preset="treble-boost">
+                Treble Boost
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="eq-controls">
           <div class="eq-control-ui">
             <div class="knob-ui">
@@ -603,10 +632,104 @@
           </div>
 
           <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Tremolo Effect</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Adds a subtle pulsing effect by gently changing the volume
+                rhythmically (Great for ambient or lo-fi sound).
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track tremolo-toggle">
+                  <span class="toggle-switch__thumb tremolo-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-tremolo hidden"></div>
+
+            <div class="settings-sub-box__heading">
+              Set LFO Frequency:
+              <span class="lfo-display">5</span>Hz
+            </div>
+
+            <p class="settings-sub-box__text">
+              Set the frequency level of Low Frequency Oscillator responsible
+              for tremolo effect (Higher values will increase the pulsing
+              effect).
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track lfo-track">
+                <div class="settings-slider__fill lfo-fill"></div>
+                <span class="settings-slider__thumb lfo-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn lfo-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-tremolo hidden"></div>
+            <h3 class="settings-sub-box__heading">LFO Waveform Type</h3>
+
+            <p class="settings-sub-box__text">
+              Set the waveform type of the LFO to experience different pulsing
+              effects when tremolo is on.
+            </p>
+
+            <div class="waveform-types">
+              <div
+                class="waveform-types__imgbox waveform--active"
+                data-waveform="sine"
+              >
+                <img
+                  src="img/sine-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Sine</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="square">
+                <img
+                  src="img/square-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Square</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="sawtooth">
+                <img
+                  src="img/sawtooth-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Sawtooth</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="triangle">
+                <img
+                  src="img/triangle-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Triangle</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
             <h3 class="settings-sub-box__heading">LRC Generator</h3>
 
             <p class="settings-sub-box__text">
-              Make your lrc files for your own song lyrics and upload them with your songs so that others can enjoy your song with its unique lyrics.
+              Make your lrc files for your own song lyrics and upload them with
+              your songs so that others can enjoy your song with its unique
+              lyrics.
             </p>
           </div>
 

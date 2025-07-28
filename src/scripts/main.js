@@ -26,6 +26,7 @@ import {
   initPlaybackSpeedSlider,
   initFftSizeSlider,
   initVolumeBoostSlider,
+  initLFOFrequencySlider,
 } from "./draggableUi.js";
 
 import {
@@ -37,6 +38,7 @@ import {
   initVisualizerColorOptions,
   audioProfile,
   initSettingsInput,
+  initChooseLFOWaveform,
 } from "./settings.js";
 
 import { deShufflePlaylists, shufflePlaylists } from "./shuffle.js";
@@ -138,6 +140,9 @@ const fftFill = document.querySelector(".fft-fill");
 const gainTrack = document.querySelector(".gain-track");
 const gainThumb = document.querySelector(".gain-thumb");
 const gainFill = document.querySelector(".gain-fill");
+const lfoTrack = document.querySelector(".lfo-track");
+const lfoThumb = document.querySelector(".lfo-thumb");
+const lfoFill = document.querySelector(".lfo-fill");
 
 const toggleShuffleBtn = document.querySelector(".shuffle-toggle");
 
@@ -1435,6 +1440,10 @@ window.addEventListener("offline", function () {
   initFftSizeSlider(fftTrack, fftThumb, fftFill);
 
   initVolumeBoostSlider(gainTrack, gainThumb, gainFill);
+
+  initLFOFrequencySlider(lfoTrack, lfoThumb, lfoFill);
+
+  initChooseLFOWaveform();
 
   initChromecast();
 
