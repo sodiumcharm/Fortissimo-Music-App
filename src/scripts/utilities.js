@@ -225,12 +225,12 @@ export const playlistCardMaker = function (
   insertedPlaylistIds.push(playlist.id);
 };
 
-export const referenceCardMaker = function (obj, url, container, context) {
+export const referenceCardMaker = function (obj, url, container, context, insertedRefCards) {
   const html = `<div class="song-reference-card flex align-center rounded bg-yel-grey-3" data-refname="${
     obj.title
   }" data-refid="${obj.id}" data-context="${context}" data-refurl="${
     url + obj.url
-  }" data-refplaylist="">
+  }" data-refplaylist="" data-eventlistener="">
                   <div class="song-card-imgbox">
                     <img src="${
                       url + obj.img
@@ -245,6 +245,7 @@ export const referenceCardMaker = function (obj, url, container, context) {
                 </div>`;
 
   container.insertAdjacentHTML("beforeend", html);
+  insertedRefCards.push(obj.id);
 };
 
 export const initDragResponse = function (fnArr, thumb) {

@@ -184,6 +184,7 @@ let currentPlaylistType = "all";
 
 const insertedSongIds = [];
 const insertedPlaylistIds = [];
+const insertedRefCards = [];
 let songData;
 
 const songForCasting = {
@@ -617,9 +618,17 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
         if (parentCard) {
           const parentId = parentCard.getAttribute("data-id");
 
-          const targetRefCard = document.querySelector(
+          let targetRefCard = document.querySelector(
             `[data-refid="${parentId}"]`
           );
+
+          if (!targetRefCard) {
+            songReferenceLoader(null, songsSection, "playlist", Number(parentId));
+
+            targetRefCard = document.querySelector(
+              `[data-refid="${parentId}"]`
+            );
+          }
 
           const targetRefLikeBtn = targetRefCard.querySelector(
             ".ref-like-container"
@@ -758,6 +767,10 @@ const playlistLoader = function (
               '<span class="mingcute--bookmark-add-fill"></span>';
           }
 
+          const songIdArr = JSON.parse(playlistCard.dataset.songs);
+
+          songReferenceLoader(songIdArr, songsSection, "playlist");
+
           const playlistId = playlistCard.getAttribute("data-playlistid");
           currentPlaylistId = playlistId;
           playlistBox.setAttribute("data-activatorid", playlistId);
@@ -769,11 +782,7 @@ const playlistLoader = function (
           allSongRefCards.forEach((card) => {
             card.classList.add("hide");
 
-            if (
-              JSON.parse(playlistCard.dataset.songs).includes(
-                Number(card.dataset.refid)
-              )
-            ) {
+            if (songIdArr.includes(Number(card.dataset.refid))) {
               card.classList.remove("hide");
             }
           });
@@ -860,89 +869,153 @@ const playlistLoader = function (
   });
 };
 
-const songReferenceLoader = function (songs, container, context) {
-  for (let obj of songs) {
-    referenceCardMaker(obj, url, container, context);
+const songReferenceLoader = function (
+  songIdArr = null,
+  container,
+  context,
+  songId = 0
+) {
+  if (songIdArr !== null && songId === 0) {
+    const songs = [];
+
+    songData.songs.forEach((song) => {
+      if (songIdArr.includes(song.id)) {
+        songs.push(song);
+      }
+    });
+
+    for (let obj of songs) {
+      if (!insertedRefCards.includes(obj.id)) {
+        referenceCardMaker(obj, url, container, context, insertedRefCards);
+      }
+    }
+  } else {
+    for (let obj of songData.songs) {
+      if (!insertedRefCards.includes(obj.id) && obj.id === songId) {
+        referenceCardMaker(obj, url, container, context, insertedRefCards);
+      }
+    }
   }
 
   document.querySelectorAll(".song-reference-card").forEach((card) => {
-    card.addEventListener("click", function (e) {
-      if (
-        !e.target.classList.contains("ref-like-container") &&
-        !e.target.classList.contains("mingcute--thumb-up-2-line") &&
-        !e.target.classList.contains("mingcute--thumb-up-2-fill")
-      ) {
-        const refId = card.dataset.refid;
+    if (card.dataset.eventlistener !== "added") {
+      card.setAttribute("data-eventlistener", "added");
 
-        if (!insertedSongIds.includes(Number(refId))) {
+      card.addEventListener("click", function (e) {
+        if (
+          !e.target.classList.contains("ref-like-container") &&
+          !e.target.classList.contains("mingcute--thumb-up-2-line") &&
+          !e.target.classList.contains("mingcute--thumb-up-2-fill")
+        ) {
+          const refId = card.dataset.refid;
+
+          if (!insertedSongIds.includes(Number(refId))) {
+            songLoader(
+              songData.songs,
+              songsContainer,
+              "global",
+              undefined,
+              Number(refId)
+            );
+          }
+
+          document.querySelectorAll(".song-card").forEach((globalCard) => {
+            if (refId === globalCard.dataset.id) {
+              globalCard.click();
+              globalCard.setAttribute(
+                "data-context",
+                `${card.dataset.context}`
+              );
+
+              const refUrl = card.dataset.refurl;
+              const refBtn = card.querySelector(".song-card-play");
+              const refCardImg = card.querySelector(".song-card-imgbox");
+
+              if (refUrl !== currentRefSongUrl) {
+                if (currentRefBtn)
+                  currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+                if (currentRefCardImg)
+                  currentRefCardImg.classList.remove("rotate");
+              }
+
+              refBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
+              refCardImg.classList.add("rotate");
+              currentRefBtn = refBtn;
+              currentRefCardImg = refCardImg;
+              currentRefSongUrl = refUrl;
+
+              document
+                .querySelectorAll(".song-reference-card")
+                .forEach((el) => {
+                  if (!el.classList.contains("hide")) {
+                    el.setAttribute("data-refplaylist", currentPlaylistId);
+                  }
+                });
+
+              if (currentPlaylistCardEl) {
+                currentPlaylistCardEl.classList.remove("playlist--active");
+              }
+
+              const targetPlaylistId = card.dataset.refplaylist;
+
+              const targetPlaylist = document.querySelector(
+                `[data-playlistid="${targetPlaylistId}"]`
+              );
+
+              globalCard.setAttribute(
+                "data-triggeredby",
+                `${targetPlaylistId}`
+              );
+
+              if (currentPlaylistBtn) {
+                currentPlaylistBtn.innerHTML =
+                  '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
+              }
+
+              const targetPlaylistBtn =
+                targetPlaylist.querySelector(".card-btn-play");
+              targetPlaylistBtn.innerHTML =
+                '<ion-icon class="icons card-play-icons" name="pause"></ion-icon>';
+              currentPlaylistBtn = targetPlaylistBtn;
+
+              currentPlaylistCardEl = targetPlaylist;
+              targetPlaylist.classList.add("playlist--active");
+
+              return;
+            }
+          });
+        }
+      });
+
+      const likeBtn = card.querySelector(".ref-like-container");
+
+      likeBtn.addEventListener("click", function () {
+        const parentRefCard = this.closest(".song-reference-card");
+
+        const targetId = parentRefCard.dataset.refid;
+
+        const targetGlobalSongCard = document.querySelector(
+          `[data-id="${targetId}"]`
+        );
+
+        if (targetGlobalSongCard) {
+          targetGlobalSongCard.querySelector(".like-container").click();
+        } else {
           songLoader(
             songData.songs,
             songsContainer,
             "global",
             undefined,
-            Number(refId)
+            Number(targetId)
           );
+
+          const newLoadedCard = document.querySelector(
+            `[data-id="${targetId}"]`
+          );
+          newLoadedCard.querySelector(".like-container").click();
         }
-
-        document.querySelectorAll(".song-card").forEach((globalCard) => {
-          if (refId === globalCard.dataset.id) {
-            globalCard.click();
-            globalCard.setAttribute("data-context", `${card.dataset.context}`);
-
-            const refUrl = card.dataset.refurl;
-            const refBtn = card.querySelector(".song-card-play");
-            const refCardImg = card.querySelector(".song-card-imgbox");
-
-            if (refUrl !== currentRefSongUrl) {
-              if (currentRefBtn)
-                currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
-              if (currentRefCardImg)
-                currentRefCardImg.classList.remove("rotate");
-            }
-
-            refBtn.innerHTML = '<ion-icon name="pause"></ion-icon>';
-            refCardImg.classList.add("rotate");
-            currentRefBtn = refBtn;
-            currentRefCardImg = refCardImg;
-            currentRefSongUrl = refUrl;
-
-            document.querySelectorAll(".song-reference-card").forEach((el) => {
-              if (!el.classList.contains("hide")) {
-                el.setAttribute("data-refplaylist", currentPlaylistId);
-              }
-            });
-
-            if (currentPlaylistCardEl) {
-              currentPlaylistCardEl.classList.remove("playlist--active");
-            }
-
-            const targetPlaylistId = card.dataset.refplaylist;
-
-            const targetPlaylist = document.querySelector(
-              `[data-playlistid="${targetPlaylistId}"]`
-            );
-
-            globalCard.setAttribute("data-triggeredby", `${targetPlaylistId}`);
-
-            if (currentPlaylistBtn) {
-              currentPlaylistBtn.innerHTML =
-                '<ion-icon class="icons card-play-icons" name="play"></ion-icon>';
-            }
-
-            const targetPlaylistBtn =
-              targetPlaylist.querySelector(".card-btn-play");
-            targetPlaylistBtn.innerHTML =
-              '<ion-icon class="icons card-play-icons" name="pause"></ion-icon>';
-            currentPlaylistBtn = targetPlaylistBtn;
-
-            currentPlaylistCardEl = targetPlaylist;
-            targetPlaylist.classList.add("playlist--active");
-
-            return;
-          }
-        });
-      }
-    });
+      });
+    }
   });
 };
 
@@ -962,7 +1035,7 @@ const initApp = async function () {
 
   playlistLoader(songData.playlists, 30);
 
-  songReferenceLoader(songData.songs, songsSection, "playlist");
+  // songReferenceLoader(songData.songs, songsSection, "playlist");
 
   const allSongCards = songsSection.querySelectorAll(".song-card");
   allSongCards.forEach((card) => {
@@ -1242,32 +1315,32 @@ const initApp = async function () {
     });
   });
 
-  document.querySelectorAll(".ref-like-container").forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const parentRefCard = btn.closest(".song-reference-card");
+  // document.querySelectorAll(".ref-like-container").forEach((btn) => {
+  //   btn.addEventListener("click", function () {
+  //     const parentRefCard = btn.closest(".song-reference-card");
 
-      const targetId = parentRefCard.dataset.refid;
+  //     const targetId = parentRefCard.dataset.refid;
 
-      const targetGlobalSongCard = document.querySelector(
-        `[data-id="${targetId}"]`
-      );
+  //     const targetGlobalSongCard = document.querySelector(
+  //       `[data-id="${targetId}"]`
+  //     );
 
-      if (targetGlobalSongCard) {
-        targetGlobalSongCard.querySelector(".like-container").click();
-      } else {
-        songLoader(
-          songData.songs,
-          songsContainer,
-          "global",
-          undefined,
-          Number(targetId)
-        );
+  //     if (targetGlobalSongCard) {
+  //       targetGlobalSongCard.querySelector(".like-container").click();
+  //     } else {
+  //       songLoader(
+  //         songData.songs,
+  //         songsContainer,
+  //         "global",
+  //         undefined,
+  //         Number(targetId)
+  //       );
 
-        const newLoadedCard = document.querySelector(`[data-id="${targetId}"]`);
-        newLoadedCard.querySelector(".like-container").click();
-      }
-    });
-  });
+  //       const newLoadedCard = document.querySelector(`[data-id="${targetId}"]`);
+  //       newLoadedCard.querySelector(".like-container").click();
+  //     }
+  //   });
+  // });
 
   allSongsTabBtn.addEventListener("click", function () {
     allTabIsOpen = true;
