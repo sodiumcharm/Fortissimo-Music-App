@@ -1,0 +1,300 @@
+@use "./mixins" as mixin;
+
+.border {
+  border: 1px solid #333;
+}
+
+.icons {
+  font-size: 2.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.bg-grey {
+  background-color: #121212;
+}
+
+.bg-grey-2 {
+  background-color: #efefef;
+  background-image: url("../img/pattern.png");
+  background-size: cover;
+  background-position: top;
+  background-repeat: repeat;
+  background-blend-mode: exclusion;
+}
+
+.bg-yel-grey {
+  background-image: linear-gradient(
+      220deg,
+      rgba(var(--primary-rgb), 0.875) -50%,
+      #121212fa 70%
+    ),
+    url("../img/pattern-2.png");
+
+  background-size: cover;
+  background-position: top;
+}
+
+.bg-playlist {
+  background-image: linear-gradient(
+    180deg,
+    rgba(var(--primary-rgb), 0.15) 0%,
+    #121212 40%
+  );
+}
+
+.bg-yel-grey-2 {
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -70%,
+    #121212 75%
+  );
+}
+
+.bg-yel-grey-2-1 {
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -200%,
+    #121212 75%
+  );
+}
+
+.bg-yel-grey-3 {
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -20%,
+    #171717 60%
+  );
+}
+
+.bg-yel-grey-4 {
+  background-image: linear-gradient(
+    45deg,
+    var(--primary-color) -40%,
+    #171717 60%
+  );
+}
+
+.bg-trnsp-grey {
+  background-image: linear-gradient(to bottom, transparent 10%, #121212 50%);
+}
+
+.rounded {
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar {
+  width: 0.8rem;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+  }
+}
+
+.rotate {
+  animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hide {
+  display: none !important;
+}
+
+.hidden {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.dropdown--hidden {
+  pointer-events: none;
+  opacity: 0;
+  
+  & * {
+    font-size: 0;
+    height: 0;
+    padding: 0;
+  }
+}
+
+.btn--active {
+  background-color: var(--primary-color);
+  color: #121212;
+}
+
+.playlist--active {
+  box-shadow: 0 0 0 6px var(--primary-color),
+    5px 13px 2.5rem rgba(var(--primary-rgb), 0.4) !important;
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+  z-index: 2;
+  @include mixin.setTransition;
+}
+
+.close-btn {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: none;
+  font-size: 4rem;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.close-btn:hover {
+  transform: scale(1.2);
+}
+
+.box-heading {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2.8rem;
+  font-weight: 600;
+}
+
+.filter-active {
+  background-color: var(--primary-color);
+  color: #121212;
+}
+
+.listening {
+  animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.swipedown-playbar {
+  transform: translateY(90%);
+}
+
+.stop-scroll {
+  overflow: hidden;
+}
+
+.hide-playlist {
+  padding: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.song-reference-card {
+  height: 7rem;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.song-reference-card:hover {
+  transform: scale(1.05);
+}
+
+.theme--active {
+  box-shadow: 0 0 0 6px var(--primary-color);
+}
+
+.visualizer-color--active {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 3px var(--primary-color);
+}
+
+.waveform--active {
+  box-shadow: 0 0 0 3px var(--primary-color);
+}
+
+.bring-left {
+  transform: translateX(0) !important;
+  width: 100% !important;
+  height: 100%;
+}
+
+.eye-care-mode {
+  filter: sepia(0.35) brightness(0.85) hue-rotate(-20deg);
+}
+
+.hide-left {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lyric-line {
+  font-size: 2rem;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.lyric-line.active {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.btn--inactive {
+  filter: brightness(0.5);
+  pointer-events: none;
+}
+
+.format--active {
+  background-color: var(--primary-color);
+  color: #222;
+}

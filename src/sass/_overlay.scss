@@ -1,0 +1,12 @@
+@use './mixins' as mixin;
+
+.overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1500;
+  backdrop-filter: blur(10px);
+  @include mixin.setTransition;
+}

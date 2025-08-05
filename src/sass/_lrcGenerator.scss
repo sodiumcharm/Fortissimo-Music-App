@@ -1,0 +1,279 @@
+@use "./mixins" as mixin;
+
+.lrc-generator {
+  @include mixin.position-center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.8rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.8rem 2.5rem;
+  background-color: #222;
+  z-index: 1850;
+  @include mixin.setTransition;
+
+  & .box-heading {
+    height: 7%;
+    margin: 0;
+  }
+
+  &__box {
+    height: 75%;
+    display: flex;
+    gap: 2rem;
+  }
+
+  &__file-upload {
+    width: 25%;
+    border-radius: 11px;
+    background-color: #252525;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+  }
+
+  &__editor {
+    width: 75%;
+    border-radius: 11px;
+    overflow: hidden;
+    position: relative;
+
+    &-textarea {
+      width: 100%;
+      height: 100%;
+      outline: none;
+      border: none;
+      background-color: #333;
+      padding: 3rem;
+      resize: none;
+      font-size: 1.4rem;
+      font-weight: 600;
+      font-family: inherit;
+      color: #eee;
+    }
+
+    &-btn {
+      @include mixin.flex-center;
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      border: none;
+      background-color: var(--primary-color);
+      width: 6rem;
+      height: 6rem;
+      border-radius: 50%;
+      font-family: inherit;
+      font-size: 4.2rem;
+      cursor: pointer;
+      @include mixin.setTransition;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  &__controls {
+    height: 18%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  &__btn {
+    border: none;
+    font-family: inherit;
+  }
+
+  &__input {
+    font-family: inherit;
+    width: 100%;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #eee;
+    background-color: #222;
+    border: none;
+    outline: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+
+    &::placeholder {
+      color: rgba(var(--primary-rgb), 0.25);
+    }
+  }
+
+  &__playbackrate {
+    @include mixin.flex-center;
+    position: absolute;
+    top: 50%;
+    transform: translate(120%, -50%);
+    gap: 2rem;
+    font-size: 1.4rem;
+  }
+
+  &__track {
+    width: 12vw;
+    height: 0.8rem;
+    background-color: rgba(var(--primary-rgb), 0.5);
+    border-radius: 50px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  &__thumb {
+    position: absolute;
+    left: 0%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+  }
+
+  &__fill {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 0%;
+    background-color: var(--primary-color);
+    border-radius: 50px;
+  }
+}
+
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__heading {
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  &__display {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 500;
+
+    & span {
+      color: var(--primary-color);
+    }
+  }
+}
+
+.file-download {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+
+  &__formats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+}
+
+.file-btn {
+  border: none;
+  font-family: inherit;
+    padding: 0.8rem 1.8rem;
+    background-image: linear-gradient(
+      45deg,
+      var(--secondary-color),
+      var(--primary-color)
+    );
+
+    border-radius: 50px;
+    text-align: center;
+    color: #222;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    @include mixin.setTransition;
+
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+
+.lrc-seekbar {
+  height: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.lrc-control {
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lrc-currenttime,
+.lrc-duration {
+  font-size: 1.4rem;
+  font-weight: 600;
+  width: 5rem;
+  text-align: center;
+}
+
+.lrc-control__btns {
+  @include mixin.flex-center;
+  gap: 4rem;
+  position: relative;
+}
+
+.lrc-control-btn {
+  background-image: linear-gradient(
+    45deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  border: none;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  font-size: 3.4rem;
+  @include mixin.flex-center;
+  @include mixin.setTransition;
+  cursor: pointer;
+
+  & span {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+
+  &:hover {
+    transform: scale(1.12);
+  }
+}
+
+.format-btn {
+  @include mixin.flex-center;
+  gap: 0.5rem;
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+  padding: 0.8rem 1.6rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-radius: 7px;
+  color: var(--primary-color);
+  width: 50%;
+  @include mixin.setTransition;
+  cursor: pointer;
+
+  & span {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}
+
+.playbackrate-display {
+  width: 2rem;
+}

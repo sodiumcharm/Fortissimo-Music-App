@@ -1,0 +1,117 @@
+@use './mixins' as mixin;
+
+.right {
+  flex-grow: 1;
+  margin: var(--ui-gap) var(--ui-gap) var(--ui-gap) 0;
+  gap: var(--ui-gap);
+  overflow: hidden;
+  position: relative;
+
+  container-type: inline-size;
+  container-name: playlistContainer;
+}
+
+.right .header {
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 2.5rem;
+}
+
+.header .nav {
+  gap: 1rem;
+}
+
+.btn-nav {
+  @include mixin.flex-center;
+  background: none;
+  border: none;
+  text-align: center;
+  color: var(--primary-color);
+  cursor: pointer;
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  @include mixin.setTransition;
+}
+
+.btn-nav-1 {
+  background-color: #000;
+}
+
+.btn-nav-2 {
+  background-color: transparent;
+}
+
+.btn-nav-3 {
+  display: none;
+  background-color: #000;
+}
+
+.btn-nav:hover {
+  transform: scale(1.16);
+}
+
+.buttons {
+  gap: 2.5rem;
+}
+
+.btn {
+  display: inline-block;
+  border: none;
+  background: none;
+  padding: 1rem 2rem;
+  border-radius: 50rem;
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--default-font-size);
+  font-weight: 650;
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.btn-trnsp:hover {
+  background-color: var(--primary-color);
+  color: #121212;
+}
+
+.btn-orange {
+  background-image: linear-gradient(
+    45deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  color: #121212;
+  font-weight: 700;
+  outline: 2px dotted var(--secondary-color);
+}
+
+.btn-orange:hover {
+  transform: scale(1.1);
+}
+
+/* Styling for the playlist area */
+
+.playlist {
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.playlist h1 {
+  padding: 0 var(--default-padding);
+  font-size: 2.4rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.cardContainer {
+  padding: 0 var(--default-padding) var(--default-padding)
+    var(--default-padding);
+  display: grid;
+  grid-template-columns: repeat(var(--col-num), 1fr);
+  column-gap: var(--grid-gap);
+  row-gap: 3rem;
+  align-items: center;
+  justify-items: center;
+}

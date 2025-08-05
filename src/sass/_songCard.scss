@@ -1,0 +1,75 @@
+@use './mixins' as mixin;
+
+.song-card {
+  height: 7rem;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.song-card:hover {
+  box-shadow: 0 0 0 3px var(--primary-color);
+}
+
+.song-card-imgbox {
+  height: 5rem;
+  width: 5rem;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.song-card-img {
+  width: 100%;
+  height: 100%;
+}
+
+.song-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.song-card-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.song-card-artist {
+  font-size: 1.1rem;
+  color: #bbb;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.like-container {
+  width: 2.4rem;
+  display: flex;
+  align-items: center;
+  color: var(--primary-color);
+  @include mixin.setTransition;
+}
+
+.like-container:hover {
+  transform: scale(1.17);
+}
+
+.song-card-play {
+  @include mixin.flex-center;
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  font-size: 4rem;
+  color: var(--primary-color);
+  cursor: pointer;
+  @include mixin.setTransition;
+}
+
+.song-card-play:hover {
+  transform: scale(1.12);
+}

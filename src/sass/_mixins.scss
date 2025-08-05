@@ -1,0 +1,32 @@
+@mixin position-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin setTransition($property: all, $duration: 0.3s) {
+  transition: $property $duration;
+}
+
+@mixin setFlex(
+  $flex-direction: row,
+  $align-y: stretch,
+  $align-x: flex-start,
+  $gap: 0,
+  $grow: 0
+) {
+  display: flex;
+  flex-direction: $flex-direction;
+  align-items: $align-y;
+  justify-content: $align-x;
+  gap: $gap;
+  flex-grow: $grow;
+}
+
+@mixin flex-center($flex-direction: row) {
+  display: flex;
+  flex-direction: $flex-direction;
+  justify-content: center;
+  align-items: center;
+}

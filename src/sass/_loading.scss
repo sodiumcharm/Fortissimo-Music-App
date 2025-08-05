@@ -1,0 +1,14 @@
+@use './mixins' as mixin;
+
+.loading-ui {
+  @include mixin.flex-center(column);
+  font-size: 1.6rem;
+  font-weight: 600;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  gap: 1rem;
+  z-index: 1000;
+}
