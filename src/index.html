@@ -1075,6 +1075,60 @@
           <ion-icon name="close-outline"></ion-icon>
         </button>
       </div>
+
+      <!-- LOGIN BOX -->
+      <div class="login-box bg-yel-grey-2-1">
+        <div class="login-box__logobox">
+          <img src="img/logo-2.png" alt="Logo" class="login-box__logo" />
+        </div>
+
+        <div class="login-box__form">
+          <h3 class="login-box__heading">Login to your Account</h3>
+
+          <div class="login-box__field">
+            <label for="identifier" class="login-box__label"
+              >Your Username or Email</label
+            >
+            <input
+              type="text"
+              id="identifier"
+              class="login-box__input"
+              placeholder="Username or Email"
+            />
+            <p class="login-box__text login-identifier-warning hidden">Username or email is required!</p>
+          </div>
+
+          <div class="login-box__field">
+            <label for="login-password" class="login-box__label"
+              >Your Password</label
+            >
+
+            <div class="login-box__password-container">
+              <input
+                type="password"
+                id="login-password"
+                class="login-box__input login-box__input-password"
+                placeholder="Password"
+              />
+
+              <button class="login-box__password-btn hide-password-login">
+                <ion-icon
+                  class="login-box__icon"
+                  name="eye-off"
+                ></ion-icon>
+              </button>
+            </div>
+
+            <p class="login-box__text login-password-warning hidden">Password is required!</p>
+          </div>
+
+          <button class="login-box__login-btn">Login</button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
     </main>
 
     <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>

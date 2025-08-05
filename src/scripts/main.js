@@ -51,6 +51,8 @@ import { initKeyHandler } from "./keyShortcuts.js";
 
 import { initLRCGenerator } from "./lrcGenerator.js";
 
+import { initUserLogin } from "./login.js";
+
 // *************************************************************
 // DOM ELEMENT SELECTION
 // *************************************************************
@@ -623,7 +625,7 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           );
 
           if (!targetRefCard) {
-            songReferenceLoader(null, songsSection, "playlist", Number(parentId));
+            songReferenceLoader(null, songsSection, "playlist", parentId);
 
             targetRefCard = document.querySelector(
               `[data-refid="${parentId}"]`
@@ -782,7 +784,7 @@ const playlistLoader = function (
           allSongRefCards.forEach((card) => {
             card.classList.add("hide");
 
-            if (songIdArr.includes(Number(card.dataset.refid))) {
+            if (songIdArr.includes(card.dataset.refid)) {
               card.classList.remove("hide");
             }
           });
@@ -915,7 +917,7 @@ const songReferenceLoader = function (
               songsContainer,
               "global",
               undefined,
-              Number(refId)
+              refId
             );
           }
 
@@ -1006,7 +1008,7 @@ const songReferenceLoader = function (
             songsContainer,
             "global",
             undefined,
-            Number(targetId)
+            targetId
           );
 
           const newLoadedCard = document.querySelector(
@@ -1034,8 +1036,6 @@ const initApp = async function () {
   songLoader(songData.songs, songsContainer, "global", 20);
 
   playlistLoader(songData.playlists, 30);
-
-  // songReferenceLoader(songData.songs, songsSection, "playlist");
 
   const allSongCards = songsSection.querySelectorAll(".song-card");
   allSongCards.forEach((card) => {
@@ -1157,7 +1157,7 @@ const initApp = async function () {
             songsContainer,
             "global",
             undefined,
-            Number(histId)
+            histId
           );
 
           const newLoadedCard = document.querySelector(
@@ -1315,33 +1315,6 @@ const initApp = async function () {
     });
   });
 
-  // document.querySelectorAll(".ref-like-container").forEach((btn) => {
-  //   btn.addEventListener("click", function () {
-  //     const parentRefCard = btn.closest(".song-reference-card");
-
-  //     const targetId = parentRefCard.dataset.refid;
-
-  //     const targetGlobalSongCard = document.querySelector(
-  //       `[data-id="${targetId}"]`
-  //     );
-
-  //     if (targetGlobalSongCard) {
-  //       targetGlobalSongCard.querySelector(".like-container").click();
-  //     } else {
-  //       songLoader(
-  //         songData.songs,
-  //         songsContainer,
-  //         "global",
-  //         undefined,
-  //         Number(targetId)
-  //       );
-
-  //       const newLoadedCard = document.querySelector(`[data-id="${targetId}"]`);
-  //       newLoadedCard.querySelector(".like-container").click();
-  //     }
-  //   });
-  // });
-
   allSongsTabBtn.addEventListener("click", function () {
     allTabIsOpen = true;
     likedTabIsOpen = false;
@@ -1495,6 +1468,8 @@ window.addEventListener("offline", function () {
 
 (async function () {
   loadingUI.classList.remove("hidden");
+
+  initUserLogin();
 
   loadSettings();
 
