@@ -1,0 +1,139 @@
+@use "./mixins" as mixin;
+
+.ok-close-btn {
+  font-family: inherit;
+  font-size: 1.6rem;
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 7px;
+  border: none;
+  background-color: var(--primary-color);
+  color: #222;
+  cursor: pointer;
+  @include mixin.setTransition;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.loading-window {
+  @include mixin.position-center;
+  width: 50rem;
+  height: 40rem;
+  background-color: #222;
+  z-index: 1900;
+  border-radius: 11px;
+  @include mixin.flex-center(column);
+  gap: 1.5rem;
+  border: 2px solid var(--primary-color);
+  @include mixin.setTransition;
+
+  & span {
+    width: 12rem;
+    height: 12rem;
+    color: var(--primary-color);
+  }
+
+  &__text {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+}
+
+.error-window {
+  @include mixin.position-center;
+  width: 60rem;
+  height: 40rem;
+  background-color: #222;
+  padding: 3rem;
+  z-index: 1900;
+  border-radius: 11px;
+  @include mixin.flex-center(column);
+  gap: 2rem;
+  border: 2px solid var(--primary-color);
+  @include mixin.setTransition;
+
+  & span {
+    width: 10rem;
+    height: 10rem;
+    color: var(--primary-color);
+  }
+
+  &__text {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+}
+
+.confirmation-window {
+  @include mixin.position-center;
+  width: 60rem;
+  height: 40rem;
+  background-color: #222;
+  padding: 3rem;
+  z-index: 1900;
+  border-radius: 11px;
+  @include mixin.flex-center(column);
+  gap: 2rem;
+  border: 2px solid var(--primary-color);
+  @include mixin.setTransition;
+
+  & span {
+    width: 10rem;
+    height: 10rem;
+    color: var(--primary-color);
+  }
+
+  &__text {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+}
+
+.del-confirm {
+  @include mixin.position-center;
+  width: 50rem;
+  height: 30rem;
+  background-color: #222;
+  padding: 3rem;
+  z-index: 1900;
+  border-radius: 11px;
+  @include mixin.flex-center(column);
+  gap: 6rem;
+  border: 2px solid var(--primary-color);
+  @include mixin.setTransition;
+
+  &__text {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  &__btns {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  &__btn {
+    width: 50%;
+    font-family: inherit;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: 7px;
+    border: none;
+    background-color: var(--primary-color);
+    color: #222;
+    cursor: pointer;
+    @include mixin.setTransition;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

@@ -58,10 +58,29 @@
   color: #ddd;
 }
 
+.playlist-stats {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+
+  &-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+  }
+
+  &__saves, &__duration {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    gap: 0.4rem;
+  }
+}
+
 .playlist-cover-img,
 .playlist-account-img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .user-account {

@@ -53,8 +53,6 @@ export const initLRCGenerator = function () {
   fileInput.addEventListener("change", function () {
     const audioFile = fileInput.files[0];
 
-    console.log(audioFile);
-
     if (!audioFile) return;
 
     const size = `${fileSizeConverter(audioFile.size, "mb")}MB`;

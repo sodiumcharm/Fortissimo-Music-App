@@ -5,9 +5,16 @@ export const addHistoryCard = function (
   artistName,
   cardImg,
   context,
-  triggeredBy
+  triggeredBy,
+  playedAt = null
 ) {
-  const now = new Date();
+  let now;
+
+  if (playedAt) {
+    now = new Date(playedAt);
+  } else {
+    now = new Date();
+  }
 
   const day = now.getDate();
 
@@ -23,11 +30,13 @@ export const addHistoryCard = function (
 
   const year = now.getFullYear();
 
+  const defaultImg = '/default-profile-img.webp';
+
   if (context === "global") {
     const html = `<div class="history-card bg-yel-grey-3" data-histid="${songId}" data-histurl="${songUrl}" data-histcontext="${context}">
             <div class="history-card-imgbox">
               <img
-                src="${cardImg}"
+                src="${cardImg || defaultImg}"
                 alt="Song Image"
                 class="song-card-img"
               />
@@ -65,7 +74,7 @@ export const addHistoryCard = function (
             <div class="history-playlist-info">
               <div class="history-playlist-imgbox">
                 <img
-                  src="${playlistImg}"
+                  src="${playlistImg || defaultImg}"
                   alt="Playlist Image"
                   class="history-playlist-img"
                 />

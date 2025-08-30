@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="/src/favicon.png" type="image/png" />
+
+    <!-- <link rel="stylesheet" href="sass/main.scss" /> -->
+
+    <!-- <script defer type="module" src="scripts/main.js"></script> -->
+
+    <script defer type="module" src="/src/scripts/main.js"></script>
+
+    <title>Fortissimo: Listen to Music Free, Anytime, Anywhere</title>
+  </head>
+  <body>
+    <main>
+      <div class="container flex">
+        <div class="left flex-column">
+          <div class="home bg-yel-grey rounded">
+            <div class="home-btns">
+              <google-cast-launcher
+                class="home-btn cast-btn"
+              ></google-cast-launcher>
+
+              <button class="home-btn history-toggle" title="History">
+                <span class="mingcute--time-duration-line"></span>
+              </button>
+
+              <button class="home-btn settings">
+                <span class="mingcute--settings-3-fill"></span>
+              </button>
+
+              <button class="home-btn left-section-exit">
+                <span class="mingcute--back-line"></span>
+              </button>
+            </div>
+
+            <canvas class="canvas" data-colorcode="1"></canvas>
+
+            <ul>
+              <li class="home-li">
+                <div class="logo-box">
+                  <img src="src/img/logo-1.png" alt="Logo" class="logo-img" />
+                </div>
+              </li>
+
+              <div class="search-box">
+                <input class="input" type="text" placeholder="Search music" />
+
+                <button class="search-mic-btn">
+                  <span class="mingcute--mic-line"></span>
+                </button>
+              </div>
+            </ul>
+          </div>
+
+          <div class="library bg-grey rounded">
+            <div class="left-window-btns">
+              <h2
+                class="flex align-center all-songs-btn left-window-tab active-left-windowtab"
+              >
+                <ion-icon class="icons" name="musical-notes-outline"></ion-icon
+                ><span class="all-songs-display">All Songs</span>
+              </h2>
+
+              <h2 class="flex align-center liked-song-btn left-window-tab">
+                <ion-icon class="icons" name="bookmark-outline"></ion-icon
+                ><span class="liked-songs-display">Liked Songs</span>
+              </h2>
+            </div>
+
+            <div class="left-window songlist">
+              <!-- <div class="song-card flex align-center rounded bg-yel-grey-3">
+                <div class="song-card-imgbox">
+                  <img
+                    src="img/card-1.webp"
+                    alt="Song Image"
+                    class="song-card-img"
+                  />
+                </div>
+                <div class="song-card-info">
+                  <p class="song-card-name">
+                    Dream Solister.....................
+                  </p>
+                  <p class="song-card-artist">TRUE</p>
+                </div>
+
+                <div class="song-like">
+                  <div class="like-container">
+                    <span class="mingcute--thumb-up-2-line"></span>
+                  </div>
+                  <span class="like-num">456564</span>
+                </div>
+
+                <button class="song-card-play">
+                  <ion-icon name="play"></ion-icon>
+                </button>
+              </div> -->
+            </div>
+
+            <div class="footer flex rounded">
+              <p class="footer-text">&copy; Soumik Roy. All rights reserved.</p>
+              <a href="#" class="link">Portfolio</a>
+              <a href="https://github.com/sodiumcharm" class="link">GitHub</a>
+              <a href="#" class="link">LinkedIn</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="right flex-column rounded">
+          <div class="loading-ui hidden">
+            <span class="svg-spinners--12-dots-scale-rotate"></span>Loading
+          </div>
+
+          <div class="header bg-yel-grey-2 flex">
+            <div class="nav flex">
+              <button class="btn-nav btn-nav-3 song-section-btn">
+                <span class="mingcute--menu-fill"></span>
+              </button>
+              <button
+                class="btn-nav btn-nav-1 playlist-loop-btn"
+                title="Playlist Loop All"
+              >
+                <span class="mingcute--repeat"></span>
+              </button>
+              <button class="btn-nav btn-nav-1 song-loop-btn" title="Loop one">
+                <span class="mingcute--repeat icon-repeat-1"></span>
+              </button>
+              <button class="btn-nav btn-nav-1 shuffle-toggle" title="Shuffle">
+                <span class="mingcute--shuffle-2-line"></span>
+              </button>
+              <button
+                class="btn-nav btn-nav-1 eq-toggle"
+                title="Enable Equalizer"
+              >
+                <span class="mingcute--remote-control-line"></span>
+              </button>
+              <button class="btn-nav btn-nav-1 eq-btn hidden" title="Equalizer">
+                <span class="mingcute--settings-6-line"></span>
+              </button>
+            </div>
+
+            <div class="buttons flex">
+              <div class="sia-btn hide">
+                <span class="ic--baseline-assistant"></span>
+              </div>
+
+              <button class="btn btn-orange btn-loginbox">Log in</button>
+
+              <div class="user-profile-btn hide">
+                <img class="user-profile-btn__img" alt="Image" />
+              </div>
+            </div>
+          </div>
+
+          <div class="playlist bg-grey">
+            <div class="playlist-detail-box bg-playlist hide-playlist">
+              <button class="playlist-box-btn exit-playlistbox">
+                <span class="mingcute--arrow-left-fill"></span>
+              </button>
+
+              <button class="playlist-box-btn save-playlistbox">
+                <span class="mingcute--bookmark-add-fill"></span>
+              </button>
+
+              <div class="playlist-details-section">
+                <div class="playlist-cover-imgbox">
+                  <img class="playlist-cover-img" alt="Cover Image" />
+                </div>
+
+                <div class="playlist-info-box">
+                  <h3 class="playlist-heading"></h3>
+
+                  <div class="playlist-desc"></div>
+
+                  <div class="playlist-stats">
+                    <div class="playlist-stats__saves">
+                      <ion-icon
+                        class="playlist-stats-icon"
+                        name="globe"
+                      ></ion-icon>
+                      <span class="saves-num">0</span>
+                      saves
+                    </div>
+
+                    <div class="playlist-stats__duration">
+                      <ion-icon
+                        class="playlist-stats-icon"
+                        name="hourglass"
+                      ></ion-icon>
+                      <span class="playlist-duration-num">0</span>
+                    </div>
+                  </div>
+
+                  <div class="user-account">
+                    <div class="user-account-imgbox">
+                      <img class="playlist-account-img" />
+                    </div>
+
+                    <p class="playlist-username"></p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="songs-section"></div>
+            </div>
+
+            <div class="filter-tags">
+              <div data-genre="all" class="filter-tag filter-active">All</div>
+              <div data-genre="band" class="filter-tag">Band</div>
+              <div data-genre="anime" class="filter-tag">Anime</div>
+              <div data-genre="romantic" class="filter-tag">Romantic</div>
+              <div data-genre="game" class="filter-tag">Game</div>
+              <div data-genre="ai-song" class="filter-tag">AI Songs</div>
+              <div data-genre="nature" class="filter-tag">Nature</div>
+              <div data-genre="patriotic" class="filter-tag">Patriotic</div>
+              <div data-genre="hollywood" class="filter-tag">Hollywood</div>
+              <div data-genre="motivational" class="filter-tag">
+                Motivational
+              </div>
+              <div data-genre="concert-band" class="filter-tag">
+                Concert Bands
+              </div>
+              <div data-genre="regional" class="filter-tag">Regional</div>
+            </div>
+
+            <h1>Fortissimo Playlists</h1>
+
+            <div class="cardContainer rounded">
+              <!-- <div class="card rounded">
+                <div class="card-imgbox rounded">
+                  <img src="img/card-1.webp" alt="Image" class="card-img" />
+
+                  <button class="card-btn-play">
+                    <ion-icon
+                      class="icons card-play-icons"
+                      name="play"
+                    ></ion-icon>
+                  </button>
+                </div>
+                <h2>Sound! Euphonium</h2>
+                <p>
+                  Masterpieces from Hibike! Euphonium which will make you feel
+                  nostalgic.
+                </p>
+
+                <div class="playlist-right-click hidden">
+                  <button class="floating-btn floating-save-btn">
+                    <ion-icon class="floating-icons" name="bookmark-outline"></ion-icon>Save playlist
+                  </button>
+                </div>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="playbar hidden flex bg-yel-grey-2-1 align-center">
+            <button class="playbar-close-btn">
+              <span class="mingcute--arrows-down-line"></span>
+            </button>
+
+            <button class="playbar-minimize hide">
+              <span class="mingcute--arrow-left-fill"></span>
+            </button>
+
+            <div class="control-imgbox rounded">
+              <img alt="Image" class="control-img" />
+              <span
+                class="ic--baseline-cast-connected playbar-cast-icon hidden"
+              ></span>
+            </div>
+
+            <div class="playbar-user-info hide">
+              <div class="playbar-user-box">
+                <div class="playbar-user-imgbox">
+                  <img class="playbar-user-img" alt="User" />
+                </div>
+
+                <p class="playbar-user-name"></p>
+              </div>
+
+              <div class="playbar-user-stats">
+                <p><span class="playbar-like-num"></span>likes</p>
+
+                <p class="playbar-user-published-on"></p>
+              </div>
+            </div>
+
+            <div class="playbar-extra hide">
+              <button class="playbar-extra-btn playbar-10-prev">
+                <span class="mingcute--rewind-backward-10-line"></span>
+              </button>
+              <button class="playbar-extra-btn playbar-10-next">
+                <span class="mingcute--rewind-forward-10-line"></span>
+              </button>
+            </div>
+
+            <div class="total-control">
+              <div class="song-control-1">
+                <div class="seekbar">
+                  <div class="buffered-bar"></div>
+                  <div class="progress-fill"></div>
+                  <span class="bar-circle"></span>
+                </div>
+                <div class="duration-info">
+                  <p class="current-time">00:00</p>
+                  <p class="total-time">00:00</p>
+                </div>
+              </div>
+
+              <div class="song-control-2">
+                <div class="song-control-info">
+                  <p class="song-control-title"></p>
+                  <p class="song-control-author"></p>
+                </div>
+
+                <div class="sound-control">
+                  <div class="control-btns">
+                    <button class="control-btn play-prev">
+                      <ion-icon name="play-skip-back"></ion-icon>
+                    </button>
+                    <button class="control-btn control-btn-play">
+                      <ion-icon name="play"></ion-icon>
+                    </button>
+                    <button class="control-btn play-next">
+                      <ion-icon name="play-skip-forward"></ion-icon>
+                    </button>
+                  </div>
+
+                  <button class="show-lyrics btn--inactive" title="Show lyrics">
+                    <span class="mynaui--music-waves-solid"></span>
+                  </button>
+
+                  <div class="volume-control">
+                    <div class="speaker-iconbox">
+                      <ion-icon name="volume-high"></ion-icon>
+                    </div>
+                    <div class="volume-bar">
+                      <div class="volume-fill"></div>
+                      <span class="volume-circle"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <audio class="audio-player" crossorigin="anonymous"></audio>
+      <div class="overlay hidden"></div>
+
+      <div class="error-note hidden">
+        <span class="line-md--alert-loop"></span>
+        <p class="error-msg">
+          Loading failed! Please check your internet connection.
+        </p>
+        <button class="err-btn rounded">Retry</button>
+      </div>
+
+      <div class="history-container bg-grey hidden">
+        <h2 class="box-heading">History</h2>
+
+        <div class="history-list">
+          <!-- <div class="history-card bg-yel-grey-3">
+            <div class="history-card-imgbox">
+              <img
+                src="img/card-1.webp"
+                alt="Song Image"
+                class="song-card-img"
+              />
+            </div>
+            <div class="history-card-info">
+              <p class="history-card-name">Dream Solister</p>
+              <p class="history-card-artist">TRUE</p>
+            </div>
+            <p class="history-time-display">
+              <span class="history-time">00:00 pm</span>
+              <span class="history-date">6 Jul, 2025</span>
+            </p>
+          </div> -->
+
+          <!-- <div class="history-playlist-card">
+            <div class="history-playlist-info">
+              <div class="history-playlist-imgbox">
+                <img
+                  src=""
+                  alt="Playlist Image"
+                  class="history-playlist-img"
+                />
+              </div>
+
+              <p class="history-playlist-name">
+                Played from
+                "<span class="history-playlistname-display"
+                  >Hibike! Euphonium Hits</span
+                >"
+              </p>
+            </div>
+
+            <div class="history-playlist-container">
+              <div class="history-card bg-yel-grey-3">
+                <div class="history-card-imgbox">
+                  <img
+                    src=""
+                    alt="Song Image"
+                    class="song-card-img"
+                  />
+                </div>
+                <div class="history-card-info">
+                  <p class="history-card-name">Dream Solister</p>
+                  <p class="history-card-artist">TRUE</p>
+                </div>
+                <button class="history-card-play">
+                  <ion-icon name="play"></ion-icon>
+                </button>
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="equalizer-box hidden">
+        <h2 class="box-heading">Equalizer</h2>
+
+        <div class="preset-box">
+          <div class="preset-dropdown">
+            <div class="preset-display">
+              <span class="preset-displayer">Try Presets</span
+              ><ion-icon
+                class="preset-icon"
+                name="chevron-down-outline"
+              ></ion-icon>
+            </div>
+
+            <div class="preset-btns dropdown--hidden">
+              <button class="preset-btn" data-preset="pop">Pop</button>
+              <button class="preset-btn" data-preset="rock">Rock</button>
+              <button class="preset-btn" data-preset="jazz">Jazz</button>
+              <button class="preset-btn" data-preset="bass-boost">
+                Bass Boost
+              </button>
+              <button class="preset-btn" data-preset="vocal">Vocal</button>
+              <button class="preset-btn" data-preset="classical">
+                Classical
+              </button>
+              <button class="preset-btn" data-preset="night">Night</button>
+              <button class="preset-btn" data-preset="treble-boost">
+                Treble Boost
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="capture-eq" title="Share settings">
+          <ion-icon name="arrow-redo"></ion-icon>
+        </button>
+
+        <button class="display-shared-presets" title="Shared Presets">
+          <ion-icon name="earth"></ion-icon>
+        </button>
+
+        <div class="eq-controls">
+          <div class="eq-control-ui">
+            <div class="knob-ui">
+              <p class="display"><span class="left-vol-display">00</span>%</p>
+              <div class="knob left-knob"></div>
+              <p class="label">LEFT VOLUME</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="sub-bass-display">00</span> dB</p>
+              <div class="track sub-bass-track">
+                <span class="thumb sub-bass-thumb"></span>
+              </div>
+              <p class="label">60Hz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="bass-display">00</span> dB</p>
+              <div class="track bass-track">
+                <span class="thumb bass-thumb"></span>
+              </div>
+              <p class="label">120Hz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="lowmid-display">00</span> dB</p>
+              <div class="track lowmid-track">
+                <span class="thumb lowmid-thumb"></span>
+              </div>
+              <p class="label">400Hz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="mid-display">00</span> dB</p>
+              <div class="track mid-track">
+                <span class="thumb mid-thumb"></span>
+              </div>
+              <p class="label">1kHz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="highmid-display">00</span> dB</p>
+              <div class="track highmid-track">
+                <span class="thumb highmid-thumb"></span>
+              </div>
+              <p class="label">2.5kHz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="treble-display">00</span> dB</p>
+              <div class="track treble-track">
+                <span class="thumb treble-thumb"></span>
+              </div>
+              <p class="label">6kHz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display">
+                <span class="brilliance-display">00</span> dB
+              </p>
+              <div class="track brilliance-track">
+                <span class="thumb brilliance-thumb"></span>
+              </div>
+              <p class="label">10kHz</p>
+            </div>
+
+            <div class="control-ui">
+              <p class="display"><span class="air-display">00</span> dB</p>
+              <div class="track air-track">
+                <span class="thumb air-thumb"></span>
+              </div>
+              <p class="label">16kHz</p>
+            </div>
+
+            <div class="knob-ui">
+              <p class="display"><span class="right-vol-display">00</span>%</p>
+              <div class="knob right-knob"></div>
+              <p class="label">RIGHT VOLUME</p>
+            </div>
+          </div>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="main-settings hidden">
+        <div class="left-settings-tab">
+          <h2 class="box-heading">
+            <span class="rotate mingcute--settings-3-fill"></span>Settings
+          </h2>
+
+          <div class="settings-tab-btns">
+            <button
+              class="settings-tab-btn bg-yel-grey-3"
+              data-settingstab="playback"
+            >
+              <ion-icon class="main-settings-icon" name="play"></ion-icon>Audio
+            </button>
+            <button class="settings-tab-btn" data-settingstab="theme">
+              <ion-icon
+                class="main-settings-icon"
+                name="color-palette"
+              ></ion-icon
+              >Theme
+            </button>
+            <button class="settings-tab-btn" data-settingstab="visualizer">
+              <ion-icon class="main-settings-icon" name="barcode"></ion-icon
+              >Visualizer
+            </button>
+            <button class="settings-tab-btn" data-settingstab="about">
+              <ion-icon
+                class="main-settings-icon"
+                name="information-circle"
+              ></ion-icon
+              >About
+            </button>
+          </div>
+        </div>
+
+        <div class="right-settings-container playback-container">
+          <h2 class="box-heading">Audio</h2>
+
+          <div class="settings-sub-box">
+            <div class="settings-sub-box__heading">
+              Set Playback Speed:
+              <span class="playback-rate-display">1.0</span>x
+            </div>
+
+            <p class="settings-sub-box__text">
+              This setting is not recommended to use as music and songs are not
+              supposed to listen at altered speed.
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track playback-rate-track">
+                <div class="settings-slider__fill playback-rate-fill"></div>
+                <span class="settings-slider__thumb playback-rate-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn playback-rate-reset">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Volume Normalisation</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Set same loudness level for all sections of different tracks.
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track normalization-toggle">
+                  <span class="toggle-switch__thumb normalization-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Mono Audio</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Left and right speakers will play the same audio (It has no
+                effect while equalizer is on).
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track mono-toggle">
+                  <span class="toggle-switch__thumb mono-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box eq-settings">
+            <h3 class="settings-sub-box__heading">Audio Equalizer</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Turn on audio equalizer to customize sound effects.
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track equalizer-toggle-2">
+                  <span class="toggle-switch__thumb equalizer-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box eq-settings">
+            <div class="settings-deactive-overlay overlay-eq hidden"></div>
+            <div class="settings-icon-text settings-eq-unhide">
+              <p class="settings-sub-box__text">
+                Adjust Equalizer settings here.
+              </p>
+
+              <ion-icon
+                class="settings-icon-text__icon"
+                name="chevron-forward-outline"
+              ></ion-icon>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-gain hidden"></div>
+
+            <div class="settings-sub-box__heading">
+              Boost Volume:
+              <span class="gain-display">0</span>%
+            </div>
+
+            <p class="settings-sub-box__text">
+              Boost volume carefully if necessary as higher percentages can
+              damage your ears.
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track gain-track">
+                <div class="settings-slider__fill gain-fill"></div>
+                <span class="settings-slider__thumb gain-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn gain-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Tremolo Effect</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Adds a subtle pulsing effect by gently changing the volume
+                rhythmically (Great for ambient or lo-fi sound).
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track tremolo-toggle">
+                  <span class="toggle-switch__thumb tremolo-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-tremolo hidden"></div>
+
+            <div class="settings-sub-box__heading">
+              Set LFO Frequency:
+              <span class="lfo-display">5</span>Hz
+            </div>
+
+            <p class="settings-sub-box__text">
+              Set the frequency level of Low Frequency Oscillator responsible
+              for tremolo effect (Higher values will increase the pulsing
+              effect).
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track lfo-track">
+                <div class="settings-slider__fill lfo-fill"></div>
+                <span class="settings-slider__thumb lfo-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn lfo-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-tremolo hidden"></div>
+            <h3 class="settings-sub-box__heading">LFO Waveform Type</h3>
+
+            <p class="settings-sub-box__text">
+              Set the waveform type of the LFO to experience different pulsing
+              effects when tremolo is on.
+            </p>
+
+            <div class="waveform-types">
+              <div
+                class="waveform-types__imgbox waveform--active"
+                data-waveform="sine"
+              >
+                <img
+                  src="src/img/sine-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Sine</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="square">
+                <img
+                  src="src/img/square-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Square</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="sawtooth">
+                <img
+                  src="src/img/sawtooth-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Sawtooth</p>
+              </div>
+
+              <div class="waveform-types__imgbox" data-waveform="triangle">
+                <img
+                  src="src/img/triangle-wave.png"
+                  alt="Waveform"
+                  class="waveform-types__img"
+                />
+                <p class="waveform-types__text">Triangle</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">LRC Generator</h3>
+
+            <p class="settings-sub-box__text">
+              Make your lrc files for your own song lyrics and upload them with
+              your songs so that others can enjoy your song with its unique
+              lyrics.
+            </p>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-icon-text show-lrc-generator">
+              <p class="settings-sub-box__text">
+                Make your lyrics with timestamps here.
+              </p>
+
+              <ion-icon
+                class="settings-icon-text__icon"
+                name="chevron-forward-outline"
+              ></ion-icon>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-settings-container theme-container hide">
+          <h2 class="box-heading">Theme</h2>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Eye Care Mode</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Use it during night time to protect your eyes from becoming
+                strained.
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track eyecare-toggle">
+                  <span class="toggle-switch__thumb eyecare-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Set Color Themes</h3>
+            <p class="settings-sub-box__text">
+              Change the color scheme of the UI and give it a new look.
+            </p>
+
+            <div class="settings-grid">
+              <div
+                class="theme-color theme-color-1 theme--active"
+                data-theme="#f3ba3e"
+                data-rgb="243, 186, 62"
+                data-secondary="#f08c00"
+                data-themecode="1"
+              ></div>
+              <div
+                class="theme-color theme-color-2"
+                data-theme="#1c7ed6"
+                data-rgb="28, 126, 214"
+                data-secondary="#1864ab"
+                data-themecode="2"
+              ></div>
+              <div
+                class="theme-color theme-color-3"
+                data-theme="#ae3ec9"
+                data-rgb="174, 62, 201"
+                data-secondary="#862e9c"
+                data-themecode="3"
+              ></div>
+              <div
+                class="theme-color theme-color-4"
+                data-theme="#d6336c"
+                data-rgb="214, 51, 108"
+                data-secondary="#a61e4d"
+                data-themecode="4"
+              ></div>
+              <div
+                class="theme-color theme-color-5"
+                data-theme="#74b816"
+                data-rgb="116, 184, 22"
+                data-secondary="#5c940d"
+                data-themecode="5"
+              ></div>
+              <div
+                class="theme-color theme-color-6"
+                data-theme="#37b24d"
+                data-rgb="55, 178, 77"
+                data-secondary="#2b8a3e"
+                data-themecode="6"
+              ></div>
+              <div
+                class="theme-color theme-color-7"
+                data-theme="#c084fc"
+                data-rgb="192, 132, 252"
+                data-secondary="#a855f7"
+                data-themecode="7"
+              ></div>
+              <div
+                class="theme-color theme-color-8"
+                data-theme="#ff3c9e"
+                data-rgb="255, 60, 158"
+                data-secondary="#ff6b00"
+                data-themecode="8"
+              ></div>
+              <div
+                class="theme-color theme-color-9"
+                data-theme="#5b21b6"
+                data-rgb="91, 33, 182"
+                data-secondary="#9333ea"
+                data-themecode="9"
+              ></div>
+              <div
+                class="theme-color theme-color-10"
+                data-theme="#15aabf"
+                data-rgb="21, 170, 191"
+                data-secondary="#0c8599"
+                data-themecode="10"
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-settings-container visualizer-container hide">
+          <h2 class="box-heading">Visualizer</h2>
+
+          <div class="settings-sub-box">
+            <h3 class="settings-sub-box__heading">Toggle Visualizer</h3>
+
+            <div class="settings-sub-box__toggle">
+              <div class="settings-sub-box__toggle-text">
+                Turn on/off the visualizer (You won't be able to set visualizer
+                color when visualizer is turned off)
+              </div>
+
+              <div class="toggle-switch">
+                <div class="toggle-switch__track visualizer-toggle">
+                  <span class="toggle-switch__thumb visualizer-thumb"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+
+            <div class="settings-sub-box__heading">Analyzer Sensitivity</div>
+
+            <p class="settings-sub-box__text">
+              Control details of the visualizer by changing FFT size (Higher
+              values can reduce performance).
+            </p>
+
+            <div class="settings-slider">
+              <div class="settings-slider__track fft-track">
+                <div class="settings-slider__fill fft-fill"></div>
+                <span class="settings-slider__thumb fft-thumb"></span>
+              </div>
+
+              <button class="settings-slider__btn fft-reset">Reset</button>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+
+            <h3 class="settings-sub-box__heading">Visualizer Color Effect</h3>
+
+            <p class="settings-sub-box__text">
+              Change the visualizer color effect by choosing a color scheme.
+            </p>
+
+            <div class="settings-grid">
+              <div
+                class="visualizer-color visualizer-color-1 visualizer-color--active"
+                data-color="1"
+              >
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-2" data-color="2">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-3" data-color="3">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-4" data-color="4">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-5" data-color="5">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-6" data-color="6">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-7" data-color="7">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-8" data-color="8">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-9" data-color="9">
+                III
+              </div>
+              <div class="visualizer-color visualizer-color-10" data-color="10">
+                III
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-sub-box">
+            <div class="settings-deactive-overlay overlay-vis hidden"></div>
+            <h3 class="settings-sub-box__heading">Set Custom Color</h3>
+
+            <p class="settings-sub-box__text">
+              You can set custom visualizer color here by inputting your desired
+              Hex or RGB code. If you click apply without any color code, it
+              will set a random color.
+            </p>
+
+            <div class="settings-input">
+              <input
+                type="text"
+                class="settings-input__field input-vis-color"
+                placeholder="#be4bdb"
+              />
+              <button class="settings-input__btn apply-custom-color">
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-settings-container about-container hide">
+          <h2 class="box-heading">About</h2>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="lyrics-box bg-yel-grey-2-1 hidden">
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+
+        <h2 class="lyrics-box__heading">Lyrics</h2>
+
+        <div class="lyrics-box__details">
+          <p class="lyrics-box__detail">
+            Title:<span class="lyrics-song-name"></span>
+          </p>
+          <p class="lyrics-box__detail">
+            Artist:<span class="lyrics-song-artist"></span>
+          </p>
+        </div>
+
+        <div class="lyrics-container"></div>
+      </div>
+
+      <div class="lrc-generator hidden">
+        <h2 class="box-heading">LRC Generator</h2>
+
+        <div class="lrc-generator__box">
+          <div class="lrc-generator__file-upload bg-yel-grey-2">
+            <div class="file-upload">
+              <input type="file" id="file-input" accept="audio/*" hidden />
+              <p class="file-upload__heading">Choose Audio File</p>
+              <label for="file-input" class="file-btn">Upload Song</label>
+              <p class="file-upload__display">
+                File Name: <span class="file-display">No File</span>
+              </p>
+              <p class="file-upload__display">
+                File Size: <span class="size-display">0MB</span>
+              </p>
+            </div>
+
+            <div class="file-download">
+              <div class="file-download__formats">
+                <button class="format-btn format-lrc-btn format--active">
+                  <span class="mingcute--file-music-fill"></span>.lrc
+                </button>
+                <button class="format-btn format-pdf-btn">
+                  <span class="mingcute--pdf-fill"></span>.pdf
+                </button>
+              </div>
+
+              <input
+                type="text"
+                class="lrc-generator__input lrc-generator__title"
+                placeholder="Lyrics Title"
+              />
+
+              <input
+                type="text"
+                class="lrc-generator__input lrc-generator__rename"
+                placeholder="File Name"
+              />
+
+              <button class="file-btn download-lrc">Download LRC</button>
+            </div>
+          </div>
+
+          <div class="lrc-generator__editor">
+            <textarea
+              class="lrc-generator__editor-textarea editor"
+              placeholder="Type your lyrics here"
+            ></textarea>
+
+            <button
+              class="lrc-generator__editor-btn capture"
+              title="Capture Timestamp"
+            >
+              <ion-icon name="hourglass-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="lrc-generator__controls">
+          <div class="lrc-seekbar"></div>
+          <div class="lrc-control">
+            <p class="lrc-currenttime">00:00</p>
+            <div class="lrc-control__btns">
+              <button class="lrc-control-btn lrc-decrement">
+                <span class="mingcute--rewind-backward-10-line"></span>
+              </button>
+              <button class="lrc-control-btn lrc-play">
+                <ion-icon name="play"></ion-icon>
+              </button>
+              <button class="lrc-control-btn lrc-increment">
+                <span class="mingcute--rewind-forward-10-line"></span>
+              </button>
+
+              <div class="lrc-generator__playbackrate">
+                <div class="lrc-generator__track">
+                  <div class="lrc-generator__fill"></div>
+                  <span class="lrc-generator__thumb"></span>
+                </div>
+
+                <div class="playbackrate-display">1.0x</div>
+              </div>
+            </div>
+            <p class="lrc-duration">00:00</p>
+          </div>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- LOGIN BOX -->
+      <div class="login-box bg-yel-grey-2-1 hidden">
+        <div class="login-box__logobox">
+          <img src="src/img/logo-2.png" alt="Logo" class="login-box__logo" />
+        </div>
+
+        <div class="login-box__form">
+          <h3 class="login-box__heading">Login to your Account</h3>
+
+          <div class="login-box__field">
+            <label for="identifier" class="login-box__label"
+              >Username or Email</label
+            >
+            <input
+              type="text"
+              id="identifier"
+              class="login-box__input"
+              maxlength="20"
+              placeholder="Username or Email"
+            />
+            <p class="login-box__text login-identifier-warning hidden">
+              Username or email is required!
+            </p>
+          </div>
+
+          <div class="login-box__field">
+            <label for="login-password" class="login-box__label"
+              >Password</label
+            >
+
+            <div class="login-box__password-container">
+              <input
+                type="password"
+                id="login-password"
+                class="login-box__input login-box__input-password"
+                placeholder="Password"
+              />
+
+              <button class="login-box__password-btn hide-password-login">
+                <ion-icon class="login-box__icon" name="eye-off"></ion-icon>
+              </button>
+            </div>
+
+            <p class="login-box__text login-password-warning hidden">
+              Password is required!
+            </p>
+
+            <p class="login-box__forgot">Forgot password?</p>
+          </div>
+
+          <button class="login-box__login-btn">Login</button>
+
+          <p class="login-box__signup-text">
+            Don't have an account? <span class="signup-toggle">Sign Up</span>
+          </p>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+        <!-- <p class="login-box__signup-text">Don't have an account? <span class="signup-toggle">Sign Up</span></p> -->
+      </div>
+
+      <div class="signup-box bg-yel-grey-2-1 hidden">
+        <div class="signup-box__img-upload">
+          <h2 class="box-heading">Profile Photo</h2>
+
+          <div class="signup-box__imgbox">
+            <img
+              src="/default-profile-img.webp"
+              class="signup-box__img"
+              alt="Profile photo"
+            />
+          </div>
+
+          <button class="signup-box__remove-img">
+            <ion-icon class="signup-box__icon" name="trash"></ion-icon>Remove
+            Photo
+          </button>
+
+          <p class="signup-box__img-warning hidden">
+            Profile photo should be under 2MB
+          </p>
+
+          <input type="file" id="profileInput" accept="image/*" hidden />
+
+          <label for="profileInput" class="signup-box__upload hidden"></label>
+        </div>
+
+        <div class="signup-box__form">
+          <h2 class="box-heading">Sign Up</h2>
+
+          <div class="signup-box__field">
+            <label for="fullname-input" class="signup-box__label"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="fullname-input"
+              maxlength="50"
+              placeholder="Your Full Name"
+            />
+            <p class="signup-box__warning sup-fullname-warning hidden">
+              Full name warning
+            </p>
+          </div>
+
+          <div class="signup-box__field">
+            <label for="username-input" class="signup-box__label"
+              >Username</label
+            >
+            <input
+              type="text"
+              id="username-input"
+              maxlength="20"
+              placeholder="Minimum 8 characters long"
+            />
+            <p class="signup-box__warning sup-username-warning hidden">
+              Username should be 8 characters long
+            </p>
+          </div>
+
+          <div class="signup-box__field">
+            <label for="email-input" class="signup-box__label"
+              >Email Address</label
+            >
+            <input type="email" id="email-input" placeholder="user@gmail.com" />
+            <p class="signup-box__warning sup-email-warning hidden">
+              Email should be correct
+            </p>
+          </div>
+
+          <div class="signup-box__field">
+            <label for="password-input" class="signup-box__label"
+              >Password</label
+            >
+
+            <div class="signup-box__password-container">
+              <input
+                type="password"
+                id="password-input"
+                placeholder="Create a Password"
+              />
+              <div class="signup-box__password-hide">
+                <ion-icon class="login-box__icon" name="eye-off"></ion-icon>
+              </div>
+            </div>
+
+            <p class="signup-box__warning sup-password-warning hidden">
+              Password must have these
+            </p>
+
+            <div class="signup-box__validation">
+              <div class="signup-box__validation-text length-warning red-flag">
+                <span></span>Must contain at least 8 characters
+              </div>
+              <div
+                class="signup-box__validation-text capitals-warning red-flag"
+              >
+                <span></span>One uppercase letter
+              </div>
+              <div class="signup-box__validation-text smalls-warning red-flag">
+                <span></span>One lowercase letter
+              </div>
+              <div
+                class="signup-box__validation-text specials-warning red-flag"
+              >
+                <span></span>One special character
+              </div>
+              <div class="signup-box__validation-text numbers-warning red-flag">
+                <span></span>One number
+              </div>
+            </div>
+          </div>
+
+          <button class="signup-box__signup-btn">Sign Up</button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="error-window hidden">
+        <span class="line-md--alert-circle-loop"></span>
+        <p class="error-window__text"></p>
+
+        <button class="ok-close-btn">Okay</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="loading-window hidden">
+        <span class="svg-spinners--gooey-balls-2"></span>
+        <p class="loading-window__text"></p>
+      </div>
+
+      <div class="confirmation-window hidden">
+        <span class="line-md--confirm-circle"></span>
+        <p class="confirmation-window__text"></p>
+
+        <button class="ok-close-btn">Okay</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- USER MENU -->
+
+      <div class="user-menu hidden">
+        <div class="user-menu__img-container">
+          <div class="user-menu__imgbox">
+            <img class="user-menu__img" alt="Profile Image" />
+          </div>
+
+          <button class="user-menu__remove-img">
+            <ion-icon class="user-menu__icon-sm" name="trash"></ion-icon>Remove
+            Image
+          </button>
+
+          <div class="user-menu__field">
+            <p class="user-menu__fullname"></p>
+            <button
+              class="user-menu__edit user-menu__edit-name"
+              title="Change Fullname"
+            >
+              <span class="line-md--pencil"></span>
+            </button>
+          </div>
+
+          <div class="user-menu__field user-menu-un">
+            <ion-icon class="user-menu__icon-sm" name="person"></ion-icon>
+            <p class="user-menu__username"></p>
+          </div>
+
+          <div class="user-menu__field email-verify">
+            <p class="user-menu__email">
+              <span class="user-menu__email-text"></span>
+              <span class="user-menu__email-status"
+                ><ion-icon name="alert-circle-outline"></ion-icon
+              ></span>
+            </p>
+            <button class="user-menu__edit request-email-otp">
+              Verify Email
+            </button>
+          </div>
+
+          <button class="user-menu__special-btn user-menu__change-password">
+            <ion-icon
+              class="user-menu__icon-sm"
+              name="shield-checkmark"
+            ></ion-icon
+            >Change Password
+          </button>
+
+          <label class="change-image-btn hide" for="change-image-input"></label>
+          <input type="file" accept="image/*" id="change-image-input" hidden />
+        </div>
+
+        <div class="user-menu__menu">
+          <button class="user-menu__regular-btn display-upload-window">
+            <ion-icon
+              class="user-menu__icon-sm"
+              name="arrow-up-circle"
+            ></ion-icon
+            >Upload Song
+          </button>
+          <button class="user-menu__regular-btn display-create-playlist">
+            <ion-icon
+              class="user-menu__icon-sm"
+              name="caret-forward-circle"
+            ></ion-icon
+            >Create Playlist
+          </button>
+          <button class="user-menu__regular-btn display-uploaded-songs">
+            <ion-icon class="user-menu__icon-sm" name="cloud-upload"></ion-icon
+            >Uploaded Songs
+          </button>
+          <button class="user-menu__regular-btn display-created-playlists">
+            <ion-icon class="user-menu__icon-sm" name="library"></ion-icon
+            >Created Playlists
+          </button>
+          <button class="user-menu__regular-btn display-saved-playlists">
+            <ion-icon class="user-menu__icon-sm" name="save"></ion-icon>Saved
+            Playlists
+          </button>
+          <button class="user-menu__regular-btn display-published-presets">
+            <ion-icon class="user-menu__icon-sm" name="options"></ion-icon
+            >Published Presets
+          </button>
+          <button class="user-menu__regular-btn display-imported-presets">
+            <ion-icon class="user-menu__icon-sm" name="download"></ion-icon
+            >Imported Presets
+          </button>
+        </div>
+
+        <div class="user-menu__logout">
+          <button class="user-menu__special-btn logout-btn">
+            <ion-icon class="user-menu__icon-sm" name="power"></ion-icon>Log Out
+          </button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- FORGOT PASSWORD EMAIL ASKING -->
+
+      <div class="ask-email bg-yel-grey-2-1 hidden">
+        <h2 class="box-heading">Recovery Email</h2>
+
+        <div class="ask-email__text">
+          We heard you forgot your password. No worries, just give us your
+          registered email address for OTP verification.
+        </div>
+
+        <input
+          type="email"
+          id="recovery-email-input"
+          placeholder="Enter your account email"
+        />
+
+        <button class="request-password-otp">Request OTP</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- OTP ASKING -->
+
+      <div class="ask-otp bg-yel-grey-2-1 hidden">
+        <h2 class="box-heading">OTP Verification</h2>
+
+        <div class="ask-otp__textbox">
+          <p class="ask-otp__text">
+            We sent OTP to
+            <span class="forgot-email"></span>, your OTP will expire within 5
+            minutes. You can request another new OTP within
+            <span class="otp-countdown">00</span> seconds.
+          </p>
+
+          <div class="ask-otp__btnbox">
+            <div class="ask-otp__overlay hidden"></div>
+
+            <button class="ask-otp__resend request-new-email-otp hide">
+              New OTP
+            </button>
+            <button class="ask-otp__resend request-new-password-otp hide">
+              New OTP
+            </button>
+          </div>
+        </div>
+
+        <div class="ask-otp__inputs">
+          <input class="otp-input" type="text" maxlength="1" />
+          <input class="otp-input" type="text" maxlength="1" />
+          <input class="otp-input" type="text" maxlength="1" />
+          <input class="otp-input" type="text" maxlength="1" />
+          <input class="otp-input" type="text" maxlength="1" />
+          <input class="otp-input" type="text" maxlength="1" />
+        </div>
+
+        <button class="ask-otp__main-btn verify-password-otp hide">
+          Verify OTP
+        </button>
+        <button class="ask-otp__main-btn verify-email-otp hide">
+          Verify OTP
+        </button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="reset-password hidden">
+        <h2 class="box-heading">Reset Password</h2>
+
+        <p class="reset-password__text">
+          Set a new password here (Password must have at least 8 characters, one
+          uppercase letter, one lowercase letter, a number and a special
+          character).
+        </p>
+
+        <div class="reset-password__container">
+          <input
+            type="password"
+            id="reset-password-input"
+            placeholder="New Password"
+          />
+
+          <button class="reset-password__hide">
+            <ion-icon name="eye-off"></ion-icon>
+          </button>
+        </div>
+
+        <button class="reset-password__btn">Reset Password</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- CHANGE NAME WINDOW -->
+
+      <div class="change-field change-fullname-window hidden">
+        <h2 class="box-heading">Change Display Name</h2>
+
+        <div class="change-field__text">
+          Set a new name for display. Do not include special characters or
+          numbers in name.
+        </div>
+
+        <input
+          type="text"
+          id="change-name-input"
+          maxlength="50"
+          placeholder="Enter a new name"
+        />
+
+        <button class="change-field__btn change-fullname-btn">Set Name</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- CHANGE PASSWORD WINDOW -->
+
+      <div class="change-field change-password-window hidden">
+        <h2 class="box-heading">Change Password</h2>
+
+        <div class="change-field__text">
+          Set a new password. New password must have at least 8 characters, one
+          uppercase letter, one lowercase letter, a number and a special
+          character!
+        </div>
+
+        <div class="change-field__field">
+          <label for="old-password-input" class="change-field__label"
+            >Old Password</label
+          >
+
+          <div class="change-field__password-container">
+            <input
+              type="password"
+              id="old-password-input"
+              placeholder="Your old password"
+            />
+
+            <button class="change-field__hide-password old-password-hide">
+              <ion-icon name="eye-off"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="change-field__field">
+          <label for="new-password-input" class="change-field__label"
+            >Create New Password</label
+          >
+
+          <div class="change-field__password-container">
+            <input
+              type="password"
+              id="new-password-input"
+              placeholder="New password"
+            />
+
+            <button class="change-field__hide-password new-password-hide">
+              <ion-icon name="eye-off"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <button class="change-field__btn change-password-btn">
+          Set Password
+        </button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- UPLOADED SONGS WINDOW -->
+
+      <div class="uploaded-songlist hidden">
+        <h2 class="box-heading">Uploaded Songs</h2>
+
+        <button class="uploaded-songlist__exit hidden">
+          <span class="mingcute--arrow-left-fill"></span>
+        </button>
+
+        <input
+          class=""
+          type="text"
+          id="search-uploaded-songs"
+          placeholder="Search uploads"
+        />
+
+        <div class="uploaded-songlist__list">
+          <!-- <div class="uploaded-songlist__card bg-yel-grey-2">
+            <div class="uploaded-songlist__card-info">
+              <div class="uploaded-songlist__card-imgbox">
+                <img
+                  src="public/default-profile-img.webp"
+                  class="uploaded-songlist__card-img"
+                  alt="Cover Image"
+                />
+              </div>
+
+              <div class="uploaded-songlist__card-name">
+                <p class="uploaded-songlist__card-title">Sound Euphonium</p>
+                <p class="uploaded-songlist__card-artist">Kitauji</p>
+              </div>
+            </div>
+
+            <p class="uploaded-songlist__card-access">
+              <ion-icon name="earth"></ion-icon>
+            </p>
+
+            <button class="uploaded-songlist__card-edit">
+              <ion-icon name="settings"></ion-icon>
+            </button>
+
+            <button class="uploaded-songlist__card-option">
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </button>
+
+            <div class="uploaded-songlist__card-options card-options hidden">
+              <div class="uploaded-songlist__card-option-btn">Delete Cover</div>
+              <div class="uploaded-songlist__card-option-btn">Delete Lyrics</div>
+              <div class="uploaded-songlist__card-option-btn">Delete Song</div>
+            </div>
+          </div> -->
+        </div>
+
+        <div class="uploaded-songlist__edit collapse-hide">
+          <div class="uploaded-songlist__edit-uploads">
+            <div class="uploaded-songlist__upload">
+              <div class="uploaded-songlist__upload-imgbox">
+                <img
+                  src="/default-profile-img.webp"
+                  class="uploaded-songlist__upload-img"
+                />
+              </div>
+
+              <div
+                class="uploaded-songlist__warning audio-change-img-warn hidden"
+              >
+                Warning
+              </div>
+
+              <button class="uploaded-songlist__btn remove-audiocover-btn">
+                Remove Cover Image
+              </button>
+
+              <label
+                class="change-audiocover-label hide"
+                for="edit-audio-cover-image"
+              ></label>
+              <input
+                type="file"
+                accept="image/*"
+                id="edit-audio-cover-image"
+                hidden
+              />
+            </div>
+
+            <div class="uploaded-songlist__upload">
+              <div class="uploaded-songlist__upload-lyricsbox">
+                <ion-icon name="document-attach"></ion-icon>
+
+                <p class="uploaded-songlist__upload-lyricsfile">
+                  No File Chosen
+                </p>
+              </div>
+
+              <div
+                class="uploaded-songlist__warning audio-change-lyrics-warn hidden"
+              >
+                Warning
+              </div>
+
+              <button class="uploaded-songlist__btn remove-lyrics-btn">
+                Remove Lyrics
+              </button>
+
+              <label
+                class="change-lyrics-label hide"
+                for="edit-audio-lyrics"
+              ></label>
+              <input type="file" accept=".lrc" id="edit-audio-lyrics" hidden />
+            </div>
+          </div>
+
+          <div class="uploaded-songlist__field-container">
+            <div class="uploaded-songlist__field">
+              <label
+                for="change-audiotitle-input"
+                class="uploaded-songlist__field-label"
+                >Edit Title</label
+              >
+              <input
+                type="text"
+                id="change-audiotitle-input"
+                maxlength="100"
+                placeholder="New title"
+              />
+            </div>
+
+            <div class="uploaded-songlist__field">
+              <label
+                for="change-artist-input"
+                class="uploaded-songlist__field-label"
+                >Edit Artist Name</label
+              >
+              <input
+                type="text"
+                id="change-artist-input"
+                maxlength="100"
+                placeholder="New Artist Name"
+              />
+            </div>
+
+            <div class="uploaded-songlist__field">
+              <label
+                for="change-audioaccess-input"
+                class="uploaded-songlist__field-label"
+              >
+                Edit Accessibility
+              </label>
+              <input
+                type="text"
+                id="change-audioaccess-input"
+                maxlength="10"
+                placeholder="Private/Public"
+              />
+            </div>
+          </div>
+
+          <button class="uploaded-songlist__btn audio-save-changes">
+            Save Edits
+          </button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="upload-song hidden">
+        <h2 class="box-heading">Upload Audio</h2>
+
+        <div class="upload-song__uploads">
+          <div class="upload-song__upload">
+            <div class="upload-song__box upload-audio-box">
+              <ion-icon name="musical-notes"></ion-icon>
+
+              <p class="upload-song__text upload-audio-text">Add Audio File</p>
+            </div>
+
+            <div class="upload-song__warning audio-warn hidden"></div>
+
+            <button class="upload-song__btn remove-audio-upload">
+              Remove Audio File
+            </button>
+
+            <label
+              class="upload-audio-label hide"
+              for="upload-audio-file"
+            ></label>
+            <input type="file" accept="audio/*" id="upload-audio-file" hidden />
+          </div>
+
+          <div class="upload-song__upload">
+            <div class="upload-song__imgbox">
+              <img src="/default-profile-img.webp" class="upload-song__img" />
+            </div>
+
+            <div class="upload-song__warning audio-img-warn hidden"></div>
+
+            <button class="upload-song__btn remove-coverimage-upload">
+              Remove Cover Image
+            </button>
+
+            <label
+              class="upload-audiocover-label hide"
+              for="upload-audiocover"
+            ></label>
+            <input type="file" accept="image/*" id="upload-audiocover" hidden />
+          </div>
+
+          <div class="upload-song__upload">
+            <div class="upload-song__box upload-lyrics-box">
+              <ion-icon name="document-attach"></ion-icon>
+
+              <p class="upload-song__text upload-lyrics-text">
+                Add Lyrics File
+              </p>
+            </div>
+
+            <div class="upload-song__warning audio-lyrics-warn hidden"></div>
+
+            <button class="upload-song__btn remove-lyrics-upload">
+              Remove Lyrics
+            </button>
+
+            <label
+              class="upload-lyrics-label hide"
+              for="upload-audio-lyrics"
+            ></label>
+            <input type="file" accept=".lrc" id="upload-audio-lyrics" hidden />
+          </div>
+        </div>
+
+        <div class="upload-song__fields">
+          <div class="upload-song__field">
+            <div class="upload-song__field-label">Title</div>
+            <input
+              type="text"
+              id="upload-audiotitle-input"
+              maxlength="100"
+              placeholder="Audio title"
+            />
+          </div>
+
+          <div class="upload-song__field">
+            <div class="upload-song__field-label">Artist</div>
+            <input
+              type="text"
+              id="upload-artist-input"
+              maxlength="100"
+              placeholder="Artist Name"
+            />
+          </div>
+
+          <div class="upload-song__field">
+            <div class="upload-song__field-label">Accessibility</div>
+            <input
+              type="text"
+              id="upload-audioaccess-input"
+              maxlength="10"
+              placeholder="Private/Public"
+            />
+          </div>
+        </div>
+
+        <button class="upload-song__btn audio-upload-main-btn">
+          Upload Audio
+        </button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="create-playlist hidden">
+        <h2 class="box-heading">Create Playlist</h2>
+
+        <div class="create-playlist__uploads">
+          <div class="create-playlist__upload">
+            <div class="create-playlist__imgbox">
+              <img
+                src="/default-profile-img.webp"
+                class="create-playlist__img"
+              />
+            </div>
+
+            <div class="create-playlist__warning playlist-img-warn"></div>
+
+            <button class="create-playlist__btn remove-playlistcover">
+              Remove Cover Image
+            </button>
+
+            <label
+              class="upload-playlistcover-label hide"
+              for="upload-playlistcover"
+            ></label>
+            <input
+              type="file"
+              accept="image/*"
+              id="upload-playlistcover"
+              hidden
+            />
+          </div>
+
+          <div class="create-playlist__upload">
+            <p class="create-playlist__tag-heading">Tags</p>
+
+            <div class="create-playlist__tag-container">
+              <button class="create-playlist__tag" data-tag-name="band">
+                Band
+              </button>
+              <button class="create-playlist__tag" data-tag-name="ai-song">
+                AI Songs
+              </button>
+              <button class="create-playlist__tag" data-tag-name="game">
+                Game
+              </button>
+              <button class="create-playlist__tag" data-tag-name="romantic">
+                Romantic
+              </button>
+              <button class="create-playlist__tag" data-tag-name="anime">
+                Anime
+              </button>
+              <button class="create-playlist__tag" data-tag-name="nature">
+                Nature
+              </button>
+              <button class="create-playlist__tag" data-tag-name="sad">
+                Sad
+              </button>
+              <button class="create-playlist__tag" data-tag-name="pop">
+                Pop
+              </button>
+              <button class="create-playlist__tag" data-tag-name="hollywood">
+                Hollywood
+              </button>
+              <button class="create-playlist__tag" data-tag-name="patriotic">
+                Patriotic
+              </button>
+              <button class="create-playlist__tag" data-tag-name="motivational">
+                Motivational
+              </button>
+              <button class="create-playlist__tag" data-tag-name="concert-band">
+                Concert Band
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="create-playlist__fields">
+          <div class="create-playlist__field">
+            <div class="create-playlist__field-label">Title</div>
+            <input
+              type="text"
+              id="upload-playlisttitle-input"
+              maxlength="100"
+              placeholder="Playlist title"
+            />
+          </div>
+
+          <div class="create-playlist__field">
+            <div class="create-playlist__field-label">
+              Description (Optional)
+            </div>
+            <textarea
+              class="upload-description-input"
+              maxlength="200"
+              placeholder="Write a description"
+            ></textarea>
+          </div>
+
+          <div class="create-playlist__field">
+            <div class="create-playlist__field-label">Accessibility</div>
+            <input
+              type="text"
+              id="upload-playlistaccess-input"
+              maxlength="10"
+              placeholder="Private/Public"
+            />
+          </div>
+        </div>
+
+        <button class="create-playlist__btn create-playlist-btn">
+          Create Playlist
+        </button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="ai-chat hidden">
+        <!-- <h2 class="box-heading">Ask Sia</h2> -->
+
+        <div class="ai-chat__chat-container">
+          <div class="ai-chat__info">
+            <h2 class="box-heading">Ask Sia</h2>
+            <div class="ai-chat__imgbox">
+              <img src="src/img/sia.jpg" class="ai-chat__img" alt="Sia" />
+            </div>
+
+            <div class="ai-chat__info-text">
+              Sia is your AI assistant. She is friendly and playful.
+            </div>
+          </div>
+
+          <div class="ai-chat__chat">
+            <div class="ai-chat__chats">
+              <!-- <div class="ai-chat__user-chat bg-yel-grey-2">
+                <p class="ai-chat__user-chat-heading">YOU</p>
+                <p class="ai-chat__user-chat-text">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum
+                  perferendis distinctio delectus sit quidem, atque magni
+                  sapiente dolor ipsam laborum pariatur quibusdam, nisi eveniet,
+                  corporis repellat impedit eius reprehenderit magnam.
+                </p>
+              </div> -->
+
+              <!-- <div class="ai-chat__sia-chat">
+                <p class="ai-chat__sia-chat-heading">SIA</p>
+                <p class="ai-chat__sia-chat-text">
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum
+                  perferendis distinctio delectus sit quidem, atque magni
+                  sapiente dolor ipsam laborum pariatur quibusdam, nisi eveniet,
+                  corporis repellat impedit eius reprehenderit magnam.
+                </p>
+              </div> -->
+            </div>
+
+            <div class="ai-chat__input-container">
+              <input
+                type="text"
+                id="ai-chat-input"
+                placeholder="Ask something"
+              />
+
+              <button class="ai-chat__btn ai-mic-btn">
+                <ion-icon name="mic"></ion-icon>
+              </button>
+
+              <button class="ai-chat__btn ai-send-chat">
+                <ion-icon name="send"></ion-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="saved-playlists hidden">
+        <h2 class="box-heading">Saved Playlists</h2>
+
+        <input
+          class=""
+          type="text"
+          id="search-saved-playlists"
+          placeholder="Search Playlists"
+        />
+
+        <div class="saved-playlists__container">
+          <!-- <div class="saved-playlists__card bg-yel-grey-2">
+            <div class="saved-playlists__card-info">
+              <div class="saved-playlists__card-imgbox">
+                <img
+                  src="public/default-profile-img.webp"
+                  alt="Cover Image"
+                  class="saved-playlists__card-img"
+                />
+              </div>
+
+              <div class="saved-playlists__card-name">
+                <div class="saved-playlists__card-title"></div>
+                <div class="saved-playlists__card-creator"></div>
+              </div>
+            </div>
+
+            <button class="saved-playlists__btn">
+              <ion-icon name="remove-circle-outline"></ion-icon>
+            </button>
+          </div> -->
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="shared-presets hidden">
+        <h2 class="box-heading">Shared Presets</h2>
+
+        <div class="shared-presets__container">
+          <!-- <div class="preset-card bg-yel-grey-2-1">
+            <div class="preset-card__main">
+              <p class="preset-card__name">Metal</p>
+
+              <div class="preset-card__user-info">
+                <div class="preset-card__imgbox">
+                  <img src="" alt="User" class="preset-card__img" />
+                </div>
+                <p class="preset-card__user">Soumik</p>
+              </div>
+
+              <div class="preset-card__values">
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">60Hz</span
+                  ><span class="p-sub-bass">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">120Hz</span
+                  ><span class="p-bass">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">400Hz</span
+                  ><span class="p-lowmid">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">1kHz</span
+                  ><span class="p-mid">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">2.5kHz</span
+                  ><span class="p-highmid">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">6kHz</span
+                  ><span class="p-treble">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">10kHz</span
+                  ><span class="p-brilliance">0</span>
+                </p>
+                <p class="preset-card__value">
+                  <span class="preset-card__value-name">16kHz</span
+                  ><span class="p-air">0</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="preset-card__btn-list">
+              <button class="preset-card__btn preset-import-btn">
+                <ion-icon name="log-in"></ion-icon>
+              </button>
+            </div>
+          </div> -->
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="imported-presets hidden">
+        <h2 class="box-heading">Imported Presets</h2>
+
+        <div class="imported-presets__container"></div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="published-presets hidden">
+        <h2 class="box-heading">Published Presets</h2>
+
+        <div class="published-presets__container"></div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="create-preset hidden">
+        <h2 class="box-heading">Share Current Settings</h2>
+
+        <label for="preset-name-input" class="create-preset__label"
+          >Preset Name</label
+        >
+        <input
+          type="text"
+          id="preset-name-input"
+          maxlength="20"
+          placeholder="Set preset name"
+        />
+
+        <button class="create-preset__btn">Publish Settings</button>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="created-playlists hidden">
+        <h2 class="box-heading">Created Playlists</h2>
+
+        <button class="created-playlists__exit hidden">
+          <span class="mingcute--arrow-left-fill"></span>
+        </button>
+
+        <input
+          class="hide"
+          type="text"
+          id="search-songs-playlist"
+          placeholder="Search Songs"
+        />
+
+        <div class="created-playlists__container"></div>
+
+        <div class="created-playlists__songs hide"></div>
+
+        <div class="edit-playlist hide">
+          <div class="edit-playlist__uploads">
+            <div class="edit-playlist__upload">
+              <div class="edit-playlist__imgbox">
+                <img
+                  src="/default-profile-img.webp"
+                  class="edit-playlist__img"
+                />
+              </div>
+
+              <div class="edit-playlist__warning playlist-edit-img-warn"></div>
+
+              <button class="edit-playlist__btn edit-remove-playlistcover">
+                Remove Cover Image
+              </button>
+
+              <label
+                class="edit-playlistcover-label hide"
+                for="edit-playlistcover"
+              ></label>
+              <input
+                type="file"
+                accept="image/*"
+                id="edit-playlistcover"
+                hidden
+              />
+            </div>
+
+            <div class="edit-playlist__upload">
+              <p class="edit-playlist__tag-heading">Tags</p>
+
+              <div class="edit-playlist__tag-container">
+                <button class="edit-playlist__tag" data-tag-name="band">
+                  Band
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="ai-song">
+                  AI Songs
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="game">
+                  Game
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="romantic">
+                  Romantic
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="anime">
+                  Anime
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="nature">
+                  Nature
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="sad">
+                  Sad
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="pop">
+                  Pop
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="hollywood">
+                  Hollywood
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="patriotic">
+                  Patriotic
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="motivational">
+                  Motivational
+                </button>
+                <button class="edit-playlist__tag" data-tag-name="concert-band">
+                  Concert Band
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="edit-playlist__fields">
+            <div class="edit-playlist__field">
+              <div class="edit-playlist__field-label">Title</div>
+              <input
+                type="text"
+                id="edit-playlisttitle-input"
+                maxlength="100"
+                placeholder="Playlist title"
+              />
+            </div>
+
+            <div class="edit-playlist__field">
+              <div class="edit-playlist__field-label">
+                Description (Optional)
+              </div>
+              <textarea
+                class="edit-description-input"
+                maxlength="200"
+                placeholder="Edit description"
+              ></textarea>
+            </div>
+
+            <div class="edit-playlist__field">
+              <div class="edit-playlist__field-label">Accessibility</div>
+              <input
+                type="text"
+                id="edit-playlistaccess-input"
+                maxlength="10"
+                placeholder="Private/Public"
+              />
+            </div>
+          </div>
+
+          <button class="edit-playlist__btn edit-playlist-btn">
+            Save Changes
+          </button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="del-confirm hidden">
+        <div class="del-confirm__text">Are you sure?</div>
+
+        <div class="del-confirm__btns">
+          <button class="del-confirm__btn del-yes">Yes</button>
+          <button class="del-confirm__btn del-no">No</button>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>

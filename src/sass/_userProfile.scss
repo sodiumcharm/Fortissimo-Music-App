@@ -1,0 +1,222 @@
+@use "./mixins" as mixin;
+
+.user-profile-btn {
+  width: 4rem;
+  height: 4rem;
+  background-color: orange;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--primary-color);
+  @include mixin.setTransition;
+  cursor: pointer;
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.sia-btn {
+  width: 4rem;
+  height: 4rem;
+  color: var(--primary-color);
+  background-color: transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  @include mixin.setTransition;
+  @include mixin.flex-center;
+  cursor: pointer;
+
+  & span {
+    height: 3.5rem;
+    width: 3.5rem;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+.user-menu {
+  height: 100%;
+  width: 45rem;
+  background-color: #222;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  border-radius: 20px 0 0 20px;
+  @include mixin.setTransition;
+  overflow: scroll;
+
+  &__img-container {
+    padding: 2.5rem;
+    @include mixin.flex-center(column);
+    gap: 1.8rem;
+  }
+
+  &__imgbox {
+    width: 15rem;
+    height: 15rem;
+    border-radius: 50%;
+    border: 3px solid var(--primary-color);
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  &__remove-img {
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1.4rem;
+    background-color: var(--primary-color);
+    color: #222;
+    padding: 0.8rem 1.6rem;
+    @include mixin.flex-center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 7px;
+    @include mixin.setTransition;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__field {
+    width: 100%;
+    height: 4rem;
+    @include mixin.flex-center;
+    gap: 1.2rem;
+    border-radius: 7px;
+    background-color: #282828;
+    padding: 0 0 0 1.5rem;
+    overflow: hidden;
+
+    & p {
+      width: 70%;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    & button {
+      width: 30%;
+    }
+  }
+
+  &-un {
+    color: var(--primary-color);
+    border: 3px solid var(--primary-color);
+    & p {
+      width: 100%;
+    }
+  }
+
+  &__edit {
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    @include mixin.flex-center;
+    height: 100%;
+    border: none;
+    background-image: linear-gradient(
+      45deg,
+      var(--secondary-color),
+      var(--primary-color)
+    );
+    cursor: pointer;
+
+    & span {
+      @include mixin.setTransition;
+    }
+
+    &:hover span {
+      transform: scale(1.11);
+    }
+  }
+
+  &__email {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__email-status {
+    @include mixin.flex-center;
+    font-size: 2rem;
+    color: #f03e3e;
+  }
+
+  &__icon-sm {
+    font-size: 2rem;
+  }
+
+  &__special-btn {
+    border: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    background-image: linear-gradient(
+      45deg,
+      var(--secondary-color),
+      var(--primary-color)
+    );
+
+    @include mixin.setTransition;
+    @include mixin.flex-center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.7rem;
+    border-radius: 7px;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  &__regular-btn {
+    border: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: transparent;
+    color: #eee;
+
+    @include mixin.setTransition;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #333;
+    }
+
+    & .user-menu__icon-sm {
+      font-size: 3rem;
+      color: var(--primary-color);
+    }
+  }
+
+  &__logout {
+    padding: 2.5rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #444;
+  }
+}

@@ -147,7 +147,7 @@
 .dropdown--hidden {
   pointer-events: none;
   opacity: 0;
-  
+
   & * {
     font-size: 0;
     height: 0;
@@ -295,6 +295,27 @@
 }
 
 .format--active {
+  background-color: var(--primary-color);
+  color: #222;
+}
+
+.collapse-hide {
+  padding: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  font-size: 0rem;
+
+  & * {
+    padding: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    font-size: 0rem;
+  }
+}
+
+.tag--active {
   background-color: var(--primary-color);
   color: #222;
 }

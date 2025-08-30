@@ -1,6 +1,18 @@
 import { eqSetter, createKnob } from "./draggableUi.js";
 import { audioProfile, settingsProfile } from "./settings.js";
-import { valueToPercentage } from "./utilities.js";
+import { presetCardMaker, valueToPercentage } from "./utilities.js";
+import {
+  createPreset,
+  data,
+  deletePreset,
+  importPreset,
+  removeImportedPreset,
+  windowManager,
+} from "./serverConnection.js";
+
+const loadingText = document.querySelector(".loading-window__text");
+const errorText = document.querySelector(".error-window__text");
+const confirmText = document.querySelector(".confirmation-window__text");
 
 export const audio = document.querySelector(".audio-player");
 export const eqBtn = document.querySelector(".eq-btn");
@@ -37,6 +49,20 @@ const eqToggleBtn = document.querySelector(".eq-toggle");
 const presetDropDown = document.querySelector(".preset-display");
 const presetDisplay = document.querySelector(".preset-displayer");
 const presetBtnBox = document.querySelector(".preset-btns");
+
+const displaySharedPresets = document.querySelector(".display-shared-presets");
+const sharedPresetContainer = document.querySelector(
+  ".shared-presets__container"
+);
+const importedPresetContainer = document.querySelector(
+  ".imported-presets__container"
+);
+const presetNameInput = document.getElementById("preset-name-input");
+const createPresetForPublish = document.querySelector(".create-preset__btn");
+const captureBtn = document.querySelector(".capture-eq");
+const publishedPresetContainer = document.querySelector(
+  ".published-presets__container"
+);
 
 const eqPresets = {
   pop: {
@@ -590,4 +616,190 @@ export const audioManipulator = function () {
     rightGain,
     document.querySelector(".right-vol-display")
   );
+
+  displaySharedPresets.addEventListener("click", function () {
+    document.querySelector(".shared-presets").classList.remove("hidden");
+  });
+
+  sharedPresetContainer.addEventListener("click", async function (e) {
+    if (
+      e.target.closest(".preset-card") &&
+      !e.target.closest(".preset-import-btn") &&
+      !e.target.closest(".remove-import-btn")
+    ) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      for (const preset of data.presetData) {
+        if (preset._id === id) {
+          applyPreset(preset);
+        }
+      }
+    }
+
+    if (e.target.closest(".preset-import-btn")) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      const imported = await importPreset(id);
+
+      if (!imported) return;
+
+      data.userData.importedPresets.push(id);
+
+      for (const preset of data.presetData) {
+        if (preset._id === id) {
+          presetCardMaker(preset, "imported-presets__container");
+        }
+      }
+
+      parentCard
+        .querySelector(".preset-import-btn")
+        .classList.add("collapse-hide");
+
+      parentCard
+        .querySelector(".remove-import-btn")
+        .classList.remove("collapse-hide");
+
+      confirmText.textContent = "Settings imported successfully.";
+      windowManager(".confirmation-window", "show");
+    }
+
+    if (e.target.closest(".remove-import-btn")) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      const removed = await removeImportedPreset(id);
+
+      if (!removed) return;
+
+      data.userData.importedPresets.splice(
+        data.userData.importedPresets.indexOf(id),
+        1
+      );
+
+      const target = importedPresetContainer.querySelector(
+        `[data-preset-id="${id}"]`
+      );
+
+      target.classList.add("hidden");
+
+      setTimeout(() => {
+        target.remove();
+      }, 400);
+
+      parentCard
+        .querySelector(".preset-import-btn")
+        .classList.remove("collapse-hide");
+
+      parentCard
+        .querySelector(".remove-import-btn")
+        .classList.add("collapse-hide");
+    }
+  });
+
+  importedPresetContainer.addEventListener("click", function (e) {
+    if (
+      e.target.closest(".preset-card") &&
+      !e.target.closest(".preset-import-btn") &&
+      !e.target.closest(".remove-import-btn")
+    ) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      for (const preset of data.presetData) {
+        if (preset._id === id) {
+          applyPreset(preset);
+        }
+      }
+    }
+
+    if (e.target.closest(".remove-import-btn")) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      const target = sharedPresetContainer.querySelector(
+        `[data-preset-id="${id}"]`
+      );
+
+      const targetRemoveBtn = target.querySelector(".remove-import-btn");
+
+      targetRemoveBtn.click();
+    }
+  });
+
+  captureBtn.addEventListener("click", function () {
+    windowManager(".create-preset", "show");
+  });
+
+  createPresetForPublish.addEventListener("click", async function () {
+    const presetName = presetNameInput.value;
+
+    if (presetName.trim() === "") return;
+
+    const obj = {
+      presetName,
+      subBass: subBassEQ.gain.value,
+      bass: bassEQ.gain.value,
+      lowMid: lowMidEQ.gain.value,
+      mid: midEQ.gain.value,
+      highMid: highMidEQ.gain.value,
+      treble: trebleEQ.gain.value,
+      brilliance: brillianceEQ.gain.value,
+      air: airEQ.gain.value,
+    };
+
+    loadingText.textContent = "Publishing settings";
+    windowManager(".loading-window", "show");
+
+    const created = await createPreset(obj);
+
+    windowManager(".loading-window", "hide");
+
+    if (!created) return;
+
+    document.querySelector(".create-preset").classList.add("hidden");
+
+    presetNameInput.value = "";
+
+    confirmText.textContent = "Settings published";
+    windowManager(".confirmation-window", "show");
+  });
+
+  publishedPresetContainer.addEventListener("click", async function (e) {
+    if (
+      !e.target.closest(".delete-preset-btn") &&
+      e.target.closest(".preset-card")
+    ) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      for (const preset of data.presetData) {
+        if (preset._id === id) {
+          applyPreset(preset);
+        }
+      }
+    }
+
+    if (e.target.closest(".delete-preset-btn")) {
+      const parentCard = e.target.closest(".preset-card");
+      const id = parentCard.getAttribute("data-preset-id");
+
+      const deleted = await deletePreset(id);
+
+      if (!deleted) return;
+
+      const target = sharedPresetContainer.querySelector(
+        `[data-preset-id="${id}"]`
+      );
+
+      target.remove();
+
+      parentCard.classList.add("hidden");
+
+      setTimeout(() => {
+        parentCard.remove();
+      }, 400);
+    }
+  });
 };
