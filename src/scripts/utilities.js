@@ -292,9 +292,6 @@ export const playlistCardMaker = function (
                     <button class="floating-btn floating-save-btn">
                       ${saveIcon}
                     </button>
-                    <button class="floating-btn floating-creator-btn">
-                      <ion-icon class="floating-icons" name="person-circle-outline"></ion-icon>Creator Info
-                    </button>
                   </div>
                 </div>`;
 

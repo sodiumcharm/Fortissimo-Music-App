@@ -50,6 +50,7 @@
     border-radius: 50%;
     overflow: hidden;
     border: 4px solid var(--primary-color);
+    flex-shrink: 0;
   }
 
   &__img {
@@ -118,6 +119,7 @@
     @include mixin.flex-center;
     cursor: pointer;
     @include mixin.setTransition;
+    flex-shrink: 0;
 
     &:hover {
       transform: scale(1.08);

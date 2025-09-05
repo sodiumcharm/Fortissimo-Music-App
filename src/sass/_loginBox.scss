@@ -311,6 +311,7 @@
       border-radius: 50%;
       border: 1px solid var(--primary-color);
       background-color: var(--primary-color);
+      flex-shrink: 0;
     }
 
     &.red-flag {

@@ -192,6 +192,7 @@
     height: 10rem;
     border-radius: 11px 0 0 11px;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   &__card-img {
@@ -208,6 +209,7 @@
   }
 
   &__card-name {
+    width: 30rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -477,6 +479,7 @@
     height: 10rem;
     border-radius: 11px 0 0 11px;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
   &__card-img {
@@ -493,20 +496,24 @@
   }
 
   &__card-name {
+    width: 30rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow: hidden;
   }
 
   &__card-title {
     font-size: 1.6rem;
     font-weight: 600;
+    text-wrap: nowrap;
   }
 
   &__card-songs {
     color: #ccc;
     font-size: 1.3rem;
     font-weight: 500;
+    text-wrap: nowrap;
   }
 
   &__card-access {

@@ -73,6 +73,7 @@
   border: 3px solid var(--primary-color);
   position: relative;
   cursor: pointer;
+  flex-shrink: 0;
 
   & .playbar-cast-icon {
     @include mixin.position-center;
@@ -286,6 +287,7 @@
   color: #121212;
   cursor: pointer;
   @include mixin.setTransition;
+  flex-shrink: 0;
 }
 
 .control-btn:hover {
