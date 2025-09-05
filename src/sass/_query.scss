@@ -1012,6 +1012,10 @@
 }
 
 @media (max-width: 29.37em) {
+  body {
+    overflow-y: auto;
+  }
+
   .equalizer-box .box-heading {
     opacity: 0;
   }
