@@ -1,6 +1,6 @@
 import { audio } from "./audioProcessor.js";
 
-export const lyricsStatus = {currentLyricsHandler: null};
+export const lyricsStatus = { currentLyricsHandler: null };
 
 export const initLyrics = function (lyricsUrl) {
   if (lyricsUrl === "null") return;
@@ -72,7 +72,7 @@ export const initLyrics = function (lyricsUrl) {
 
     const onTimeUpdate = function () {
       const currentTime = audio.currentTime;
-      
+
       for (let i = 0; i < lyrics.length; i++) {
         if (
           currentTime >= lyrics[i].time &&
@@ -90,7 +90,12 @@ export const initLyrics = function (lyricsUrl) {
             if (newActive) {
               newActive.classList.add("active");
 
-              newActive.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+              // newActive.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+              lyricsContainer.scrollTo({
+                top: newActive.offsetTop - lyricsContainer.clientHeight / 2,
+                behavior: "smooth",
+              });
             }
 
             currentIndex = i;
@@ -102,7 +107,10 @@ export const initLyrics = function (lyricsUrl) {
     };
 
     if (lyricsStatus.currentLyricsHandler) {
-      audio.removeEventListener("timeupdate", lyricsStatus.currentLyricsHandler);
+      audio.removeEventListener(
+        "timeupdate",
+        lyricsStatus.currentLyricsHandler
+      );
     }
 
     lyricsStatus.currentLyricsHandler = onTimeUpdate;
