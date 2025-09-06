@@ -17,6 +17,7 @@ import {
   registerLike,
   removeSong,
   renderUserMedia,
+  reportAudio,
   savePlaylist,
   windowManager,
 } from "./serverConnection.js";
@@ -624,6 +625,7 @@ const songLoader = function (songs, container, context, batchSize, songId = 0) {
           playbar.setAttribute("data-lyrics", songLyrics);
           playbar.setAttribute("data-playbartitle", currentSongName);
           playbar.setAttribute("data-artist", currentArtistName);
+          playbar.setAttribute("data-audio-id", id);
 
           if (songUrl !== currentSongUrl) {
             if (currentBtn)
@@ -1459,6 +1461,20 @@ const initApp = async function () {
     .addEventListener("click", function () {
       if (!audio.src) return;
       audio.currentTime -= 10;
+    });
+
+  document
+    .querySelector(".playbar-report-btn")
+    .addEventListener("click", async function () {
+      const id = playbar.getAttribute("data-audio-id");
+
+      const reported = await reportAudio(id);
+
+      if (!reported) return;
+
+      confirmText.textContent = "Audio reported successfully!";
+
+      windowManager(".confirmation-window", "show");
     });
 
   playNextBtn.addEventListener("click", function () {
