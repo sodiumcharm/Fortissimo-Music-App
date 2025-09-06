@@ -90,7 +90,7 @@ export const initLyrics = function (lyricsUrl) {
             if (newActive) {
               newActive.classList.add("active");
 
-              newActive.scrollIntoView({ behavior: "smooth", block: "center" });
+              newActive.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
             }
 
             currentIndex = i;
