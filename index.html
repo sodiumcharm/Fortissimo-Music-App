@@ -123,7 +123,11 @@
             <div class="footer flex rounded">
               <p class="footer-text">&copy; Soumik Roy. All rights reserved.</p>
               <a href="#" class="link">Portfolio</a>
-              <a href="https://github.com/sodiumcharm" class="link">GitHub</a>
+              <a
+                href="https://github.com/sodiumcharm/Fortissimo-Music-App.git"
+                class="link"
+                >GitHub</a
+              >
               <a href="#" class="link">LinkedIn</a>
             </div>
           </div>
@@ -314,7 +318,13 @@
                 <span class="mingcute--rewind-backward-10-line"></span>
               </button>
 
-              <button class="playbar-report-btn">Report</button>
+              <button class="playbar-report-btn" title="Report">
+                <ion-icon name="flag"></ion-icon>
+              </button>
+
+              <button class="playbar-extra-btn playbar-comment-btn" title="Comments">
+                <ion-icon name="chatbubble-ellipses"></ion-icon>
+              </button>
 
               <button class="playbar-extra-btn playbar-10-next">
                 <span class="mingcute--rewind-forward-10-line"></span>
@@ -2371,6 +2381,67 @@
 
           <button class="edit-playlist__btn edit-playlist-btn">
             Save Changes
+          </button>
+        </div>
+
+        <button class="close-btn">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="comments-box hidden">
+        <h2 class="box-heading">Comments</h2>
+
+        <div class="comments-container">
+          <!-- <div class="comment-card">
+            <div class="comment-card__user">
+              <div class="comment-card__imgbox">
+                <img
+                  src="/public/default-profile-img.webp"
+                  alt="User"
+                  class="comment-card__img"
+                />
+              </div>
+
+              <p class="comment-card__name">Soumik</p>
+            </div>
+
+            <div class="comment-card__text">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+              Reiciendis necessitatibus dolorum aspernatur ipsum vitae corporis
+              nesciunt, pariatur blanditiis, voluptatem recusandae consectetur!
+              Odit voluptate veritatis distinctio iure praesentium nulla sequi
+              consectetur.
+            </div>
+
+            <div class="comment-card__details">
+              <p class="comment-card__time">1212121 july 2023</p>
+
+              <div class="comment-card__like">
+                <p class="comment-card__like-num">22</p>
+
+                <button class="comment-card__like-btn">
+                  <span class="mingcute--thumb-up-2-line"></span>
+                </button>
+              </div>
+            </div>
+
+            <button class="comment-card__delete">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </div> -->
+        </div>
+
+        <div class="comments__input-container">
+          <input
+            type="text"
+            id="comment-input"
+            maxlength="10"
+            placeholder="Type comment here"
+          />
+
+          <button class="comments__send-btn">
+            <ion-icon name="send"></ion-icon>
           </button>
         </div>
 

@@ -646,6 +646,63 @@ export const chatTextMaker = function (type, message) {
     .insertAdjacentHTML("beforeend", html);
 };
 
+export const commentCardMaker = function (comment) {
+  const defaultImg = "/default-profile-img.webp";
+
+  let liked = "";
+  let likeIcon = `<span class="mingcute--thumb-up-2-line"></span>`;
+  let deleteHide = "hide";
+
+  if (data.userData && comment.likeIds.includes(data.userData._id)) {
+    liked = "liked";
+    likeIcon = `<span class="mingcute--thumb-up-2-fill"></span>`;
+  }
+
+  if (data.userData && comment.user._id === data.userData._id) {
+    deleteHide = "";
+  }
+
+  const html = `<div class="comment-card ${liked}" data-id="${comment._id}">
+            <div class="comment-card__user">
+              <div class="comment-card__imgbox">
+                <img
+                  src="${comment.user.profileImage || defaultImg}"
+                  alt="User"
+                  class="comment-card__img"
+                />
+              </div>
+
+              <p class="comment-card__name">${comment.user.fullname}</p>
+            </div>
+
+            <div class="comment-card__text">
+              ${comment.comment}
+            </div>
+
+            <div class="comment-card__details">
+              <p class="comment-card__time">${dateFormatter(
+                comment.createdAt
+              )}</p>
+
+              <div class="comment-card__like">
+                <p class="comment-card__like-num">${comment.likes}</p>
+
+                <button class="comment-card__like-btn">
+                  ${likeIcon}
+                </button>
+              </div>
+            </div>
+
+            <button class="comment-card__delete ${deleteHide}">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </div>`;
+
+  document
+    .querySelector(".comments-container")
+    .insertAdjacentHTML("afterbegin", html);
+};
+
 export const initDragResponse = function (fnArr, thumb) {
   let isDragging = false;
 

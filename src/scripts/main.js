@@ -86,6 +86,7 @@ import {
 } from "./mediaOperation.js";
 
 import { initAIChat } from "./aiChat.js";
+import { initComments } from "./comments.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -1666,6 +1667,10 @@ const initApp = async function () {
       if (btn.parentElement.classList.contains("signup-box")) {
         cleanupSignupWindow();
       }
+
+      if (btn.parentElement.classList.contains("comments-box")) {
+        document.querySelector(".comments-container").innerHTML = "";
+      }
     });
   });
 
@@ -1795,18 +1800,6 @@ const initApp = async function () {
 
         parentCard.querySelector(".created-playlists__card-img").src =
           "/default-profile-img.webp";
-
-        // const targetCard = playlistContainer.querySelector(
-        //   `[data-playlistid="${id}"]`
-        // );
-
-        // if (targetCard) targetCard.remove();
-
-        // data.playlistData.forEach((playlist) => {
-        //   if (playlist._id === id) {
-        //     data.playlistData.splice(data.playlistData.indexOf(playlist), 1);
-        //   }
-        // });
       }
 
       if (e.target.closest(".del-playlist")) {
@@ -2027,6 +2020,8 @@ window.addEventListener("offline", function () {
   initChooseLFOWaveform();
 
   initChromecast();
+
+  initComments();
 
   allCloseOkBtns.forEach((btn) => {
     btn.addEventListener("click", function () {

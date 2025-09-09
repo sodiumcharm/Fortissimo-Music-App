@@ -90,8 +90,6 @@ export const initLyrics = function (lyricsUrl) {
             if (newActive) {
               newActive.classList.add("active");
 
-              // newActive.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-
               lyricsContainer.scrollTo({
                 top: newActive.offsetTop - lyricsContainer.clientHeight / 2,
                 behavior: "smooth",

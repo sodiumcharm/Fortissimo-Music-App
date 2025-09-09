@@ -1548,7 +1548,7 @@ export const deletePlaylist = async function (id) {
   }
 };
 
-export const reportAudio = async function(id) {
+export const reportAudio = async function (id) {
   const report = async function () {
     const res = await fetch(url + `/api/v1/audios/report/${id}`, {
       method: "PATCH",
@@ -1589,4 +1589,159 @@ export const reportAudio = async function(id) {
     windowManager(".error-window", "show");
     return false;
   }
-}
+};
+
+export const getComments = async function (audioId) {
+  const getAll = async function () {
+    const res = await fetch(url + `/api/v1/comments/all/${audioId}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    return res;
+  };
+
+  let res = await getAll();
+  let resData = await res.json();
+
+  if (res.status === 200) {
+    return resData.data.comments;
+  } else {
+    errorText.textContent = resData.message;
+    windowManager(".error-window", "show");
+    return false;
+  }
+};
+
+export const postComment = async function (audioId, text) {
+  const post = async function () {
+    const res = await fetch(url + "/api/v1/comments/post", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ audioId: audioId, text: text }),
+    });
+
+    return res;
+  };
+
+  let res = await post();
+  let resData = await res.json();
+
+  if (res.status === 200) {
+    return resData.data.comment;
+  } else if (res.status === 405) {
+    const refreshed = await refreshAccess();
+
+    if (!refreshed) return;
+
+    res = await post();
+    resData = await res.json();
+
+    if (res.status === 200) {
+      return resData.data.comment;
+    } else {
+      errorText.textContent = resData.message;
+      windowManager(".error-window", "show");
+      return false;
+    }
+  } else if (res.status === 401) {
+    windowManager(".login-box", "show");
+    return false;
+  } else {
+    errorText.textContent = resData.message;
+    windowManager(".error-window", "show");
+    return false;
+  }
+};
+
+export const likeComment = async function (id) {
+  const like = async function () {
+    const res = await fetch(url + `/api/v1/comments/like/${id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    return res;
+  };
+
+  let res = await like();
+  let resData = await res.json();
+
+  if (res.status === 200) {
+    return resData.data.liked;
+  } else if (res.status === 405) {
+    const refreshed = await refreshAccess();
+
+    if (!refreshed) return;
+
+    res = await like();
+    resData = await res.json();
+
+    if (res.status === 200) {
+      return resData.data.liked;
+    } else {
+      errorText.textContent = resData.message;
+      windowManager(".error-window", "show");
+      return false;
+    }
+  } else if (res.status === 401) {
+    windowManager(".login-box", "show");
+    return false;
+  } else {
+    errorText.textContent = resData.message;
+    windowManager(".error-window", "show");
+    return false;
+  }
+};
+
+export const deleteComment = async function (id) {
+  const del = async function () {
+    const res = await fetch(url + `/api/v1/comments/delete/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    return res;
+  };
+
+  let res = await del();
+  let resData = await res.json();
+
+  if (res.status === 200) {
+    return true;
+  } else if (res.status === 405) {
+    const refreshed = await refreshAccess();
+
+    if (!refreshed) return;
+
+    res = await del();
+    resData = await res.json();
+
+    if (res.status === 200) {
+      return true;
+    } else {
+      errorText.textContent = resData.message;
+      windowManager(".error-window", "show");
+      return false;
+    }
+  } else if (res.status === 401) {
+    windowManager(".login-box", "show");
+    return false;
+  } else {
+    errorText.textContent = resData.message;
+    windowManager(".error-window", "show");
+    return false;
+  }
+};

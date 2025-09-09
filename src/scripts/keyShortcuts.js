@@ -16,8 +16,6 @@ const isTyping = function (e) {
 
 export const initKeyHandler = function () {
   document.addEventListener("keydown", function (e) {
-    console.log(e);
-
     if (isTyping(e)) return;
 
     keyPresses.add(e.key.toLowerCase());
