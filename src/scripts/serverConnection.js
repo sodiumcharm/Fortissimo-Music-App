@@ -349,7 +349,7 @@ export const refreshAccess = async function () {
 
     windowManager(".error-window", "show");
 
-    await logoutUser();
+    windowManager(".login-box", "show");
 
     return false;
   }
