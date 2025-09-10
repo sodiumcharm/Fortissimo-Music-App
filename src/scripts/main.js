@@ -87,6 +87,7 @@ import {
 
 import { initAIChat } from "./aiChat.js";
 import { initComments } from "./comments.js";
+import { initReport } from "./report.js";
 
 // *************************************************************
 // DOM ELEMENT SELECTION
@@ -1467,15 +1468,11 @@ const initApp = async function () {
   document
     .querySelector(".playbar-report-btn")
     .addEventListener("click", async function () {
-      const id = playbar.getAttribute("data-audio-id");
+      windowManager('.report-box', 'show');
 
-      const reported = await reportAudio(id);
+      const id = playbar.getAttribute('data-audio-id');
 
-      if (!reported) return;
-
-      confirmText.textContent = "Audio reported successfully!";
-
-      windowManager(".confirmation-window", "show");
+      document.querySelector('.report-box').setAttribute('data-id', id);
     });
 
   playNextBtn.addEventListener("click", function () {
@@ -2022,6 +2019,8 @@ window.addEventListener("offline", function () {
   initChromecast();
 
   initComments();
+
+  initReport();
 
   allCloseOkBtns.forEach((btn) => {
     btn.addEventListener("click", function () {

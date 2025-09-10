@@ -1548,14 +1548,16 @@ export const deletePlaylist = async function (id) {
   }
 };
 
-export const reportAudio = async function (id) {
+export const reportAudio = async function (id, reason) {
   const report = async function () {
-    const res = await fetch(url + `/api/v1/audios/report/${id}`, {
+    const res = await fetch(url + `/api/v1/audios/report`, {
       method: "PATCH",
       credentials: "include",
       headers: {
         Accept: "application/json",
+        "Content-type": "application/json",
       },
+      body: JSON.stringify({ audioId: id, reason: reason }),
     });
 
     return res;

@@ -188,7 +188,8 @@
   .create-playlist,
   .created-playlists,
   .create-preset,
-  .lyrics-box, .comments-box {
+  .lyrics-box,
+  .comments-box {
     width: 100%;
     height: 100%;
     border-radius: 0;
@@ -203,7 +204,8 @@
   .loading-window,
   .error-window,
   .confirmation-window,
-  .del-confirm, .error-note {
+  .del-confirm,
+  .error-note {
     width: 90vw;
     height: 50vh;
   }
@@ -1013,7 +1015,7 @@
 
   .lyrics-container {
     padding: 0 1.5rem 1.5rem 1.5rem;
-    
+
     & * {
       font-size: 1.6rem;
     }
@@ -1024,7 +1026,6 @@
   }
 
   .comment-card {
-
     &__imgbox {
       width: 1.5rem;
       height: 1.5rem;
@@ -1032,6 +1033,15 @@
 
     &__name {
       font-size: 1.3rem;
+    }
+  }
+
+  .report-box {
+    height: 65vh;
+    width: 90vw;
+
+    &__option {
+      font-size: 1.2rem;
     }
   }
 }
@@ -1295,7 +1305,9 @@
   .ask-email,
   .reset-password,
   .change-field,
-  .signup-box, .create-preset, .comments-box {
+  .signup-box,
+  .create-preset,
+  .comments-box {
     & .box-heading {
       font-size: 2.1rem;
     }
