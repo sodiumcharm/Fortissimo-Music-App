@@ -1,3 +1,4 @@
+import { showConfirmationModal } from "./mediaOperation.js";
 import {
   deleteComment,
   getComments,
@@ -90,6 +91,10 @@ export const initComments = function () {
 
         const id = parentCard.getAttribute("data-id");
 
+        const confirmed = await showConfirmationModal('Do you really want to delete this comment?')
+
+        if (!confirmed) return;
+        
         const deleted = await deleteComment(id);
 
         if (!deleted) return;
