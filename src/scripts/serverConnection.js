@@ -669,7 +669,7 @@ export const changeProfileImage = async function (form) {
     errorText.textContent = `Your email address ${data.userData.email} is not verified!`;
     windowManager(".error-window", "show");
   } else {
-    errorText.textContent = resData.message + "Note: Max allowed image size is 2MB.";
+    errorText.textContent = resData.message + " Note: Max allowed image size is 2MB.";
     windowManager(".error-window", "show");
     return false;
   }
