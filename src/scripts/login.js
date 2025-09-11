@@ -512,6 +512,7 @@ export const initUserOperations = function () {
       const imageUrl = URL.createObjectURL(image);
       mainProfileImage.src = imageUrl;
       profileBtnImg.src = imageUrl;
+      this.value = "";
 
       setTimeout(() => {
         URL.revokeObjectURL(imageUrl);
