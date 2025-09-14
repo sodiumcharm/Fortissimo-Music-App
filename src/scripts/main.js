@@ -1417,6 +1417,17 @@ const initApp = async function () {
     }
   });
 
+  audio.addEventListener("pause", function () {
+    if (songPlayBtn.innerHTML.includes("pause")) {
+      songPlayBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+      currentBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+      
+      if (currentRefBtn) {
+        currentRefBtn.innerHTML = '<ion-icon name="play"></ion-icon>';
+      }
+    }
+  });
+
   document
     .querySelector(".control-imgbox")
     .addEventListener("click", function () {
@@ -1468,11 +1479,11 @@ const initApp = async function () {
   document
     .querySelector(".playbar-report-btn")
     .addEventListener("click", async function () {
-      windowManager('.report-box', 'show');
+      windowManager(".report-box", "show");
 
-      const id = playbar.getAttribute('data-audio-id');
+      const id = playbar.getAttribute("data-audio-id");
 
-      document.querySelector('.report-box').setAttribute('data-id', id);
+      document.querySelector(".report-box").setAttribute("data-id", id);
     });
 
   playNextBtn.addEventListener("click", function () {
