@@ -30,7 +30,7 @@ const speedThumb = document.querySelector('.lrc-generator__thumb');
 const speedFill = document.querySelector('.lrc-generator__fill');
 const speedDisplay = document.querySelector('.playbackrate-display');
 
-let format = "pdf";
+let format = "lrc";
 
 export const initLRCGenerator = function () {
   const styles = getComputedStyle(document.documentElement);
