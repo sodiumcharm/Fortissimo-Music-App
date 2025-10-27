@@ -26,9 +26,20 @@
     />
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- <link rel="stylesheet" href="sass/main.scss" /> -->
-
-    <!-- <script defer type="module" src="scripts/main.js"></script> -->
+    <script type="text/javascript">
+      (function (c, l, a, r, i, t, y) {
+        c[a] =
+          c[a] ||
+          function () {
+            (c[a].q = c[a].q || []).push(arguments);
+          };
+        t = l.createElement(r);
+        t.async = 1;
+        t.src = "https://www.clarity.ms/tag/" + i;
+        y = l.getElementsByTagName(r)[0];
+        y.parentNode.insertBefore(t, y);
+      })(window, document, "clarity", "script", "twseow2pgu");
+    </script>
 
     <script defer type="module" src="/src/scripts/main.js"></script>
 
@@ -322,7 +333,10 @@
                 <ion-icon name="flag"></ion-icon>
               </button>
 
-              <button class="playbar-extra-btn playbar-comment-btn" title="Comments">
+              <button
+                class="playbar-extra-btn playbar-comment-btn"
+                title="Comments"
+              >
                 <ion-icon name="chatbubble-ellipses"></ion-icon>
               </button>
 
@@ -1422,9 +1436,7 @@
                 ><ion-icon name="alert-circle-outline"></ion-icon
               ></span>
             </p>
-            <button class="user-menu__edit request-email-otp">
-              Verify
-            </button>
+            <button class="user-menu__edit request-email-otp">Verify</button>
           </div>
 
           <button class="user-menu__special-btn user-menu__change-password">
@@ -2453,7 +2465,10 @@
         <h2 class="box-heading">Report</h2>
 
         <div class="report-box__container">
-          <div class="report-box__option option-active" data-reason="Hateful or abusive content">
+          <div
+            class="report-box__option option-active"
+            data-reason="Hateful or abusive content"
+          >
             <span class="report-box__option-circle"></span>
             Hateful or abusive content
           </div>
@@ -2463,7 +2478,10 @@
             Inappropriate Title
           </div>
 
-          <div class="report-box__option" data-reason="Controvertial Cover Image">
+          <div
+            class="report-box__option"
+            data-reason="Controvertial Cover Image"
+          >
             <span class="report-box__option-circle"></span>
             Controvertial Cover Image
           </div>
